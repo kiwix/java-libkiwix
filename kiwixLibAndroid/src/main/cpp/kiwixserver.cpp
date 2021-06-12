@@ -27,7 +27,8 @@
 #include "utils.h"
 
 /* Kiwix Reader JNI functions */
-JNIEXPORT jlong JNICALL Java_org_kiwix_kiwixlib_JNIKiwixServer_getNativeServer(
+JNIEXPORT jlong
+extern "C" JNICALL Java_org_kiwix_kiwixlib_JNIKiwixServer_getNativeServer(
     JNIEnv* env, jobject obj, jobject jLibrary)
 {
   LOG("Attempting to create server");

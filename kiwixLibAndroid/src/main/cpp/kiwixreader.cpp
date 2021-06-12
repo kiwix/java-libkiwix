@@ -28,7 +28,8 @@
 #include "utils.h"
 
 /* Kiwix Reader JNI functions */
-JNIEXPORT jlong JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getNativeReader(
+JNIEXPORT jlong
+extern "C" JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getNativeReader(
     JNIEnv* env, jobject obj, jstring filename)
 {
   std::string cPath = jni2c(filename, env);
@@ -65,7 +66,8 @@ int jni2fd(const jobject& fdObj, JNIEnv* env)
 
 } // unnamed namespace
 
-JNIEXPORT jlong JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getNativeReaderByFD(
+JNIEXPORT jlong
+extern "C" JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getNativeReaderByFD(
     JNIEnv* env, jobject obj, jobject fdObj)
 {
 #ifndef _WIN32
@@ -559,3 +561,5 @@ JNIEXPORT jboolean JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getRandomPage(
   }
   return retVal;
 }
+extern "C"
+JNIEXPORT void JNICALL
