@@ -19,12 +19,9 @@
 
 
 #include <jni.h>
-#include "org_kiwix_kiwixlib_Book.h"
 
 #include "utils.h"
 #include "book.h"
-#include <jni.h>
-#include <jni.h>
 
 JNIEXPORT void JNICALL
 Java_org_kiwix_kiwixlib_Book_allocate(

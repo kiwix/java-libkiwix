@@ -42,7 +42,7 @@ Java_org_kiwix_kiwixlib_Library_dispose(JNIEnv* env, jobject thisObj)
 #define LIBRARY (getPtr<kiwix::Library>(env, thisObj))
 
 /* Kiwix library functions */
-JNIEXPORT jboolean JNICALL
+extern "C" JNIEXPORT jboolean JNICALL
 Java_org_kiwix_kiwixlib_Library_addBook(
   JNIEnv* env, jobject thisObj, jstring path)
 {
