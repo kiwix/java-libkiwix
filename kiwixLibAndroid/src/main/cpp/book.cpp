@@ -23,14 +23,14 @@
 #include "utils.h"
 #include "book.h"
 
-JNIEXPORT void JNICALL
+extern "C" JNIEXPORT void JNICALL
 Java_org_kiwix_kiwixlib_Book_allocate(
   JNIEnv* env, jobject thisObj)
 {
   allocate<kiwix::Book>(env, thisObj);
 }
 
-JNIEXPORT void JNICALL
+extern "C" JNIEXPORT void JNICALL
 Java_org_kiwix_kiwixlib_Book_dispose(JNIEnv* env, jobject thisObj)
 {
   dispose<kiwix::Book>(env, thisObj);

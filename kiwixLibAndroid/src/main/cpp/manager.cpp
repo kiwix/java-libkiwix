@@ -25,7 +25,7 @@
 #include "utils.h"
 
 
-JNIEXPORT void JNICALL
+extern "C" JNIEXPORT void JNICALL
 Java_org_kiwix_kiwixlib_Manager_allocate(
   JNIEnv* env, jobject thisObj, jobject libraryObj)
 {
@@ -33,7 +33,7 @@ Java_org_kiwix_kiwixlib_Manager_allocate(
   allocate<kiwix::Manager>(env, thisObj, lib);
 }
 
-JNIEXPORT void JNICALL
+extern "C" JNIEXPORT void JNICALL
 Java_org_kiwix_kiwixlib_Manager_dispose(JNIEnv* env, jobject thisObj)
 {
   dispose<kiwix::Manager>(env, thisObj);
@@ -42,7 +42,7 @@ Java_org_kiwix_kiwixlib_Manager_dispose(JNIEnv* env, jobject thisObj)
 #define MANAGER (getPtr<kiwix::Manager>(env, thisObj))
 
 /* Kiwix manager functions */
-JNIEXPORT jboolean JNICALL
+extern "C" JNIEXPORT jboolean JNICALL
 Java_org_kiwix_kiwixlib_Manager_readFile(
   JNIEnv* env, jobject thisObj, jstring path)
 {
@@ -57,7 +57,7 @@ Java_org_kiwix_kiwixlib_Manager_readFile(
   return false;
 }
 
-JNIEXPORT jboolean JNICALL
+extern "C" JNIEXPORT jboolean JNICALL
 Java_org_kiwix_kiwixlib_Manager_readXml(
   JNIEnv* env, jobject thisObj, jstring content, jstring libraryPath)
 {
@@ -74,7 +74,7 @@ Java_org_kiwix_kiwixlib_Manager_readXml(
   return false;
 }
 
-JNIEXPORT jboolean JNICALL
+extern "C" JNIEXPORT jboolean JNICALL
 Java_org_kiwix_kiwixlib_Manager_readOpds(
   JNIEnv* env, jobject thisObj, jstring content, jstring urlHost)
 {
@@ -91,7 +91,7 @@ Java_org_kiwix_kiwixlib_Manager_readOpds(
   return false;
 }
 
-JNIEXPORT jboolean JNICALL
+extern "C" JNIEXPORT jboolean JNICALL
 Java_org_kiwix_kiwixlib_Manager_readBookmarkFile(
   JNIEnv* env, jobject thisObj, jstring path)
 {
@@ -107,7 +107,7 @@ Java_org_kiwix_kiwixlib_Manager_readBookmarkFile(
   return false;
 }
 
-JNIEXPORT jstring JNICALL
+extern "C" JNIEXPORT jstring JNICALL
 Java_org_kiwix_kiwixlib_Manager_addBookFromPath(
   JNIEnv* env, jobject thisObj,
   jstring pathToOpen, jstring pathToSave, jstring url, jboolean checkMetaData)

@@ -30,7 +30,8 @@
 
 std::mutex globalLock;
 
-JNIEXPORT void JNICALL Java_org_kiwix_kiwixlib_JNIICU_setDataDirectory(
+extern "C" JNIEXPORT void JNICALL
+Java_org_kiwix_kiwixlib_JNIICU_setDataDirectory(
     JNIEnv* env, jclass kclass, jstring dirStr)
 {
   std::string cPath = jni2c(dirStr, env);

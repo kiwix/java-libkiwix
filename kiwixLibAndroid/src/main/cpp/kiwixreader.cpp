@@ -28,7 +28,8 @@
 #include "utils.h"
 
 /* Kiwix Reader JNI functions */
-extern "C" JNIEXPORT jlong JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getNativeReader(
+extern "C" JNIEXPORT jlong JNICALL
+Java_org_kiwix_kiwixlib_JNIKiwixReader_getNativeReader(
     JNIEnv* env, jobject obj, jstring filename)
 {
   std::string cPath = jni2c(filename, env);
@@ -65,7 +66,8 @@ int jni2fd(const jobject& fdObj, JNIEnv* env)
 
 } // unnamed namespace
 
-extern "C" JNIEXPORT jlong JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getNativeReaderByFD(
+extern "C" JNIEXPORT jlong JNICALL
+Java_org_kiwix_kiwixlib_JNIKiwixReader_getNativeReaderByFD(
     JNIEnv* env, jobject obj, jobject fdObj)
 {
 #ifndef _WIN32
@@ -88,7 +90,8 @@ extern "C" JNIEXPORT jlong JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getNat
 #endif
 }
 
-JNIEXPORT jlong JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getNativeReaderEmbedded(
+extern "C" JNIEXPORT jlong JNICALL
+Java_org_kiwix_kiwixlib_JNIKiwixReader_getNativeReaderEmbedded(
     JNIEnv* env, jobject obj, jobject fdObj, jlong offset, jlong size)
 {
 #ifndef _WIN32
@@ -111,7 +114,7 @@ JNIEXPORT jlong JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getNativeReaderEm
 #endif
 }
 
-JNIEXPORT void JNICALL
+extern "C" JNIEXPORT void JNICALL
 Java_org_kiwix_kiwixlib_JNIKiwixReader_dispose(JNIEnv* env, jobject obj)
 {
   Handle<kiwix::Reader>::dispose(env, obj);
@@ -120,7 +123,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_dispose(JNIEnv* env, jobject obj)
 #define READER (Handle<kiwix::Reader>::getHandle(env, obj))
 
 /* Kiwix library functions */
-JNIEXPORT jstring JNICALL
+extern "C" JNIEXPORT jstring JNICALL
 Java_org_kiwix_kiwixlib_JNIKiwixReader_getMainPage(JNIEnv* env, jobject obj)
 {
   jstring url;
@@ -136,7 +139,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getMainPage(JNIEnv* env, jobject obj)
   return url;
 }
 
-JNIEXPORT jstring JNICALL
+extern "C" JNIEXPORT jstring JNICALL
 Java_org_kiwix_kiwixlib_JNIKiwixReader_getId(JNIEnv* env, jobject obj)
 {
   jstring id;
@@ -153,7 +156,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getId(JNIEnv* env, jobject obj)
   return id;
 }
 
-JNIEXPORT jint JNICALL
+extern "C" JNIEXPORT jint JNICALL
 Java_org_kiwix_kiwixlib_JNIKiwixReader_getFileSize(JNIEnv* env, jobject obj)
 {
   jint size = 0;
@@ -169,7 +172,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getFileSize(JNIEnv* env, jobject obj)
   return size;
 }
 
-JNIEXPORT jstring JNICALL
+extern "C" JNIEXPORT jstring JNICALL
 Java_org_kiwix_kiwixlib_JNIKiwixReader_getCreator(JNIEnv* env, jobject obj)
 {
   jstring creator;
@@ -186,7 +189,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getCreator(JNIEnv* env, jobject obj)
   return creator;
 }
 
-JNIEXPORT jstring JNICALL
+extern "C" JNIEXPORT jstring JNICALL
 Java_org_kiwix_kiwixlib_JNIKiwixReader_getPublisher(JNIEnv* env, jobject obj)
 {
   jstring publisher;
@@ -218,7 +221,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getName(JNIEnv* env, jobject obj)
   return name;
 }
 
-JNIEXPORT jstring JNICALL
+extern "C" JNIEXPORT jstring JNICALL
 Java_org_kiwix_kiwixlib_JNIKiwixReader_getFavicon(JNIEnv* env, jobject obj)
 {
   jstring favicon;
@@ -238,7 +241,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getFavicon(JNIEnv* env, jobject obj)
   return favicon;
 }
 
-JNIEXPORT jstring JNICALL
+extern "C" JNIEXPORT jstring JNICALL
 Java_org_kiwix_kiwixlib_JNIKiwixReader_getDate(JNIEnv* env, jobject obj)
 {
   jstring date;
@@ -254,7 +257,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getDate(JNIEnv* env, jobject obj)
   return date;
 }
 
-JNIEXPORT jstring JNICALL
+extern "C" JNIEXPORT jstring JNICALL
 Java_org_kiwix_kiwixlib_JNIKiwixReader_getLanguage(JNIEnv* env, jobject obj)
 {
   jstring language;
@@ -271,7 +274,8 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getLanguage(JNIEnv* env, jobject obj)
   return language;
 }
 
-JNIEXPORT jstring JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getMimeType(
+extern "C" JNIEXPORT jstring JNICALL
+Java_org_kiwix_kiwixlib_JNIKiwixReader_getMimeType(
     JNIEnv* env, jobject obj, jstring url)
 {
   jstring mimeType;
@@ -289,7 +293,8 @@ JNIEXPORT jstring JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getMimeType(
   return mimeType;
 }
 
-JNIEXPORT jstring JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_checkUrl(
+extern "C" JNIEXPORT jstring JNICALL
+Java_org_kiwix_kiwixlib_JNIKiwixReader_checkUrl(
      JNIEnv* env, jobject obj, jstring url)
 {
   jstring finalUrl;
@@ -304,7 +309,8 @@ JNIEXPORT jstring JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_checkUrl(
   return finalUrl;
 }
 
-JNIEXPORT jbyteArray JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getContent(
+extern "C" JNIEXPORT jbyteArray JNICALL
+Java_org_kiwix_kiwixlib_JNIKiwixReader_getContent(
     JNIEnv* env, jobject obj, jobject url, jobject titleObj, jobject mimeTypeObj, jobject sizeObj)
 {
   /* Default values */
@@ -340,7 +346,8 @@ JNIEXPORT jbyteArray JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getContent(
   return data;
 }
 
-JNIEXPORT jbyteArray JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getContentPart(
+extern "C" JNIEXPORT jbyteArray JNICALL
+Java_org_kiwix_kiwixlib_JNIKiwixReader_getContentPart(
     JNIEnv* env, jobject obj, jstring url, jint offset, jint len, jobject sizeObj)
 {
   jbyteArray data = env->NewByteArray(0);
@@ -371,7 +378,7 @@ JNIEXPORT jbyteArray JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getContentPa
   return data;
 }
 
-JNIEXPORT jlong JNICALL
+extern "C" JNIEXPORT jlong JNICALL
 Java_org_kiwix_kiwixlib_JNIKiwixReader_getArticleSize(
     JNIEnv* env, jobject obj, jstring url)
 {
@@ -387,7 +394,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getArticleSize(
   return c2jni(0, env);
 }
 
-JNIEXPORT jobject JNICALL
+extern "C" JNIEXPORT jobject JNICALL
 Java_org_kiwix_kiwixlib_JNIKiwixReader_getDirectAccessInformation(
     JNIEnv* env, jobject obj, jstring url)
 {
@@ -409,7 +416,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getDirectAccessInformation(
   return dai;
 }
 
-JNIEXPORT jboolean JNICALL
+extern "C" JNIEXPORT jboolean JNICALL
 Java_org_kiwix_kiwixlib_JNIKiwixReader_searchSuggestions(JNIEnv* env,
                                                          jobject obj,
                                                          jstring prefix,
@@ -434,7 +441,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_searchSuggestions(JNIEnv* env,
   return retVal;
 }
 
-JNIEXPORT jboolean JNICALL
+extern "C" JNIEXPORT jboolean JNICALL
 Java_org_kiwix_kiwixlib_JNIKiwixReader_getNextSuggestion(JNIEnv* env,
                                                          jobject obj,
                                                          jobject titleObj,
@@ -461,7 +468,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getNextSuggestion(JNIEnv* env,
   return retVal;
 }
 
-JNIEXPORT jboolean JNICALL
+extern "C" JNIEXPORT jboolean JNICALL
 Java_org_kiwix_kiwixlib_JNIKiwixReader_getPageUrlFromTitle(JNIEnv* env,
                                                            jobject obj,
                                                            jstring title,
@@ -482,7 +489,8 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getPageUrlFromTitle(JNIEnv* env,
   return JNI_FALSE;
 }
 
-JNIEXPORT jstring JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getTitle(
+extern "C" JNIEXPORT jstring JNICALL
+Java_org_kiwix_kiwixlib_JNIKiwixReader_getTitle(
     JNIEnv* env, jobject obj)
 {
   jstring title;
@@ -498,7 +506,7 @@ JNIEXPORT jstring JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getTitle(
   return title;
 }
 
-JNIEXPORT jstring JNICALL
+extern "C" JNIEXPORT jstring JNICALL
 Java_org_kiwix_kiwixlib_JNIKiwixReader_getDescription(JNIEnv* env, jobject obj)
 {
   jstring description;
@@ -514,7 +522,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getDescription(JNIEnv* env, jobject obj)
   return description;
 }
 
-JNIEXPORT jint JNICALL
+extern "C" JNIEXPORT jint JNICALL
 Java_org_kiwix_kiwixlib_JNIKiwixReader_getArticleCount(JNIEnv* env, jobject obj)
 {
   jint articleCount = 0;
@@ -528,7 +536,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getArticleCount(JNIEnv* env, jobject obj)
   return articleCount;
 }
 
-JNIEXPORT jint JNICALL
+extern "C" JNIEXPORT jint JNICALL
 Java_org_kiwix_kiwixlib_JNIKiwixReader_getMediaCount(JNIEnv* env, jobject obj)
 {
   jint mediaCount = 0;
@@ -543,7 +551,8 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getMediaCount(JNIEnv* env, jobject obj)
 }
 
 
-JNIEXPORT jboolean JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getRandomPage(
+extern "C" JNIEXPORT jboolean JNICALL
+Java_org_kiwix_kiwixlib_JNIKiwixReader_getRandomPage(
     JNIEnv* env, jobject obj, jobject urlObj)
 {
   jboolean retVal = JNI_FALSE;
@@ -559,5 +568,3 @@ JNIEXPORT jboolean JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getRandomPage(
   }
   return retVal;
 }
-extern "C"
-JNIEXPORT void JNICALL

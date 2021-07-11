@@ -30,14 +30,14 @@
 #define RESULT (Handle<kiwix::Result>::getHandle(env, obj))
 
 
-JNIEXPORT void JNICALL
+extern "C" JNIEXPORT void JNICALL
 Java_org_kiwix_kiwixlib_JNIKiwixSearcher_dispose(JNIEnv* env, jobject obj)
 {
   Handle<kiwix::Searcher>::dispose(env, obj);
 }
 
 /* Kiwix Reader JNI functions */
-JNIEXPORT jlong JNICALL
+extern "C" JNIEXPORT jlong JNICALL
 Java_org_kiwix_kiwixlib_JNIKiwixSearcher_getNativeHandle(JNIEnv* env,
                                                           jobject obj)
 {
@@ -46,7 +46,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixSearcher_getNativeHandle(JNIEnv* env,
 }
 
 /* Kiwix library functions */
-JNIEXPORT void JNICALL Java_org_kiwix_kiwixlib_JNIKiwixSearcher_addReader(
+extern "C" JNIEXPORT void JNICALL Java_org_kiwix_kiwixlib_JNIKiwixSearcher_addReader(
     JNIEnv* env, jobject obj, jobject reader)
 {
   auto searcher = SEARCHER;
@@ -54,7 +54,7 @@ JNIEXPORT void JNICALL Java_org_kiwix_kiwixlib_JNIKiwixSearcher_addReader(
   searcher->add_reader(*(Handle<kiwix::Reader>::getHandle(env, reader)));
 }
 
-JNIEXPORT void JNICALL Java_org_kiwix_kiwixlib_JNIKiwixSearcher_search(
+extern "C" JNIEXPORT void JNICALL Java_org_kiwix_kiwixlib_JNIKiwixSearcher_search(
     JNIEnv* env, jobject obj, jstring query, jint count)
 {
   std::string cquery = jni2c(query, env);
@@ -63,7 +63,7 @@ JNIEXPORT void JNICALL Java_org_kiwix_kiwixlib_JNIKiwixSearcher_search(
   SEARCHER->search(cquery, 0, ccount);
 }
 
-JNIEXPORT jobject JNICALL
+extern "C" JNIEXPORT jobject JNICALL
 Java_org_kiwix_kiwixlib_JNIKiwixSearcher_getNextResult(JNIEnv* env,
                                                          jobject obj)
 {
@@ -80,13 +80,13 @@ Java_org_kiwix_kiwixlib_JNIKiwixSearcher_getNextResult(JNIEnv* env,
   return result;
 }
 
-JNIEXPORT void JNICALL Java_org_kiwix_kiwixlib_JNIKiwixSearcher_00024Result_dispose(
+extern "C" JNIEXPORT void JNICALL Java_org_kiwix_kiwixlib_JNIKiwixSearcher_00024Result_dispose(
     JNIEnv* env, jobject obj)
 {
   Handle<kiwix::Result>::dispose(env, obj);
 }
 
-JNIEXPORT jstring JNICALL
+extern "C" JNIEXPORT jstring JNICALL
 Java_org_kiwix_kiwixlib_JNIKiwixSearcher_00024Result_getUrl(JNIEnv* env,
                                                         jobject obj)
 {

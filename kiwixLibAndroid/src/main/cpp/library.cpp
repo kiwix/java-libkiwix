@@ -26,14 +26,14 @@
 #include "utils.h"
 
 /* Kiwix Reader JNI functions */
-JNIEXPORT void JNICALL
+extern "C" JNIEXPORT void JNICALL
 Java_org_kiwix_kiwixlib_Library_allocate(
     JNIEnv* env, jobject thisObj)
 {
   allocate<kiwix::Library>(env, thisObj);
 }
 
-JNIEXPORT void JNICALL
+extern "C" JNIEXPORT void JNICALL
 Java_org_kiwix_kiwixlib_Library_dispose(JNIEnv* env, jobject thisObj)
 {
   dispose<kiwix::Library>(env, thisObj);

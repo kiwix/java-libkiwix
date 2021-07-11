@@ -27,8 +27,8 @@
 #include "utils.h"
 
 /* Kiwix Reader JNI functions */
-JNIEXPORT jlong
-extern "C" JNICALL Java_org_kiwix_kiwixlib_JNIKiwixServer_getNativeServer(
+extern "C" JNIEXPORT jlong
+JNICALL Java_org_kiwix_kiwixlib_JNIKiwixServer_getNativeServer(
     JNIEnv* env, jobject obj, jobject jLibrary)
 {
   LOG("Attempting to create server");
@@ -44,7 +44,7 @@ extern "C" JNICALL Java_org_kiwix_kiwixlib_JNIKiwixServer_getNativeServer(
   }
 }
 
-JNIEXPORT void JNICALL
+extern "C" JNIEXPORT void JNICALL
 Java_org_kiwix_kiwixlib_JNIKiwixServer_dispose(JNIEnv* env, jobject obj)
 {
   Handle<kiwix::Server>::dispose(env, obj);
@@ -53,51 +53,51 @@ Java_org_kiwix_kiwixlib_JNIKiwixServer_dispose(JNIEnv* env, jobject obj)
 #define SERVER (Handle<kiwix::Server>::getHandle(env, obj))
 
 /* Kiwix library functions */
-JNIEXPORT void JNICALL
+extern "C" JNIEXPORT void JNICALL
 Java_org_kiwix_kiwixlib_JNIKiwixServer_setRoot(JNIEnv* env, jobject obj, jstring jRoot)
 {
   std::string root = jni2c(jRoot, env);
   SERVER->setRoot(root);
 }
 
-JNIEXPORT void JNICALL
+extern "C" JNIEXPORT void JNICALL
 Java_org_kiwix_kiwixlib_JNIKiwixServer_setAddress(JNIEnv* env, jobject obj, jstring jAddress)
 {
   std::string address = jni2c(jAddress, env);
   SERVER->setAddress(address);
 }
 
-JNIEXPORT void JNICALL
+extern "C" JNIEXPORT void JNICALL
 Java_org_kiwix_kiwixlib_JNIKiwixServer_setPort(JNIEnv* env, jobject obj, int port)
 {
   SERVER->setPort(port);
 }
 
-JNIEXPORT void JNICALL
+extern "C" JNIEXPORT void JNICALL
 Java_org_kiwix_kiwixlib_JNIKiwixServer_setNbThreads(JNIEnv* env, jobject obj, int threads)
 {
   SERVER->setNbThreads(threads);
 }
 
-JNIEXPORT void JNICALL
+extern "C" JNIEXPORT void JNICALL
 Java_org_kiwix_kiwixlib_JNIKiwixServer_setTaskbar(JNIEnv* env, jobject obj, jboolean withTaskbar, jboolean withLibraryButton)
 {
   SERVER->setTaskbar(withTaskbar, withLibraryButton);
 }
 
-JNIEXPORT void JNICALL
+extern "C" JNIEXPORT void JNICALL
 Java_org_kiwix_kiwixlib_JNIKiwixServer_setBlockExternalLinks(JNIEnv* env, jobject obj, jboolean blockExternalLinks)
 {
   SERVER->setBlockExternalLinks(blockExternalLinks);
 }
 
-JNIEXPORT jboolean JNICALL
+extern "C" JNIEXPORT jboolean JNICALL
 Java_org_kiwix_kiwixlib_JNIKiwixServer_start(JNIEnv* env, jobject obj)
 {
   return SERVER->start();
 }
 
-JNIEXPORT void JNICALL
+extern "C" JNIEXPORT void JNICALL
 Java_org_kiwix_kiwixlib_JNIKiwixServer_stop(JNIEnv* env, jobject obj)
 {
   SERVER->stop();
