@@ -13,4 +13,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+# IDEA/Android Studio ignores
 /.idea/*
+.idea/
