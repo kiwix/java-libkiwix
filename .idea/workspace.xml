@@ -5,29 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b3419f3f-9f8b-494a-ab00-9a8ee2e2257e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/book.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/book.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/filter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/filter.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kiwixicu.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/kiwixicu.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kiwixreader.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/kiwixreader.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kiwixsearcher.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/kiwixsearcher.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kiwixserver.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/kiwixserver.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/library.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/library.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/manager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/manager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/org/kiwix/kiwixlib/Book.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/kiwix/java_libkiwix/Book.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/org/kiwix/kiwixlib/DirectAccessInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/kiwix/java_libkiwix/DirectAccessInfo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/org/kiwix/kiwixlib/Filter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/kiwix/java_libkiwix/Filter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/org/kiwix/kiwixlib/JNIICU.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/kiwix/java_libkiwix/JNIICU.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/org/kiwix/kiwixlib/JNIKiwix.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/kiwix/java_libkiwix/JNIKiwix.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/org/kiwix/kiwixlib/JNIKiwixBool.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/kiwix/java_libkiwix/JNIKiwixBool.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/org/kiwix/kiwixlib/JNIKiwixException.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/kiwix/java_libkiwix/JNIKiwixException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/org/kiwix/kiwixlib/JNIKiwixInt.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/kiwix/java_libkiwix/JNIKiwixInt.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/org/kiwix/kiwixlib/JNIKiwixReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/kiwix/java_libkiwix/JNIKiwixReader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/org/kiwix/kiwixlib/JNIKiwixSearcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/kiwix/java_libkiwix/JNIKiwixSearcher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/org/kiwix/kiwixlib/JNIKiwixServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/kiwix/java_libkiwix/JNIKiwixServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/org/kiwix/kiwixlib/JNIKiwixString.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/kiwix/java_libkiwix/JNIKiwixString.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/org/kiwix/kiwixlib/Library.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/kiwix/java_libkiwix/Library.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/org/kiwix/kiwixlib/Manager.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/kiwix/java_libkiwix/Manager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/utils.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
     </list>
     <list id="5ad0b4b6-d9bc-4002-bed7-0e1bc69e7295" name="added android configuation and moved file to appropriate directory" comment="" />
     <option name="SHOW_DIALOG" value="false" />
