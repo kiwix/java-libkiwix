@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2013 Emmanuel Engelhart <kelson@kiwix.org>
- * Copyright (C) 2017 Matthieu Gautier <mgautier@kymeria.fr>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU  General Public License as published by
@@ -18,19 +17,9 @@
  * MA 02110-1301, USA.
  */
 
-package org.kiwix.kiwixlib;
+package org.kiwix.java_libkiwix;
 
-import android.content.Context;
-import com.getkeepsafe.relinker.ReLinker;
-import org.kiwix.kiwixlib.JNIICU;
-
-public class JNIKiwix
+public class JNIKiwixInt
 {
-  public JNIKiwix(final Context context){
-    ReLinker.loadLibrary(context, "kiwix");
-  }
-
-  public void setDataDirectory(String icuDataDir) {
-    JNIICU.setDataDirectory(icuDataDir);
-  }
+  public int value;
 }

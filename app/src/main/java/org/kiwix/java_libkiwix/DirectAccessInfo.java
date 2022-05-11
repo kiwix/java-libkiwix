@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Emmanuel Engelhart <kelson@kiwix.org>
+ * Copyright (C) 2017 Matthieu Gautier <mgautier@kymeria.fr>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU  General Public License as published by
@@ -17,9 +17,10 @@
  * MA 02110-1301, USA.
  */
 
-package org.kiwix.kiwixlib;
+package org.kiwix.java_libkiwix;
 
-public class JNIKiwixInt
+public class DirectAccessInfo
 {
-  public int value;
+  public String filename;
+  public long offset;
 }

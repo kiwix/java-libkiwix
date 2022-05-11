@@ -18,13 +18,13 @@
  * MA 02110-1301, USA.
  */
 
-package org.kiwix.kiwixlib;
+package org.kiwix.java_libkiwix;
 
-import org.kiwix.kiwixlib.JNIKiwixException;
-import org.kiwix.kiwixlib.JNIKiwixString;
-import org.kiwix.kiwixlib.JNIKiwixInt;
-import org.kiwix.kiwixlib.JNIKiwixSearcher;
-import org.kiwix.kiwixlib.DirectAccessInfo;
+import org.kiwix.java_libkiwix.JNIKiwixException;
+import org.kiwix.java_libkiwix.JNIKiwixString;
+import org.kiwix.java_libkiwix.JNIKiwixInt;
+import org.kiwix.java_libkiwix.JNIKiwixSearcher;
+import org.kiwix.java_libkiwix.DirectAccessInfo;
 import java.io.FileDescriptor;
 
 public class JNIKiwixReader

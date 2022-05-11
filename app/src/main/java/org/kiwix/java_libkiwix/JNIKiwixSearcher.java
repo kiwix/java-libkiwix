@@ -19,9 +19,9 @@
  */
 
 
-package org.kiwix.kiwixlib;
+package org.kiwix.java_libkiwix;
 
-import org.kiwix.kiwixlib.JNIKiwixReader;
+import org.kiwix.java_libkiwix.JNIKiwixReader;
 import java.util.Vector;
 
 public class JNIKiwixSearcher

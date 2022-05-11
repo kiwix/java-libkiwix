@@ -17,10 +17,10 @@
  * MA 02110-1301, USA.
  */
 
-package org.kiwix.kiwixlib;
+package org.kiwix.java_libkiwix;
 
-import org.kiwix.kiwixlib.JNIKiwixException;
-import org.kiwix.kiwixlib.Library;
+import org.kiwix.java_libkiwix.JNIKiwixException;
+import org.kiwix.java_libkiwix.Library;
 
 public class JNIKiwixServer
 {

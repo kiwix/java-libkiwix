@@ -1,5 +1,5 @@
 
-package org.kiwix.kiwixlib;
+package org.kiwix.java_libkiwix;
 
 public class Book
 {

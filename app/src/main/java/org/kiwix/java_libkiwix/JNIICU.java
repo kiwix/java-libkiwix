@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2013 Emmanuel Engelhart <kelson@kiwix.org>
  * Copyright (C) 2017 Matthieu Gautier <mgautier@kymeria.fr>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -17,10 +18,9 @@
  * MA 02110-1301, USA.
  */
 
-package org.kiwix.kiwixlib;
+package org.kiwix.java_libkiwix;
 
-public class DirectAccessInfo
+public class JNIICU
 {
-  public String filename;
-  public long offset;
+  static public native void setDataDirectory(String icuDataDir);
 }
