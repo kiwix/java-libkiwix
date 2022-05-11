@@ -1,9 +1,6 @@
 *.iml
-<<<<<<< HEAD
 .gradle/
-=======
 .gradle
->>>>>>> e8c44a5 (updated .gitignore file and)
 /local.properties
 /.idea/caches
 /.idea/libraries
@@ -17,3 +14,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+# IDEA/Android Studio ignores
+/.idea/*
+.idea/
