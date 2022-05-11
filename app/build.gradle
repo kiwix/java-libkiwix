@@ -1,8 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'com.android.library'
-    id 'maven'
+    id 'maven-publish'
 }
 
 android {
@@ -60,42 +59,49 @@ dependencies {
 }
 // TODO: Refactor kiwixlib to java-libkiwix
 task writePom {
-    pom {
-        project {
-            groupId 'org.kiwix.kiwixlib'
-            artifactId 'kiwixlib'
-            version '10.1.1' + (System.env.KIWIXLIB_BUILDVERSION == null ? '' : '-'+System.env.KIWIXLIB_BUILDVERSION)
-            packaging 'aar'
-            name 'kiwixlib'
-            url 'https://github.com/kiwix/libkiwix'
-            licenses {
-                license {
-                    name 'GPLv3'
-                    url 'https://www.gnu.org/licenses/gpl-3.0.en.html'
-                }
-            }
-            developers {
-                developer {
-                    id 'kiwix'
-                    name 'kiwix'
-                    email 'contact@kiwix.org'
-                }
-            }
-            scm {
-                connection 'https://github.com/kiwix/libkiwix.git'
-                developerConnection 'https://github.com/kiwix/libkiwix.git'
-                url 'https://github.com/kiwix/libkiwix'
-            }
-        }
-    }.withXml {
-        def dependenciesNode = asNode().appendNode('dependencies')
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                pom {
+                    groupId 'org.kiwix.kiwixlib'
+                    artifactId 'kiwixlib'
+                    version '10.1.1' + (System.env.KIWIXLIB_BUILDVERSION == null ? '' : '-' + System.env.KIWIXLIB_BUILDVERSION)
+                    packaging 'aar'
+                    name = 'kiwixlib'
+                    url = 'https://github.com/kiwix/libkiwix'
+                    licenses {
+                        license {
+                            name = 'GPLv3'
+                            url = 'https://www.gnu.org/licenses/gpl-3.0.en.html'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = 'kiwix'
+                            name = 'kiwix'
+                            email = 'contact@kiwix.org'
+                        }
+                    }
+                    scm {
+                        connection = 'https://github.com/kiwix/libkiwix.git'
+                        developerConnection = 'https://github.com/kiwix/libkiwix.git'
+                        url = 'https://github.com/kiwix/libkiwix'
+                    }
 
-        //Iterate over the implementation dependencies, adding a <dependency> node for each
-        configurations.implementation.allDependencies.each {
-            def dependencyNode = dependenciesNode.appendNode('dependency')
-            dependencyNode.appendNode('groupId', it.group)
-            dependencyNode.appendNode('artifactId', it.name)
-            dependencyNode.appendNode('version', it.version)
+                }
+                //TODO: Add this
+//                        .withXml {
+//                    def dependenciesNode = asNode().appendNode('dependencies')
+//
+//                    //Iterate over the implementation dependencies, adding a <dependency> node for each
+//                    configurations.implementation.allDependencies.each {
+//                        def dependencyNode = dependenciesNode.appendNode('dependency')
+//                        dependencyNode.appendNode('groupId', it.group)
+//                        dependencyNode.appendNode('artifactId', it.name)
+//                        dependencyNode.appendNode('version', it.version)
+//                    }
+//                }.writeTo("$buildDir/pom.xml")
+            }
         }
-    }.writeTo("$buildDir/pom.xml")
+    }
 }
