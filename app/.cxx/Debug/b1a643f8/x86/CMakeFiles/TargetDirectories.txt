@@ -1,3 +1,0 @@
-/Users/gouri/Desktop/Javalibkiwix/app/.cxx/Debug/b1a643f8/x86/CMakeFiles/rebuild_cache.dir
-/Users/gouri/Desktop/Javalibkiwix/app/.cxx/Debug/b1a643f8/x86/CMakeFiles/edit_cache.dir
-/Users/gouri/Desktop/Javalibkiwix/app/.cxx/Debug/b1a643f8/x86/CMakeFiles/java_libkiwix.dir
