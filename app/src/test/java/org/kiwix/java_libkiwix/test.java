@@ -1,3 +1,4 @@
+package org.kiwix.java_libkiwix;
 
 import java.io.*;
 import java.util.*;
