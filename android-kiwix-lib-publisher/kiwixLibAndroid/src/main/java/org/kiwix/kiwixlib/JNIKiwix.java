@@ -21,14 +21,18 @@
 package org.kiwix.kiwixlib;
 
 import android.content.Context;
+<<<<<<< HEAD
 import android.util.Log;
 
+=======
+>>>>>>> main
 import com.getkeepsafe.relinker.ReLinker;
 import org.kiwix.kiwixlib.JNIICU;
 
 public class JNIKiwix
 {
   public JNIKiwix(final Context context){
+<<<<<<< HEAD
 
     ReLinker.Logger logger=new ReLinker.Logger() {
       @Override
@@ -37,6 +41,9 @@ public class JNIKiwix
       }
     };
     ReLinker.log(logger).loadLibrary(context, "kiwix");
+=======
+    ReLinker.loadLibrary(context, "kiwix");
+>>>>>>> main
   }
 
   public void setDataDirectory(String icuDataDir) {
