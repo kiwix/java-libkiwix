@@ -20,11 +20,6 @@
 
 package org.kiwix.kiwixlib;
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> main
 public class JNIICU
 {
   static public native void setDataDirectory(String icuDataDir);

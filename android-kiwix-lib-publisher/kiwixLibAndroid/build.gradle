@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-apply plugin: 'maven'
+
 
 android {
     compileSdkVersion 28
@@ -20,45 +20,14 @@ android {
 dependencies {
     implementation 'com.getkeepsafe.relinker:relinker:1.4.5'
 }
-
-task writePom {
-  pom {
-    project {
-        groupId 'org.kiwix.kiwixlib'
-        artifactId 'kiwixlib'
-        version '10.1.1' + (System.env.KIWIXLIB_BUILDVERSION == null ? '' : '-'+System.env.KIWIXLIB_BUILDVERSION)
-        packaging 'aar'
-        name 'kiwixlib'
-        url 'https://github.com/kiwix/libkiwix'
-        licenses {
-            license {
-                name 'GPLv3'
-                url 'https://www.gnu.org/licenses/gpl-3.0.en.html'
-            }
+// Publish to Maven Central
+nexusPublishing {
+    repositories {
+        sonatype {
+            username = "kiwix"
+            password = "oq*Gf^UT57yzjM7J8"
+            stagingProfileId = "1135feec1bc4ef"
         }
-      developers {
-          developer {
-              id 'kiwix'
-              name 'kiwix'
-              email 'contact@kiwix.org'
-          }
-      }
-      scm {
-          connection 'https://github.com/kiwix/libkiwix.git'
-          developerConnection 'https://github.com/kiwix/libkiwix.git'
-          url 'https://github.com/kiwix/libkiwix'
-      }
     }
-  }.withXml {
-    def dependenciesNode = asNode().appendNode('dependencies')
-
-    //Iterate over the implementation dependencies, adding a <dependency> node for each
-    configurations.implementation.allDependencies.each {
-      def dependencyNode = dependenciesNode.appendNode('dependency')
-      dependencyNode.appendNode('groupId', it.group)
-      dependencyNode.appendNode('artifactId', it.name)
-      dependencyNode.appendNode('version', it.version)
-    }
-  }.writeTo("$buildDir/pom.xml")
 }
 
