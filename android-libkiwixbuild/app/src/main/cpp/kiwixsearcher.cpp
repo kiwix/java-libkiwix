@@ -22,9 +22,9 @@
 #include "org_kiwix_kiwixlib_JNIKiwixSearcher.h"
 #include "org_kiwix_kiwixlib_JNIKiwixSearcher_Result.h"
 
-#include "reader.h"
-#include "searcher.h"
-#include "utils.h"
+#include <reader.h>
+#include <searcher.h>
+#include <utils.h>
 
 #define SEARCHER (Handle<kiwix::Searcher>::getHandle(env, obj))
 #define RESULT (Handle<kiwix::Result>::getHandle(env, obj))

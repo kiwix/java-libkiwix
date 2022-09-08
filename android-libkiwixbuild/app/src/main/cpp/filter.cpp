@@ -22,7 +22,7 @@
 #include "org_kiwix_kiwixlib_Filter.h"
 
 #include <library.h>
-#include "utils.h"
+#include <utils.h>
 
 /* Kiwix Reader JNI functions */
 METHOD0(void, Filter, allocate) {

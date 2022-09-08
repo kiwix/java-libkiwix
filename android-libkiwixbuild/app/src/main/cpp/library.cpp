@@ -21,9 +21,9 @@
 #include <jni.h>
 #include "org_kiwix_kiwixlib_Library.h"
 
-#include "library.h"
-#include "reader.h"
-#include "utils.h"
+#include <library.h>
+#include <reader.h>
+#include <utils.h>
 
 /* Kiwix Reader JNI functions */
 JNIEXPORT void JNICALL
@@ -55,7 +55,7 @@ Java_org_kiwix_kiwixlib_Library_addBook(
     return LIBRARY->addBook(book);
   } catch (std::exception& e) {
     LOG("Unable to add the book");
-    LOG(e.what()); }
+       LOG("%s", e.what()); }
   return false;
 }
 

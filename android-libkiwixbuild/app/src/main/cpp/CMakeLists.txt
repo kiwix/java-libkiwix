@@ -22,7 +22,6 @@ add_library( # Sets the name of the library.
 
         # Provides a relative path to your source file(s).
         filter.cpp
-        kiwixicu.cpp
         kiwixreader.cpp
         kiwixsearcher.cpp
         library.cpp
@@ -36,12 +35,21 @@ add_library(libzim SHARED IMPORTED)
 set_target_properties(libzim PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/../../main/jniLibs/${ANDROID_ABI}/libzim.so)
 target_include_directories(libkiwix
         INTERFACE /home/hp-pc/Documents/android-publisher/android-libkiwixbuild/app/src/main/cpp/include)
+target_include_directories(libkiwix
+        INTERFACE /home/hp-pc/Desktop/c_test/icu-main/icu4c/source/common/unicode
+        )
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by
 # default, you only need to specify the name of the public NDK library
 # you want to add. CMake verifies that the library exists before
 # completing its build.
 
+find_library( # Sets the name of the path variable.
+        log-lib
+
+        # Specifies the name of the NDK library that
+        # you want CMake to locate.
+        log)
 
 # Specifies libraries CMake should link to your target library. You
 # can link multiple libraries, such as libraries you define in this
@@ -51,6 +59,7 @@ target_link_libraries( # Specifies the target library.
         kiwix
         libkiwix
         libzim
+
         # Links the target library to the log library
         # included in the NDK.
         ${log-lib})
