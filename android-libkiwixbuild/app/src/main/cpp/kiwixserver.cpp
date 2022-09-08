@@ -22,9 +22,9 @@
 #include <jni.h>
 #include "org_kiwix_kiwixlib_JNIKiwixServer.h"
 
-#include "base64.h"
-#include "server.h"
-#include "utils.h"
+#include <base64.h>
+#include <server.h>
+#include <utils.h>
 
 /* Kiwix Reader JNI functions */
 JNIEXPORT jlong JNICALL Java_org_kiwix_kiwixlib_JNIKiwixServer_getNativeServer(
@@ -38,7 +38,7 @@ JNIEXPORT jlong JNICALL Java_org_kiwix_kiwixlib_JNIKiwixServer_getNativeServer(
     return reinterpret_cast<jlong>(new Handle<kiwix::Server>(server));
   } catch (std::exception& e) {
     LOG("Error creating the server");
-    LOG(e.what());
+    LOG("%s", e.what());
     return 0;
   }
 }
@@ -55,7 +55,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixServer_dispose(JNIEnv* env, jobject obj)
 JNIEXPORT void JNICALL
 Java_org_kiwix_kiwixlib_JNIKiwixServer_setRoot(JNIEnv* env, jobject obj, jstring jRoot)
 {
-  std::string root = jni2c(jRoot, env);
+  std::basic_string<char, std::char_traits<char>, std::allocator<char>> root = jni2c(jRoot, env);
   SERVER->setRoot(root);
 }
 

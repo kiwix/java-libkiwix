@@ -18,14 +18,14 @@
  * MA 02110-1301, USA.
  */
 
-
+#include <android/log.h>
 #include <jni.h>
 #include <exception>
 #include "org_kiwix_kiwixlib_JNIKiwixReader.h"
 
-#include "base64.h"
-#include "reader.h"
-#include "utils.h"
+#include <base64.h>
+#include <reader.h>
+#include <utils.h>
 
 /* Kiwix Reader JNI functions */
 JNIEXPORT jlong JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getNativeReader(
@@ -40,7 +40,7 @@ JNIEXPORT jlong JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getNativeReader(
     return reinterpret_cast<jlong>(new Handle<kiwix::Reader>(reader));
   } catch (std::exception& e) {
     LOG("Error opening ZIM file");
-    LOG(e.what());
+      LOG("%s", e.what());
     return 0;
   }
 }
@@ -78,7 +78,7 @@ JNIEXPORT jlong JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getNativeReaderBy
     return reinterpret_cast<jlong>(new Handle<kiwix::Reader>(reader));
   } catch (std::exception& e) {
     LOG("Error opening ZIM file");
-    LOG(e.what());
+       LOG("%s", e.what());
     return 0;
   }
 #else
@@ -101,7 +101,7 @@ JNIEXPORT jlong JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getNativeReaderEm
     return reinterpret_cast<jlong>(new Handle<kiwix::Reader>(reader));
   } catch (std::exception& e) {
     LOG("Error opening ZIM file");
-    LOG(e.what());
+       LOG("%s", e.what());
     return 0;
   }
 #else
@@ -130,7 +130,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getMainPage(JNIEnv* env, jobject obj)
     url = c2jni(cUrl, env);
   } catch (std::exception& e) {
     LOG("Unable to get ZIM main page");
-    LOG(e.what());
+       LOG("%s", e.what());
     url = NULL;
   }
   return url;
@@ -146,7 +146,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getId(JNIEnv* env, jobject obj)
     id = c2jni(cId, env);
   } catch (std::exception& e) {
     LOG("Unable to get ZIM id");
-    LOG(e.what());
+       LOG("%s", e.what());
     id = NULL;
   }
 
@@ -163,7 +163,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getFileSize(JNIEnv* env, jobject obj)
     size = c2jni(cSize, env);
   } catch (std::exception& e) {
     LOG("Unable to get ZIM file size");
-    LOG(e.what());
+       LOG("%s", e.what());
   }
 
   return size;
@@ -179,7 +179,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getCreator(JNIEnv* env, jobject obj)
     creator = c2jni(cCreator, env);
   } catch (std::exception& e) {
     LOG("Unable to get ZIM creator");
-    LOG(e.what());
+       LOG("%s", e.what());
     creator = NULL;
   }
 
@@ -196,7 +196,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getPublisher(JNIEnv* env, jobject obj)
     publisher = c2jni(cPublisher, env);
   } catch (std::exception& e) {
     LOG("Unable to get ZIM publish");
-    LOG(e.what());
+       LOG("%s", e.what());
     publisher = NULL;
   }
   return publisher;
@@ -212,7 +212,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getName(JNIEnv* env, jobject obj)
     name = c2jni(cName, env);
   } catch (std::exception& e) {
     LOG("Unable to get ZIM name");
-    LOG(e.what());
+       LOG("%s", e.what());
     name = NULL;
   }
   return name;
@@ -232,7 +232,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getFavicon(JNIEnv* env, jobject obj)
         env);
   } catch (std::exception& e) {
     LOG("Unable to get ZIM favicon");
-    LOG(e.what());
+       LOG("%s", e.what());
     favicon = NULL;
   }
   return favicon;
@@ -248,7 +248,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getDate(JNIEnv* env, jobject obj)
     date = c2jni(cDate, env);
   } catch (std::exception& e) {
     LOG("Unable to get ZIM date");
-    LOG(e.what());
+       LOG("%s", e.what());
     date = NULL;
   }
   return date;
@@ -264,7 +264,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getLanguage(JNIEnv* env, jobject obj)
     language = c2jni(cLanguage, env);
   } catch (std::exception& e) {
     LOG("Unable to get ZIM language");
-    LOG(e.what());
+       LOG("%s", e.what());
     language = NULL;
   }
 
@@ -283,7 +283,7 @@ JNIEXPORT jstring JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getMimeType(
     mimeType = c2jni(cMimeType, env);
   } catch (std::exception& e) {
     LOG("Unable to get mime-type for url: %s", cUrl.c_str());
-    LOG(e.what());
+       LOG("%s", e.what());
     mimeType = NULL;
   }
   return mimeType;
@@ -334,7 +334,7 @@ JNIEXPORT jbyteArray JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getContent(
     }
   } catch (std::exception& e) {
     LOG("Unable to get content for url: %s", cUrl.c_str());
-    LOG(e.what());
+       LOG("%s", e.what());
   }
 
   return data;
@@ -366,7 +366,7 @@ JNIEXPORT jbyteArray JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getContentPa
     }
   } catch (std::exception& e) {
     LOG("Unable to get partial content for url: %s (%u : %u)", cUrl.c_str(), cOffset, cLen);
-    LOG(e.what());
+       LOG("%s", e.what());
   }
   return data;
 }
@@ -382,7 +382,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getArticleSize(
     return c2jni(entry.getSize(), env);
   } catch(std::exception& e) {
     LOG("Unable to get size for url : %s", cUrl.c_str());
-    LOG(e.what());
+       LOG("%s", e.what());
   }
   return c2jni(0, env);
 }
@@ -404,7 +404,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getDirectAccessInformation(
     setDaiObjValue(part_info.first, part_info.second, dai, env);
   } catch (std::exception& e) {
     LOG("Unable to get direct access info for url: %s", cUrl.c_str());
-    LOG(e.what());
+       LOG("%s", e.what());
   }
   return dai;
 }
@@ -428,7 +428,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_searchSuggestions(JNIEnv* env,
 #pragma GCC diagnostic pop
   } catch (std::exception& e) {
     LOG("Unable to get search results for pattern: %s", cPrefix.c_str());
-    LOG(e.what());
+       LOG("%s", e.what());
   }
 
   return retVal;
@@ -455,7 +455,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getNextSuggestion(JNIEnv* env,
 #pragma GCC diagnostic pop
   } catch (std::exception& e) {
     LOG("Unable to get next suggestion");
-    LOG(e.what());
+       LOG("%s", e.what());
   }
 
   return retVal;
@@ -476,7 +476,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getPageUrlFromTitle(JNIEnv* env,
     return JNI_TRUE;
   } catch (std::exception& e) {
     LOG("Unable to get url for title %s: ", cTitle.c_str());
-    LOG(e.what());
+       LOG("%s", e.what());
   }
 
   return JNI_FALSE;
@@ -492,7 +492,7 @@ JNIEXPORT jstring JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getTitle(
     title = c2jni(cTitle, env);
   } catch (std::exception& e) {
     LOG("Unable to get zim title");
-    LOG(e.what());
+       LOG("%s", e.what());
     title = NULL;
   }
   return title;
@@ -508,7 +508,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getDescription(JNIEnv* env, jobject obj)
     description = c2jni(cDescription, env);
   } catch (std::exception& e) {
     LOG("Unable to get zim description");
-    LOG(e.what());
+       LOG("%s", e.what());
     description = NULL;
   }
   return description;
@@ -523,7 +523,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getArticleCount(JNIEnv* env, jobject obj)
     articleCount = c2jni(cArticleCount, env);
   } catch (std::exception& e) {
     LOG("Unable to get article count.");
-    LOG(e.what());
+       LOG("%s", e.what());
   }
   return articleCount;
 }
@@ -537,7 +537,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getMediaCount(JNIEnv* env, jobject obj)
     mediaCount = c2jni(cMediaCount, env);
   } catch (std::exception& e) {
     LOG("Unable to get media count.");
-    LOG(e.what());
+       LOG("%s", e.what());
   }
   return mediaCount;
 }
@@ -555,7 +555,7 @@ JNIEXPORT jboolean JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getRandomPage(
     retVal = JNI_TRUE;
   } catch (std::exception& e) {
     LOG("Unable to get random page");
-    LOG(e.what());
+       LOG("%s", e.what());
   }
   return retVal;
 }
