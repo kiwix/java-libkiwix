@@ -17,6 +17,7 @@ android {
         externalNativeBuild {
             cmake {
                 cppFlags ''
+                arguments "-DANDROID_STL=c++_shared"
             }
         }
     }
@@ -43,6 +44,7 @@ android {
     buildFeatures {
         viewBinding true
     }
+    ndkVersion '21.4.7075529'
 
 }
 

@@ -50,8 +50,8 @@ JNIEXPORT void JNICALL Java_org_kiwix_kiwixlib_JNIKiwixSearcher_addReader(
     JNIEnv* env, jobject obj, jobject reader)
 {
   auto searcher = SEARCHER;
-
-  searcher->add_reader(*(Handle<kiwix::Reader>::getHandle(env, reader)));
+  auto sharedPtr = shared_ptr<kiwix::Reader>(*(Handle<kiwix::Reader>::getHandle(env, reader)), NoDelete());
+  searcher->add_reader(sharedPtr);
 }
 
 JNIEXPORT void JNICALL Java_org_kiwix_kiwixlib_JNIKiwixSearcher_search(
@@ -64,8 +64,7 @@ JNIEXPORT void JNICALL Java_org_kiwix_kiwixlib_JNIKiwixSearcher_search(
 }
 
 JNIEXPORT jobject JNICALL
-Java_org_kiwix_kiwixlib_JNIKiwixSearcher_getNextResult(JNIEnv* env,
-                                                         jobject obj)
+Java_org_kiwix_kiwixlib_JNIKiwixSearcher_getNextResult(JNIEnv* env,jobject obj)
 {
   jobject result = nullptr;
 

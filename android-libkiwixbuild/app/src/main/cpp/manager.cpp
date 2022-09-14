@@ -21,8 +21,8 @@
 #include <jni.h>
 #include "org_kiwix_kiwixlib_Manager.h"
 
-#include <manager.h>
-#include <utils.h>
+#include "manager.h"
+#include "utils.h"
 
 
 JNIEXPORT void JNICALL
@@ -85,7 +85,7 @@ Java_org_kiwix_kiwixlib_Manager_readOpds(
     return MANAGER->readOpds(cContent, cUrl);
   } catch (std::exception& e) {
     LOG("Unable to get ZIM id");
-      LOG("%s", e.what());
+    LOG("%s",e.what());
   }
 
   return false;
@@ -106,6 +106,8 @@ Java_org_kiwix_kiwixlib_Manager_readBookmarkFile(
 
   return false;
 }
+
+
 
 JNIEXPORT jstring JNICALL
 Java_org_kiwix_kiwixlib_Manager_addBookFromPath(
