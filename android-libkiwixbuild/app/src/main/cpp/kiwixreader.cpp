@@ -27,6 +27,16 @@
 #include <reader.h>
 #include <utils.h>
 
+#include "org_kiwix_kiwixlib_JNIICU.h"
+
+#include <iostream>
+#include <string>
+
+#include "unicode/putil.h"
+
+#include "include/zim/tools.h"
+
+
 /* Kiwix Reader JNI functions */
 JNIEXPORT jlong JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getNativeReader(
     JNIEnv* env, jobject obj, jstring filename)
@@ -558,4 +568,18 @@ JNIEXPORT jboolean JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getRandomPage(
        LOG("%s", e.what());
   }
   return retVal;
+}
+
+
+JNIEXPORT void JNICALL Java_org_kiwix_kiwixlib_JNIICU_setICUDataDirectory(JNIEnv *env, jclass clazz,
+                                                   jstring icu_data_dir) {
+
+    std::string cPath = jni2c(icu_data_dir, env);
+
+    Lock l;
+    try {
+      zim::setICUDataDirectory(cPath.c_str());
+    } catch (...) {
+        std::cerr << "Unable to set data directory " << cPath << std::endl;
+    }
 }

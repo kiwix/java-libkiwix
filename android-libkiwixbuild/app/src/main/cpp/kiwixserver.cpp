@@ -26,6 +26,8 @@
 #include <server.h>
 #include <utils.h>
 
+std::mutex globalLock;
+
 /* Kiwix Reader JNI functions */
 JNIEXPORT jlong JNICALL Java_org_kiwix_kiwixlib_JNIKiwixServer_getNativeServer(
     JNIEnv* env, jobject obj, jobject jLibrary)
@@ -101,3 +103,4 @@ Java_org_kiwix_kiwixlib_JNIKiwixServer_stop(JNIEnv* env, jobject obj)
 {
   SERVER->stop();
 }
+

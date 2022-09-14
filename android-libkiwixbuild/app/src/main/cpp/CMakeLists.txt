@@ -38,33 +38,35 @@ set_property(TARGET zim PROPERTY IMPORTED_LOCATION /home/hp-pc/Documents/android
 #
 find_library(libkiwix
         kiwix # Lib's full name in this case - libfoo.so
-        PATHS /home/hp-pc/Documents/android-publisher/android-libkiwixbuild/app/src/main/jniLibs/${ANDROID_ABI})
+        PATHS
+        /home/hp-pc/Desktop/final_lib_kiwix_build/java-libkiwix/android-libkiwixbuild/app/src/main/jniLibs/${ANDROID_ABI}/libkiwix)
 if (NOT libkiwix)
-        message(FATAL_ERROR "kiwix not found!")
+        message(FATAL_ERROR "kiwix not found! ")
 endif()
 
 find_library(libzim
         zim # Lib's full name in this case - libfoo.so
-        PATHS /home/hp-pc/Documents/android-publisher/android-libkiwixbuild/app/src/main/jniLibs/${ANDROID_ABI})
+        PATHS
+        /home/hp-pc/Desktop/final_lib_kiwix_build/java-libkiwix/android-libkiwixbuild/app/src/main/jniLibs/${ANDROID_ABI}/libzim)
 if (NOT libzim)
         message(FATAL_ERROR "libzim not found!")
 endif()
 add_library(libkiwix SHARED IMPORTED)
 
-set_property(TARGET libkiwix PROPERTY IMPORTED_LOCATION /home/hp-pc/Documents/android-publisher/android-libkiwixbuild/app/src/main/jniLibs/${ANDROID_ABI}/libkiwix.so)
+set_property(TARGET libkiwix
+        PROPERTY
+        IMPORTED_LOCATION
+        /home/hp-pc/Desktop/final_lib_kiwix_build/java-libkiwix/android-libkiwixbuild/app/src/main/jniLibs/${ANDROID_ABI}/libkiwix/libkiwix.so)
 add_library(libzim SHARED IMPORTED)
 
-set_property(TARGET libzim PROPERTY IMPORTED_LOCATION /home/hp-pc/Documents/android-publisher/android-libkiwixbuild/app/src/main/jniLibs/${ANDROID_ABI}/libzim.so)
+set_property(TARGET
+        libzim
+        PROPERTY
+        IMPORTED_LOCATION
+        /home/hp-pc/Desktop/final_lib_kiwix_build/java-libkiwix/android-libkiwixbuild/app/src/main/jniLibs/${ANDROID_ABI}/libzim/libzim.so)
 include_directories(/home/hp-pc/Documents/android-publisher/android-libkiwixbuild/app/src/main/cpp/include)
 include_directories(/home/hp-pc/Desktop/c_test/icu-main/icu4c/source/common/unicode)
-target_link_libraries( # Specifies the target library.
-        buildkiwix
-        libkiwix
-        libzim
-        # Links the target library to the log library
-        # included in the NDK.
-        ${log-lib}
-        )
+
 
 
 
@@ -87,5 +89,12 @@ find_library( # Sets the name of the path variable.
 
 
 
-
+target_link_libraries( # Specifies the target library.
+        buildkiwix
+        libkiwix
+        libzim
+        # Links the target library to the log library
+        # included in the NDK.
+        ${log-lib}
+        )
 
