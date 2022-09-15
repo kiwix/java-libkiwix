@@ -18,6 +18,7 @@
  * MA 02110-1301, USA.
  */
 
+/*
 #include <jni.h>
 #include "org_kiwix_kiwixlib_JNIICU.h"
 
@@ -30,7 +31,7 @@
 
 std::mutex globalLock;
 
-JNIEXPORT void JNICALL Java_org_kiwix_kiwixlib_JNIICU_setDataDataDirectory(
+JNIEXPORT void JNICALL Java_org_kiwix_kiwixlib_JNIICU_setDataDirectory(
         JNIEnv* env, jclass kclass, jstring dirStr)
 {
 std::string cPath = jni2c(dirStr, env);
@@ -38,6 +39,30 @@ std::string cPath = jni2c(dirStr, env);
 Lock l;
 try {
 u_setDataDirectory(cPath.c_str());
+} catch (...) {
+std::cerr << "Unable to set data directory " << cPath << std::endl;
+}
+}*/
+
+
+#include <jni.h>
+#include "org_kiwix_kiwixlib_JNIICU.h"
+
+#include <iostream>
+#include <string>
+#include "include/zim/tools.h"
+#include "utils.h"
+
+
+
+JNIEXPORT void JNICALL Java_org_kiwix_kiwixlib_JNIICU_setDataDirectory(
+        JNIEnv* env, jclass kclass, jstring dirStr)
+{
+std::string cPath = jni2c(dirStr, env);
+
+Lock l;
+try {
+    zim::setICUDataDirectory(cPath);
 } catch (...) {
 std::cerr << "Unable to set data directory " << cPath << std::endl;
 }

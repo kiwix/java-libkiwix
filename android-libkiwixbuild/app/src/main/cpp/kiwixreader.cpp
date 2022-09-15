@@ -569,6 +569,7 @@ JNIEXPORT jboolean JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getRandomPage(
   }
   return retVal;
 }
+/*
 
 
 JNIEXPORT void JNICALL Java_org_kiwix_kiwixlib_JNIICU_setICUDataDirectory(JNIEnv *env, jclass clazz,
@@ -582,4 +583,5 @@ JNIEXPORT void JNICALL Java_org_kiwix_kiwixlib_JNIICU_setICUDataDirectory(JNIEnv
     } catch (...) {
         std::cerr << "Unable to set data directory " << cPath << std::endl;
     }
-}
+}*/
+

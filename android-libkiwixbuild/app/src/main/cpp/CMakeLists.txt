@@ -28,7 +28,8 @@ add_library(
         library.cpp
         manager.cpp
         kiwixserver.cpp
-        )
+        kiwixicu.cpp
+)
 #[[add_library(kiwix SHARED IMPORTED)
 
 set_property(TARGET kiwix PROPERTY IMPORTED_LOCATION /home/hp-pc/Documents/android-publisher/android-libkiwixbuild/app/src/main/jniLibs/${ANDROID_ABI}/libkiwix.so)
@@ -39,15 +40,15 @@ set_property(TARGET zim PROPERTY IMPORTED_LOCATION /home/hp-pc/Documents/android
 find_library(libkiwix
         kiwix # Lib's full name in this case - libfoo.so
         PATHS
-        /home/hp-pc/Desktop/final_lib_kiwix_build/java-libkiwix/android-libkiwixbuild/app/src/main/jniLibs/${ANDROID_ABI}/libkiwix)
+        ${CMAKE_SOURCE_DIR}/../jniLibs/${CMAKE_ANDROID_ARCH_ABI}/libkiwix)
 if (NOT libkiwix)
-        message(FATAL_ERROR "kiwix not found! ")
+        message(FATAL_ERROR "kiwix not found! -->  ${CMAKE_SOURCE_DIR} ")
 endif()
 
 find_library(libzim
         zim # Lib's full name in this case - libfoo.so
         PATHS
-        /home/hp-pc/Desktop/final_lib_kiwix_build/java-libkiwix/android-libkiwixbuild/app/src/main/jniLibs/${ANDROID_ABI}/libzim)
+        ${CMAKE_SOURCE_DIR}/../jniLibs/${CMAKE_ANDROID_ARCH_ABI}/libzim)
 if (NOT libzim)
         message(FATAL_ERROR "libzim not found!")
 endif()
@@ -56,14 +57,14 @@ add_library(libkiwix SHARED IMPORTED)
 set_property(TARGET libkiwix
         PROPERTY
         IMPORTED_LOCATION
-        /home/hp-pc/Desktop/final_lib_kiwix_build/java-libkiwix/android-libkiwixbuild/app/src/main/jniLibs/${ANDROID_ABI}/libkiwix/libkiwix.so)
+        ${CMAKE_SOURCE_DIR}/../jniLibs/${CMAKE_ANDROID_ARCH_ABI}//libkiwix/libkiwix.so)
 add_library(libzim SHARED IMPORTED)
 
 set_property(TARGET
         libzim
         PROPERTY
         IMPORTED_LOCATION
-        /home/hp-pc/Desktop/final_lib_kiwix_build/java-libkiwix/android-libkiwixbuild/app/src/main/jniLibs/${ANDROID_ABI}/libzim/libzim.so)
+        ${CMAKE_SOURCE_DIR}/../jniLibs/${CMAKE_ANDROID_ARCH_ABI}/libzim/libzim.so)
 include_directories(/home/hp-pc/Documents/android-publisher/android-libkiwixbuild/app/src/main/cpp/include)
 include_directories(/home/hp-pc/Desktop/c_test/icu-main/icu4c/source/common/unicode)
 

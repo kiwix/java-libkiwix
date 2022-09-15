@@ -27,6 +27,9 @@ public class JNIKiwix
 {
   public JNIKiwix(final Context context){
     ReLinker.loadLibrary(context, "kiwix");
+    ReLinker.loadLibrary(context, "zim");
+    ReLinker.loadLibrary(context, "buildkiwix");
+    ReLinker.loadLibrary(context, "c++_shared");
   }
 
   public void setDataDirectory(String icuDataDir) {
