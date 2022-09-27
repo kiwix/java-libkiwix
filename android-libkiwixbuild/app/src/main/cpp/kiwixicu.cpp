@@ -44,7 +44,7 @@ std::cerr << "Unable to set data directory " << cPath << std::endl;
 }
 }*/
 
-
+#include "unicode/putil.h"
 #include <jni.h>
 #include "org_kiwix_kiwixlib_JNIICU.h"
 
@@ -59,9 +59,9 @@ JNIEXPORT void JNICALL Java_org_kiwix_kiwixlib_JNIICU_setDataDirectory(
         JNIEnv* env, jclass kclass, jstring dirStr)
 {
 std::string cPath = jni2c(dirStr, env);
-
 Lock l;
-try {
+try
+{
     zim::setICUDataDirectory(cPath);
 } catch (...) {
 std::cerr << "Unable to set data directory " << cPath << std::endl;

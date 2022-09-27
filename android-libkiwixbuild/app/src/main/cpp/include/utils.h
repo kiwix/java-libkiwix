@@ -257,3 +257,9 @@ inline void setDaiObjValue(const std::string& filename, const long offset,
 }
 
 #endif // _ANDROID_JNI_UTILS_H
+
+
+struct NoDelete
+{
+    template<class T> void operator()(T*) {}
+};
