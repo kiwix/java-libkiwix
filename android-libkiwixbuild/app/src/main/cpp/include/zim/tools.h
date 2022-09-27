@@ -17,8 +17,8 @@
  *
  */
 
-#ifndef ZIM_TOOLS_H
-#define ZIM_TOOLS_H
+
+
 
 #include "zim_config.h"
 
@@ -37,4 +37,3 @@ namespace zim {
 
 }
 
-#endif // ZIM_TOOLS_H
