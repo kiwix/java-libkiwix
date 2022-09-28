@@ -126,7 +126,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getMainPage(JNIEnv* env, jobject obj)
   jstring url;
 
   try {
-    std::string cUrl = READER->getMainPage().getPath();
+    std::string cUrl = READER->getMainPage().getFinalEntry().getPath();
     url = c2jni(cUrl, env);
   } catch (std::exception& e) {
     LOG("Unable to get ZIM main page");
