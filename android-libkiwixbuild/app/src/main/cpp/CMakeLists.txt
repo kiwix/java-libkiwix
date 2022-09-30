@@ -53,7 +53,10 @@ set_property(TARGET
 
 
 
-include_directories(${CMAKE_SOURCE_DIR}/include/)
+include_directories(${CMAKE_SOURCE_DIR}/include/libkiwix)
+include_directories(${CMAKE_SOURCE_DIR}/include/icu)
+include_directories(${CMAKE_SOURCE_DIR}/include/libzim)
+
 find_library(
         log-lib
         log)
