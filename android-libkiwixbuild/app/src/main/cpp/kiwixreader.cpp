@@ -34,7 +34,7 @@
 
 #include "unicode/putil.h"
 
-#include "include/zim/tools.h"
+#include "zim/tools.h"
 
 
 /* Kiwix Reader JNI functions */

@@ -50,7 +50,7 @@ std::cerr << "Unable to set data directory " << cPath << std::endl;
 
 #include <iostream>
 #include <string>
-#include "include/zim/tools.h"
+#include "zim/tools.h"
 #include "utils.h"
 
 
