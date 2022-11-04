@@ -22,101 +22,122 @@
 #include "org_kiwix_kiwixlib_JNIKiwixSearcher.h"
 #include "org_kiwix_kiwixlib_JNIKiwixSearcher_Result.h"
 
-#include <reader.h>
-#include <searcher.h>
 #include <utils.h>
+#include <zim/search.h>
+#include <zim/item.h>
+#include <zim/suggestion.h>
+#include "library.h"
 
-#define SEARCHER (Handle<kiwix::Searcher>::getHandle(env, obj))
-#define RESULT (Handle<kiwix::Result>::getHandle(env, obj))
+#define SEARCHER (Handle<zim::Searcher>::getHandle(env, obj))
+#define RESULT (Handle<zim::SearchResultSet>::getHandle(env, obj))
 
 
 JNIEXPORT void JNICALL
 Java_org_kiwix_kiwixlib_JNIKiwixSearcher_dispose(JNIEnv* env, jobject obj)
 {
-  Handle<kiwix::Searcher>::dispose(env, obj);
+  Handle<zim::Searcher>::dispose(env, obj);
 }
 
 /* Kiwix Reader JNI functions */
 JNIEXPORT jlong JNICALL
 Java_org_kiwix_kiwixlib_JNIKiwixSearcher_getNativeHandle(JNIEnv* env,
-                                                          jobject obj)
-{
-  kiwix::Searcher* searcher = new kiwix::Searcher();
-  return reinterpret_cast<jlong>(new Handle<kiwix::Searcher>(searcher));
-}
-
-/* Kiwix library functions */
-JNIEXPORT void JNICALL Java_org_kiwix_kiwixlib_JNIKiwixSearcher_addReader(
-    JNIEnv* env, jobject obj, jobject reader)
-{
-  auto searcher = SEARCHER;
-  auto sharedPtr = shared_ptr<kiwix::Reader>(*(Handle<kiwix::Reader>::getHandle(env, reader)), NoDelete());
-  searcher->add_reader(sharedPtr);
+                                                          jobject obj, jstring filename)
+  {
+  std::string cPath = jni2c(filename, env);
+  zim::Archive* archive = new zim::Archive(cPath);
+  zim::Searcher* searcher = new zim::Searcher(*archive);
+  return reinterpret_cast<jlong>(new Handle<zim::Searcher>(searcher));
 }
 
 JNIEXPORT void JNICALL Java_org_kiwix_kiwixlib_JNIKiwixSearcher_search(
-    JNIEnv* env, jobject obj, jstring query, jint count)
+    JNIEnv* env, jobject obj, jstring querySearch)
 {
-  std::string cquery = jni2c(query, env);
-  unsigned int ccount = jni2c(count, env);
-
-  SEARCHER->search(cquery, 0, ccount);
+  std::string cQuery = jni2c(querySearch, env);
+  zim::Query query;
+  query.setQuery(cQuery);
+  SEARCHER->search(query);
 }
 
 JNIEXPORT jobject JNICALL
-Java_org_kiwix_kiwixlib_JNIKiwixSearcher_getNextResult(JNIEnv* env,jobject obj)
+Java_org_kiwix_kiwixlib_JNIKiwixSearcher_getNextResult(JNIEnv* env,jobject obj, jstring querySearch)
 {
   jobject result = nullptr;
-
-  kiwix::Result* cresult = SEARCHER->getNextResult();
-  if (cresult != nullptr) {
+  std::string cQuery = jni2c(querySearch, env);
+  zim::Query query;
+  query.setQuery(cQuery);
+  zim::Search search = SEARCHER->search(query);
+  zim::SearchResultSet resultoutput = search.getResults(0,10);
+  zim::SearchResultSet* cresult = &resultoutput;
+    if (cresult != nullptr) {
     jclass resultclass
-        = env->FindClass("org/kiwix/kiwixlib/JNIKiwixSearcher$Result");
+        = env->FindClass("org/kiwix/kiwixlib/JNIKiwixSearcher$SearchResultSet");
     jmethodID ctor = env->GetMethodID(
         resultclass, "<init>", "(Lorg/kiwix/kiwixlib/JNIKiwixSearcher;JLorg/kiwix/kiwixlib/JNIKiwixSearcher;)V");
-    result = env->NewObject(resultclass, ctor, obj, reinterpret_cast<jlong>(new Handle<kiwix::Result>(cresult)), obj);
+    result = env->NewObject(resultclass, ctor, obj, reinterpret_cast<jlong>(new Handle<zim::SearchResultSet>(cresult)), obj);
   }
   return result;
 }
 
-JNIEXPORT void JNICALL Java_org_kiwix_kiwixlib_JNIKiwixSearcher_00024Result_dispose(
+JNIEXPORT void JNICALL Java_org_kiwix_kiwixlib_JNIKiwixSearcher_00024SearchResultSet_dispose(
     JNIEnv* env, jobject obj)
 {
-  Handle<kiwix::Result>::dispose(env, obj);
+  Handle<zim::SearchResultSet>::dispose(env, obj);
 }
 
 JNIEXPORT jstring JNICALL
-Java_org_kiwix_kiwixlib_JNIKiwixSearcher_00024Result_getUrl(JNIEnv* env,
+Java_org_kiwix_kiwixlib_JNIKiwixSearcher_00024SearchResultSet_getUrl(JNIEnv* env,
                                                         jobject obj)
 {
   try {
-    return c2jni(RESULT->get_url(), env);
-  } catch (...) {
-    return nullptr;
-  }
+     std::string getPath;
+     zim::SearchResultSet result = *(*RESULT);
+     for( auto searchIt = result.begin(); searchIt != result.end(); searchIt++) {
+          getPath = searchIt.getPath();
+     }
+     return c2jni(getPath, env);
+     } catch (...) {
+     return nullptr;
+     }
 }
 
 JNIEXPORT jstring JNICALL
-Java_org_kiwix_kiwixlib_JNIKiwixSearcher_00024Result_getTitle(JNIEnv* env,
+Java_org_kiwix_kiwixlib_JNIKiwixSearcher_00024SearchResultSet_getTitle(JNIEnv* env,
                                                           jobject obj)
 {
   try {
-    return c2jni(RESULT->get_title(), env);
+    std::string getTitle;
+    zim::SearchResultSet result = *(*RESULT);
+     for( auto searchIt = result.begin(); searchIt != result.end(); searchIt++) {
+          getTitle = searchIt.getTitle();
+     }
+    return c2jni(getTitle, env);
   } catch (...) {
     return nullptr;
   }
 }
 
 JNIEXPORT jstring JNICALL
-Java_org_kiwix_kiwixlib_JNIKiwixSearcher_00024Result_getSnippet(JNIEnv* env,
+Java_org_kiwix_kiwixlib_JNIKiwixSearcher_00024SearchResultSet_getSnippet(JNIEnv* env,
                                                             jobject obj)
 {
-  return c2jni(RESULT->get_snippet(), env);
+  std::string getSnippet;
+  zim::SearchResultSet result = *(*RESULT);
+  for( auto searchIt = result.begin(); searchIt != result.end(); searchIt++) {
+      getSnippet = searchIt.getSnippet();
+  }
+  return c2jni(getSnippet, env);
 }
 
 JNIEXPORT jstring JNICALL
-Java_org_kiwix_kiwixlib_JNIKiwixSearcher_00024Result_getContent(JNIEnv* env,
+Java_org_kiwix_kiwixlib_JNIKiwixSearcher_00024SearchResultSet_getContent(JNIEnv* env,
                                                             jobject obj)
 {
-  return c2jni(RESULT->get_content(), env);
+  std::string getContent;
+  zim::SearchResultSet result = *(*RESULT);
+  for( auto searchIt = result.begin(); searchIt != result.end(); searchIt++) {
+      auto entry = *searchIt;
+      auto item = entry.getItem(true);
+      getContent = item.getData().data();
+  }
+  return c2jni(getContent, env);
 }

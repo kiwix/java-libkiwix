@@ -20,6 +20,11 @@
 
 package org.kiwix.kiwixlib;
 
+import org.kiwix.kiwixlib.JNIKiwixException;
+import org.kiwix.kiwixlib.JNIKiwixString;
+import org.kiwix.kiwixlib.JNIKiwixInt;
+import org.kiwix.kiwixlib.JNIKiwixSearcher;
+import org.kiwix.kiwixlib.DirectAccessInfo;
 import java.io.FileDescriptor;
 
 public class JNIKiwixReader
@@ -132,11 +137,11 @@ public class JNIKiwixReader
 
   public native boolean getRandomPage(JNIKiwixString url);
 
-  public JNIKiwixSearcher search(String query, int count)
+  public JNIKiwixSearcher search(String query)
   {
     JNIKiwixSearcher searcher = new JNIKiwixSearcher();
     searcher.addKiwixReader(this);
-    searcher.search(query, count);
+    searcher.search(query);
     return searcher;
   }
 
@@ -144,7 +149,7 @@ public class JNIKiwixReader
   {
     nativeHandle = getNativeReader(filename);
     if (nativeHandle == 0) {
-        throw new JNIKiwixException("Cannot open zimfile "+filename);
+      throw new JNIKiwixException("Cannot open zimfile "+filename);
     }
   }
 
@@ -152,16 +157,16 @@ public class JNIKiwixReader
   {
     nativeHandle = getNativeReaderByFD(fd);
     if (nativeHandle == 0) {
-        throw new JNIKiwixException("Cannot open zimfile by fd "+fd.toString());
+      throw new JNIKiwixException("Cannot open zimfile by fd "+fd.toString());
     }
   }
 
   public JNIKiwixReader(FileDescriptor fd, long offset, long size)
-      throws JNIKiwixException
+          throws JNIKiwixException
   {
     nativeHandle = getNativeReaderEmbedded(fd, offset, size);
     if (nativeHandle == 0) {
-        throw new JNIKiwixException(String.format("Cannot open embedded zimfile (fd=%s, offset=%d, size=%d)", fd, offset, size));
+      throw new JNIKiwixException(String.format("Cannot open embedded zimfile (fd=%s, offset=%d, size=%d)", fd, offset, size));
     }
   }
 

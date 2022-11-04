@@ -21,6 +21,7 @@
 
 package org.kiwix.kiwixlib;
 
+import org.kiwix.kiwixlib.JNIKiwixReader;
 import java.util.Vector;
 
 public class JNIKiwixSearcher
@@ -43,12 +44,12 @@ public class JNIKiwixSearcher
 
   public JNIKiwixSearcher()
   {
-    nativeHandle = getNativeHandle();
+    nativeHandle = getNativeHandle("");
     usedReaders = new Vector();
   }
   public native void dispose();
 
-  private native long getNativeHandle();
+  private native long getNativeHandle(String filePath);
   private long nativeHandle;
   private Vector usedReaders;
 
@@ -59,8 +60,8 @@ public class JNIKiwixSearcher
     usedReaders.addElement(reader);
   };
 
-  public native void search(String query, int count);
+  public native void search(String query);
 
-  public native Result getNextResult();
+  public native Result getNextResult(String query);
   public native boolean hasMoreResult();
 }

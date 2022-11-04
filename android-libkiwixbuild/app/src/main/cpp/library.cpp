@@ -20,9 +20,9 @@
 
 #include <jni.h>
 #include "org_kiwix_kiwixlib_Library.h"
-
+#include <zim/archive.h>
+#include <zim/zim.h>
 #include <library.h>
-#include <reader.h>
 #include <utils.h>
 
 /* Kiwix Reader JNI functions */
@@ -49,9 +49,9 @@ Java_org_kiwix_kiwixlib_Library_addBook(
   auto cPath = jni2c(path, env);
 
   try {
-    kiwix::Reader reader(cPath);
+    zim::Archive archive(cPath);
     kiwix::Book book;
-    book.update(reader);
+    book.update(archive);
     return LIBRARY->addBook(book);
   } catch (std::exception& e) {
     LOG("Unable to add the book");

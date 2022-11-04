@@ -24,7 +24,7 @@
 #include "org_kiwix_kiwixlib_JNIKiwixReader.h"
 
 #include <base64.h>
-#include <reader.h>
+
 #include <utils.h>
 
 #include "org_kiwix_kiwixlib_JNIICU.h"
@@ -33,9 +33,91 @@
 #include <string>
 
 #include "unicode/putil.h"
+#include <zim/archive.h>
+#include <zim/search.h>
+#include <zim/item.h>
+#include <zim/suggestion.h>
+#include "library.h"
+#include "book.h"
 
-#include "zim/tools.h"
+#include "include/zim/tools.h"
+#include <unicode/normlzr.h>
+#include <unicode/rep.h>
+#include <unicode/ucnv.h>
+#include <unicode/uniset.h>
+#include <unicode/ustring.h>
+#include <unicode/unistr.h>
 
+class SuggestItem
+{
+  // Functions
+  public:
+    // Create a sugggestion item.
+    explicit SuggestItem(const std::string& title, const std::string& path) :
+      title(title),
+      path(path) {}
+
+  public:
+    const std::string& getTitle() const  { return title;}
+    const std::string& getPath() const   { return path;}
+
+  // Data
+  private:
+    std::string title;
+    std::string path;
+};
+
+  using SuggestionsList_t = std::vector<SuggestItem>;
+
+  SuggestionsList_t suggestions;
+  SuggestionsList_t::iterator suggestionsOffset;
+
+std::string ucFirst(const std::string& word)
+{
+  if (word.empty()) {
+    return "";
+  }
+
+  std::string result;
+
+  icu::UnicodeString unicodeWord(word.c_str());
+  auto unicodeFirstLetter = icu::UnicodeString(unicodeWord, 0, 1).toUpper();
+  unicodeWord.replace(0, 1, unicodeFirstLetter);
+  unicodeWord.toUTF8String(result);
+
+  return result;
+}
+
+std::string lcFirst(const std::string& word)
+{
+  if (word.empty()) {
+    return "";
+  }
+
+  std::string result;
+
+  icu::UnicodeString unicodeWord(word.c_str());
+  auto unicodeFirstLetter = icu::UnicodeString(unicodeWord, 0, 1).toLower();
+  unicodeWord.replace(0, 1, unicodeFirstLetter);
+  unicodeWord.toUTF8String(result);
+
+  return result;
+}
+
+std::string toTitle(const std::string& word)
+{
+  if (word.empty()) {
+    return "";
+  }
+
+  std::string result;
+
+  icu::UnicodeString unicodeWord(word.c_str());
+  unicodeWord = unicodeWord.toTitle(0);
+  unicodeWord.toUTF8String(result);
+
+  return result;
+}
 
 /* Kiwix Reader JNI functions */
 JNIEXPORT jlong JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getNativeReader(
@@ -46,8 +128,8 @@ JNIEXPORT jlong JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getNativeReader(
   LOG("Attempting to create reader with: %s", cPath.c_str());
   Lock l;
   try {
-    kiwix::Reader* reader = new kiwix::Reader(cPath);
-    return reinterpret_cast<jlong>(new Handle<kiwix::Reader>(reader));
+    zim::Archive* reader = new zim::Archive(cPath);
+    return reinterpret_cast<jlong>(new Handle<zim::Archive>(reader));
   } catch (std::exception& e) {
     LOG("Error opening ZIM file");
       LOG("%s", e.what());
@@ -84,8 +166,8 @@ JNIEXPORT jlong JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getNativeReaderBy
   LOG("Attempting to create reader with fd: %d", fd);
   Lock l;
   try {
-    kiwix::Reader* reader = new kiwix::Reader(fd);
-    return reinterpret_cast<jlong>(new Handle<kiwix::Reader>(reader));
+    zim::Archive* reader = new zim::Archive(fd);
+    return reinterpret_cast<jlong>(new Handle<zim::Archive>(reader));
   } catch (std::exception& e) {
     LOG("Error opening ZIM file");
        LOG("%s", e.what());
@@ -107,8 +189,8 @@ JNIEXPORT jlong JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getNativeReaderEm
   LOG("Attempting to create reader with fd: %d", fd);
   Lock l;
   try {
-    kiwix::Reader* reader = new kiwix::Reader(fd, offset, size);
-    return reinterpret_cast<jlong>(new Handle<kiwix::Reader>(reader));
+    zim::Archive* reader = new zim::Archive(fd, offset, size);
+    return reinterpret_cast<jlong>(new Handle<zim::Archive>(reader));
   } catch (std::exception& e) {
     LOG("Error opening ZIM file");
        LOG("%s", e.what());
@@ -124,10 +206,11 @@ JNIEXPORT jlong JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getNativeReaderEm
 JNIEXPORT void JNICALL
 Java_org_kiwix_kiwixlib_JNIKiwixReader_dispose(JNIEnv* env, jobject obj)
 {
-  Handle<kiwix::Reader>::dispose(env, obj);
+  Handle<zim::Archive>::dispose(env, obj);
 }
 
-#define READER (Handle<kiwix::Reader>::getHandle(env, obj))
+#define READER (Handle<zim::Archive>::getHandle(env, obj))
+#define SEARCH_SUGGESTION (Handle<zim::SuggestionSearcher>::getHandle(env, obj))
 
 /* Kiwix library functions */
 JNIEXPORT jstring JNICALL
@@ -136,7 +219,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getMainPage(JNIEnv* env, jobject obj)
   jstring url;
 
   try {
-    std::string cUrl = READER->getMainPage().getPath();
+    std::string cUrl = READER->getMainEntry().getItem(true).getPath();
     url = c2jni(cUrl, env);
   } catch (std::exception& e) {
     LOG("Unable to get ZIM main page");
@@ -152,7 +235,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getId(JNIEnv* env, jobject obj)
   jstring id;
 
   try {
-    std::string cId = READER->getId();
+    std::string cId = (std::string) READER->getUuid();
     id = c2jni(cId, env);
   } catch (std::exception& e) {
     LOG("Unable to get ZIM id");
@@ -169,7 +252,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getFileSize(JNIEnv* env, jobject obj)
   jint size = 0;
 
   try {
-    int cSize = READER->getFileSize();
+    int cSize = READER->getFilesize() / 1024;
     size = c2jni(cSize, env);
   } catch (std::exception& e) {
     LOG("Unable to get ZIM file size");
@@ -185,7 +268,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getCreator(JNIEnv* env, jobject obj)
   jstring creator;
 
   try {
-    std::string cCreator = READER->getCreator();
+    std::string cCreator = READER->getMetadata("Creator");
     creator = c2jni(cCreator, env);
   } catch (std::exception& e) {
     LOG("Unable to get ZIM creator");
@@ -202,7 +285,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getPublisher(JNIEnv* env, jobject obj)
   jstring publisher;
 
   try {
-    std::string cPublisher = READER->getPublisher();
+    std::string cPublisher = READER->getMetadata("Publisher");
     publisher = c2jni(cPublisher, env);
   } catch (std::exception& e) {
     LOG("Unable to get ZIM publish");
@@ -218,7 +301,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getName(JNIEnv* env, jobject obj)
   jstring name;
 
   try {
-    std::string cName = READER->getName();
+    std::string cName = READER->getMetadata("Name");
     name = c2jni(cName, env);
   } catch (std::exception& e) {
     LOG("Unable to get ZIM name");
@@ -236,7 +319,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getFavicon(JNIEnv* env, jobject obj)
   try {
     std::string cContent;
     std::string cMime;
-    READER->getFavicon(cContent, cMime);
+    cContent= READER->getIllustrationItem().getData();
     favicon = c2jni(
         base64_encode(cContent),
         env);
@@ -254,7 +337,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getDate(JNIEnv* env, jobject obj)
   jstring date;
 
   try {
-    std::string cDate = READER->getDate();
+    std::string cDate = READER->getMetadata("Date");
     date = c2jni(cDate, env);
   } catch (std::exception& e) {
     LOG("Unable to get ZIM date");
@@ -270,7 +353,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getLanguage(JNIEnv* env, jobject obj)
   jstring language;
 
   try {
-    std::string cLanguage = READER->getLanguage();
+    std::string cLanguage = READER->getMetadata("Language");
     language = c2jni(cLanguage, env);
   } catch (std::exception& e) {
     LOG("Unable to get ZIM language");
@@ -288,8 +371,9 @@ JNIEXPORT jstring JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getMimeType(
 
   std::string cUrl = jni2c(url, env);
   try {
-    auto entry = READER->getEntryFromEncodedPath(cUrl);
-    auto cMimeType = entry.getMimetype();
+    auto entry = READER->getEntryByPath(cUrl);
+    auto item = entry.getItem(true);
+    auto cMimeType = item.getMimetype();
     mimeType = c2jni(cMimeType, env);
   } catch (std::exception& e) {
     LOG("Unable to get mime-type for url: %s", cUrl.c_str());
@@ -305,9 +389,9 @@ JNIEXPORT jstring JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_checkUrl(
   jstring finalUrl;
   std::string cUrl = jni2c(url, env);
   try {
-    auto entry = READER->getEntryFromEncodedPath(cUrl);
-    entry = entry.getFinalEntry();
-    finalUrl = c2jni(entry.getPath(), env);
+    auto entry = READER->getEntryByPath(cUrl);
+    auto item = entry.getItem(true);
+    finalUrl = c2jni(item.getPath(), env);
   } catch (std::exception& e) {
     finalUrl = c2jni(std::string(), env);
   }
@@ -328,19 +412,19 @@ JNIEXPORT jbyteArray JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getContent(
   unsigned int cSize = 0;
 
   try {
-    auto entry = READER->getEntryFromEncodedPath(cUrl);
+    auto entry = READER->getEntryByPath(cUrl);
     bool isRedirect = entry.isRedirect();
-    entry = entry.getFinalEntry();
-    cSize = entry.getSize();
+    auto item = entry.getItem(true);
+    cSize = item.getSize();
     setIntObjValue(cSize, sizeObj, env);
-    setStringObjValue(entry.getMimetype(), mimeTypeObj, env);
-    setStringObjValue(entry.getTitle(), titleObj, env);
+    setStringObjValue(item.getMimetype(), mimeTypeObj, env);
+    setStringObjValue(item.getTitle(), titleObj, env);
     if (isRedirect) {
-      setStringObjValue(entry.getPath(), url, env);
+      setStringObjValue(item.getPath(), url, env);
     } else {
       data = env->NewByteArray(cSize);
       env->SetByteArrayRegion(
-          data, 0, cSize, reinterpret_cast<const jbyte*>(entry.getBlob().data()));
+          data, 0, cSize, reinterpret_cast<const jbyte*>(item.getData().data()));
     }
   } catch (std::exception& e) {
     LOG("Unable to get content for url: %s", cUrl.c_str());
@@ -362,13 +446,13 @@ JNIEXPORT jbyteArray JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getContentPa
   unsigned int cOffset = jni2c(offset, env);
   unsigned int cLen = jni2c(len, env);
   try {
-    auto entry = READER->getEntryFromEncodedPath(cUrl);
-    entry = entry.getFinalEntry();
+    auto entry = READER->getEntryByPath(cUrl);
+    auto item = entry.getItem(true);
 
     if (cLen == 0) {
-      setIntObjValue(entry.getSize(), sizeObj, env);
-    } else if (cOffset+cLen < entry.getSize()) {
-      auto blob = entry.getBlob(cOffset, cLen);
+      setIntObjValue(item.getSize(), sizeObj, env);
+    } else if (cOffset+cLen < item.getSize()) {
+      auto blob = item.getData(cOffset, cLen);
       data = env->NewByteArray(cLen);
       env->SetByteArrayRegion(
           data, 0, cLen, reinterpret_cast<const jbyte*>(blob.data()));
@@ -387,9 +471,9 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getArticleSize(
 {
   std::string cUrl = jni2c(url, env);
   try {
-    auto entry = READER->getEntryFromEncodedPath(cUrl);
-    entry = entry.getFinalEntry();
-    return c2jni(entry.getSize(), env);
+    auto entry = READER->getEntryByPath(cUrl);
+    auto item = entry.getItem(true);
+    return c2jni(item.getSize(), env);
   } catch(std::exception& e) {
     LOG("Unable to get size for url : %s", cUrl.c_str());
        LOG("%s", e.what());
@@ -408,9 +492,9 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getDirectAccessInformation(
 
    std::string cUrl = jni2c(url, env);
    try {
-    auto entry = READER->getEntryFromEncodedPath(cUrl);
-    entry = entry.getFinalEntry();
-    auto part_info = entry.getDirectAccessInfo();
+    auto entry = READER->getEntryByPath(cUrl);
+    auto item = entry.getItem(true);
+    auto part_info = item.getDirectAccessInformation();
     setDaiObjValue(part_info.first, part_info.second, dai, env);
   } catch (std::exception& e) {
     LOG("Unable to get direct access info for url: %s", cUrl.c_str());
@@ -428,13 +512,44 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_searchSuggestions(JNIEnv* env,
   jboolean retVal = JNI_FALSE;
   std::string cPrefix = jni2c(prefix, env);
   unsigned int cCount = jni2c(count, env);
-
   try {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-    if (READER->searchSuggestionsSmart(cPrefix, cCount)) {
-      retVal = JNI_TRUE;
-    }
+     std::vector<std::string> variants;
+     variants.push_back(cPrefix);
+     variants.push_back(ucFirst(cPrefix));
+     variants.push_back(lcFirst(cPrefix));
+     variants.push_back(toTitle(cPrefix));
+     suggestions.clear();
+     suggestionsOffset = suggestions.begin();
+   auto suggestionSearcher = zim::SuggestionSearcher(*(*READER));
+      if(READER->hasTitleIndex()) {
+         auto suggestionSearch = suggestionSearcher.suggest(cPrefix);
+         const auto suggestionsResultSet = suggestionSearch.getResults(0, cCount);
+          for (auto current : suggestionsResultSet) {
+               SuggestItem suggestion(current.getTitle(),current.getPath());
+               suggestions.push_back(suggestion);
+          }
+      } else {
+           // Check some of the variants of the prefix
+           for (std::vector<std::string>::iterator variantsItr = variants.begin();
+                variantsItr != variants.end();
+                variantsItr++) {
+             auto suggestionSearch = suggestionSearcher.suggest(*variantsItr);
+             for (auto current : suggestionSearch.getResults(0, cCount)) {
+               if (suggestions.size() >= cCount) {
+                 break;
+               }
+
+              SuggestItem suggestion(current.getTitle(),current.getPath());
+              suggestions.push_back(suggestion);
+             }
+           }
+         }
+         if(suggestions.size() > 0){
+            retVal = JNI_TRUE;
+         }
+      suggestionsOffset = suggestions.begin();
 #pragma GCC diagnostic pop
   } catch (std::exception& e) {
     LOG("Unable to get search results for pattern: %s", cPrefix.c_str());
@@ -457,11 +572,16 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getNextSuggestion(JNIEnv* env,
   try {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-    if (READER->getNextSuggestion(cTitle, cUrl)) {
-      setStringObjValue(cTitle, titleObj, env);
-      setStringObjValue(cUrl, urlObj, env);
-      retVal = JNI_TRUE;
-    }
+     if (suggestionsOffset != suggestions.end()) {
+        cTitle = (*(suggestionsOffset)).getTitle();
+        cUrl = (*(suggestionsOffset)).getPath();
+        setStringObjValue(cTitle, titleObj, env);
+        setStringObjValue(cUrl, urlObj, env);
+        /* increment the cursor for the next call */
+        suggestionsOffset++;
+
+        retVal = JNI_TRUE;
+      }
 #pragma GCC diagnostic pop
   } catch (std::exception& e) {
     LOG("Unable to get next suggestion");
@@ -480,9 +600,9 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getPageUrlFromTitle(JNIEnv* env,
   std::string cTitle = jni2c(title, env);
 
   try {
-    auto entry = READER->getEntryFromTitle(cTitle);
-    entry = entry.getFinalEntry();
-    setStringObjValue(entry.getPath(), urlObj, env);
+    auto entry = READER->getEntryByTitle(cTitle);
+    auto item = entry.getItem(true);
+    setStringObjValue(item.getPath(), urlObj, env);
     return JNI_TRUE;
   } catch (std::exception& e) {
     LOG("Unable to get url for title %s: ", cTitle.c_str());
@@ -498,7 +618,7 @@ JNIEXPORT jstring JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getTitle(
   jstring title;
 
   try {
-    std::string cTitle = READER->getTitle();
+    std::string cTitle = READER->getMetadata("Title");
     title = c2jni(cTitle, env);
   } catch (std::exception& e) {
     LOG("Unable to get zim title");
@@ -514,7 +634,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getDescription(JNIEnv* env, jobject obj)
   jstring description;
 
   try {
-    std::string cDescription = READER->getDescription();
+    std::string cDescription = READER->getMetadata("Description");
     description = c2jni(cDescription, env);
   } catch (std::exception& e) {
     LOG("Unable to get zim description");
@@ -560,7 +680,7 @@ JNIEXPORT jboolean JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getRandomPage(
   std::string cUrl;
 
   try {
-    std::string cUrl = READER->getRandomPage().getPath();
+    std::string cUrl = READER->getRandomEntry().getItem(true).getPath();
     setStringObjValue(cUrl, urlObj, env);
     retVal = JNI_TRUE;
   } catch (std::exception& e) {
@@ -569,19 +689,3 @@ JNIEXPORT jboolean JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getRandomPage(
   }
   return retVal;
 }
-/*
-
-
-JNIEXPORT void JNICALL Java_org_kiwix_kiwixlib_JNIICU_setICUDataDirectory(JNIEnv *env, jclass clazz,
-                                                   jstring icu_data_dir) {
-
-    std::string cPath = jni2c(icu_data_dir, env);
-
-    Lock l;
-    try {
-      zim::setICUDataDirectory(cPath.c_str());
-    } catch (...) {
-        std::cerr << "Unable to set data directory " << cPath << std::endl;
-    }
-}*/
-
