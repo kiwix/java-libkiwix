@@ -459,11 +459,6 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_searchSuggestions(JNIEnv* env,
   try {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-     std::vector<std::string> variants;
-     variants.push_back(cPrefix);
-     variants.push_back(ucFirst(cPrefix));
-     variants.push_back(lcFirst(cPrefix));
-     variants.push_back(toTitle(cPrefix));
      suggestions.clear();
      suggestionsOffset = suggestions.begin();
    auto suggestionSearcher = zim::SuggestionSearcher(*(*READER));
@@ -474,22 +469,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_searchSuggestions(JNIEnv* env,
                SuggestItem suggestion(current.getTitle(),current.getPath());
                suggestions.push_back(suggestion);
           }
-      } else {
-           // Check some of the variants of the prefix
-           for (std::vector<std::string>::iterator variantsItr = variants.begin();
-                variantsItr != variants.end();
-                variantsItr++) {
-             auto suggestionSearch = suggestionSearcher.suggest(*variantsItr);
-             for (auto current : suggestionSearch.getResults(0, cCount)) {
-               if (suggestions.size() >= cCount) {
-                 break;
-               }
-
-              SuggestItem suggestion(current.getTitle(),current.getPath());
-              suggestions.push_back(suggestion);
-             }
-           }
-         }
+      }
          if(suggestions.size() > 0){
             retVal = JNI_TRUE;
          }
