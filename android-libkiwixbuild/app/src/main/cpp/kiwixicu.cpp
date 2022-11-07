@@ -18,7 +18,6 @@
  * MA 02110-1301, USA.
  */
 
-#include "unicode/putil.h"
 #include <jni.h>
 #include "org_kiwix_kiwixlib_JNIICU.h"
 

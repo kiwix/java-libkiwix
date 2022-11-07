@@ -51,7 +51,6 @@ set_property(TARGET
         ${CMAKE_SOURCE_DIR}/../jniLibs/${CMAKE_ANDROID_ARCH_ABI}/libzim/libzim.so)
 
 include_directories(${CMAKE_SOURCE_DIR}/include/libkiwix)
-include_directories(${CMAKE_SOURCE_DIR}/include/icu)
 include_directories(${CMAKE_SOURCE_DIR}/include/libzim)
 include_directories(${CMAKE_SOURCE_DIR}/include/javah_generated)
 

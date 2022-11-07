@@ -23,8 +23,6 @@
 #include <exception>
 #include "org_kiwix_kiwixlib_JNIKiwixReader.h"
 
-#include <base64.h>
-
 #include <utils.h>
 
 #include "org_kiwix_kiwixlib_JNIICU.h"
@@ -32,7 +30,6 @@
 #include <iostream>
 #include <string>
 
-#include "unicode/putil.h"
 #include <zim/archive.h>
 #include <zim/search.h>
 #include <zim/item.h>
@@ -41,12 +38,6 @@
 #include "book.h"
 
 #include "include/zim/tools.h"
-#include <unicode/normlzr.h>
-#include <unicode/rep.h>
-#include <unicode/ucnv.h>
-#include <unicode/uniset.h>
-#include <unicode/ustring.h>
-#include <unicode/unistr.h>
 
 class SuggestItem
 {
@@ -71,53 +62,6 @@ class SuggestItem
 
   SuggestionsList_t suggestions;
   SuggestionsList_t::iterator suggestionsOffset;
-
-std::string ucFirst(const std::string& word)
-{
-  if (word.empty()) {
-    return "";
-  }
-
-  std::string result;
-
-  icu::UnicodeString unicodeWord(word.c_str());
-  auto unicodeFirstLetter = icu::UnicodeString(unicodeWord, 0, 1).toUpper();
-  unicodeWord.replace(0, 1, unicodeFirstLetter);
-  unicodeWord.toUTF8String(result);
-
-  return result;
-}
-
-std::string lcFirst(const std::string& word)
-{
-  if (word.empty()) {
-    return "";
-  }
-
-  std::string result;
-
-  icu::UnicodeString unicodeWord(word.c_str());
-  auto unicodeFirstLetter = icu::UnicodeString(unicodeWord, 0, 1).toLower();
-  unicodeWord.replace(0, 1, unicodeFirstLetter);
-  unicodeWord.toUTF8String(result);
-
-  return result;
-}
-
-std::string toTitle(const std::string& word)
-{
-  if (word.empty()) {
-    return "";
-  }
-
-  std::string result;
-
-  icu::UnicodeString unicodeWord(word.c_str());
-  unicodeWord = unicodeWord.toTitle(0);
-  unicodeWord.toUTF8String(result);
-
-  return result;
-}
 
 /* Kiwix Reader JNI functions */
 JNIEXPORT jlong JNICALL Java_org_kiwix_kiwixlib_JNIKiwixReader_getNativeReader(
