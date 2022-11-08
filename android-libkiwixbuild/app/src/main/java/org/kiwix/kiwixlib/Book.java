@@ -1,6 +1,8 @@
 
 package org.kiwix.kiwixlib;
 
+import org.kiwix.kiwixlib.JNIKiwixReader;
+
 public class Book
 {
   public Book() { allocate(); }
