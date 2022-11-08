@@ -37,7 +37,7 @@
 #include "library.h"
 #include "book.h"
 
-#include "include/zim/tools.h"
+#include "zim/tools.h"
 
 class SuggestItem
 {
@@ -265,7 +265,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixReader_getFavicon(JNIEnv* env, jobject obj)
     std::string cMime;
     cContent= READER->getIllustrationItem().getData();
     favicon = c2jni(
-        base64_encode(cContent),
+        cContent,
         env);
   } catch (std::exception& e) {
     LOG("Unable to get ZIM favicon");

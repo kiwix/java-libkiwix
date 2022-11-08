@@ -23,7 +23,7 @@
 
 #include <iostream>
 #include <string>
-#include "include/zim/tools.h"
+#include "zim/tools.h"
 #include "utils.h"
 
 JNIEXPORT void JNICALL Java_org_kiwix_kiwixlib_JNIICU_setDataDirectory(
