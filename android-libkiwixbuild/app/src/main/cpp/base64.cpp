@@ -41,9 +41,6 @@ std::string base64_encode(const std::string& inString) {
 
       while((i++ < 3))
 	ret += '=';
-
     }
-
   return ret;
-
 }

@@ -23,6 +23,11 @@ jobs:
           distribution: adopt
           java-version: 11
 
+      - name: Building Project
+        uses: actions/github-script@v6
+        with:
+          script: bash contrib/build.sh
+
       - name: Release build
         run: ./gradlew assemble
 
