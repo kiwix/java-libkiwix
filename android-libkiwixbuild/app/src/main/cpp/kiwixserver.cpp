@@ -56,7 +56,7 @@ Java_org_kiwix_kiwixlib_JNIKiwixServer_dispose(JNIEnv* env, jobject obj)
 JNIEXPORT void JNICALL
 Java_org_kiwix_kiwixlib_JNIKiwixServer_setRoot(JNIEnv* env, jobject obj, jstring jRoot)
 {
-  std::basic_string<char, std::char_traits<char>, std::allocator<char>> root = jni2c(jRoot, env);
+  std::string root = jni2c(jRoot, env);
   SERVER->setRoot(root);
 }
 
