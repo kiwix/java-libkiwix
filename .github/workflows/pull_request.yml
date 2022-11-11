@@ -30,7 +30,9 @@ jobs:
           ./gradlew addSetICUDataDirectory build
 
       - name: create unit coverage
-        run: ./gradlew jacocoInstrumentationTestReport
+        run: |
+          cd android-libkiwixbuild
+          ./gradlew jacocoInstrumentationTestReport
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
