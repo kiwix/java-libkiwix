@@ -145,7 +145,7 @@ public class test {
         assertEquals(bookIds.length, 1);
         Book book = lib.getBookById(bookIds[0]);
         assertEquals(book.getTitle(), "Test ZIM file");
-        assertEquals(book.getTags(), "unit;test");
+        assertEquals(book.getTags(), "unit;androidTests");
         assertEquals(book.getFaviconUrl(), "http://localhost/meta?name=favicon&content=small");
         assertEquals(book.getUrl(), "http://localhost/small.zim");
     }

@@ -25,7 +25,7 @@ jobs:
         run: bash contrib/build.sh
 
       - name: Compile Project
-        run: ./gradlew build
+        run: bash contrib/compile.sh
 
       - name: create unit coverage
         run: ./gradlew jacocoInstrumentationTestReport
