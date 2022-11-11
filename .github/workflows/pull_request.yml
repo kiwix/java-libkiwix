@@ -25,7 +25,9 @@ jobs:
         run: bash contrib/build.sh
 
       - name: Compile Project
-        run: bash contrib/compile.sh
+        run: |
+          cd android-libkiwixbuild
+          ./gradlew build
 
       - name: create unit coverage
         run: ./gradlew jacocoInstrumentationTestReport
