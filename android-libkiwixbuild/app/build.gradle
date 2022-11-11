@@ -194,10 +194,9 @@ task copyLibkiwixAndroidx86_64(type: Copy) {
     into projectDir.path + "/src/main/jniLibs/x86_64/libkiwix/"
 }
 
-// This is temprory task to edit zim/tools.h file
+// This is temporary task to edit zim/tools.h file
 task("addSetICUDataDirectory") {
-  File file = new File(projectDir.path, "/src/main/cpp/include/libzim/zim/tools.h")
-  if (!file.exists()) file.createNewFile()
+    File file = new File(projectDir.path, "/src/main/cpp/include/libzim/zim/tools.h")
     PrintWriter PrintWriter = new PrintWriter(file)
     PrintWriter.write("/*\n" +
             " * Copyright (C) 2022 Matthieu Gautier <mgautier@kymeria.fr>\n" +
