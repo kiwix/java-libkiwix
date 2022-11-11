@@ -194,51 +194,55 @@ task copyLibkiwixAndroidx86_64(type: Copy) {
     into projectDir.path + "/src/main/jniLibs/x86_64/libkiwix/"
 }
 
-// This is temporary task to edit zim/tools.h file
-task("addSetICUDataDirectory") {
+// This is temporary task to edit zim/tools.h file should be removed when https://github.com/openzim/libzim/issues/739 this Pr merged
+task addSetICUDataDirectory(type: Copy) {
     File file = new File(projectDir.path, "/src/main/cpp/include/libzim/zim/tools.h")
-    PrintWriter PrintWriter = new PrintWriter(file)
-    PrintWriter.write("/*\n" +
-            " * Copyright (C) 2022 Matthieu Gautier <mgautier@kymeria.fr>\n" +
-            " *\n" +
-            " * This program is free software; you can redistribute it and/or\n" +
-            " * modify it under the terms of the GNU General Public License as\n" +
-            " * published by the Free Software Foundation; either version 2 of the\n" +
-            " * License, or (at your option) any later version.\n" +
-            " *\n" +
-            " * This program is distributed in the hope that it will be useful, but\n" +
-            " * is provided AS IS, WITHOUT ANY WARRANTY; without even the implied\n" +
-            " * warranty of MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, and\n" +
-            " * NON-INFRINGEMENT.  See the GNU General Public License for more details.\n" +
-            " *\n" +
-            " * You should have received a copy of the GNU General Public License\n" +
-            " * along with this program; if not, write to the Free Software\n" +
-            " * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA\n" +
-            " *\n" +
-            " */\n" +
-            "\n" +
-            "#ifndef ZIM_TOOLS_H\n" +
-            "#define ZIM_TOOLS_H\n" +
-            "\n" +
-            "#include <zim/zim_config.h>\n" +
-            "\n" +
-            "\n" +
-            "namespace zim {\n" +
-            "#if defined(ENABLE_XAPIAN)\n" +
-            "\n" +
-            "  /** Helper function to set the icu data directory.\n" +
-            "   *\n" +
-            "   * On Android, we compile ICU without data integrated\n" +
-            "   * in the library. So android application needs to set\n" +
-            "   * the data directory where ICU can find its data.\n" +
-            "   */\n" +
-            "  void setICUDataDirectory(const std::string& path);\n" +
-            "\n" +
-            "#endif\n" +
-            "void setICUDataDirectory(const std::string& path);\n" +
-            "}\n" +
-            "\n" +
-            "#endif // ZIM_TOOLS_H\n")
-    PrintWriter.flush()
-    PrintWriter.close()
+    try {
+        PrintWriter printWriter = new PrintWriter(file)
+        printWriter.write("/*\n" +
+                " * Copyright (C) 2022 Matthieu Gautier <mgautier@kymeria.fr>\n" +
+                " *\n" +
+                " * This program is free software; you can redistribute it and/or\n" +
+                " * modify it under the terms of the GNU General Public License as\n" +
+                " * published by the Free Software Foundation; either version 2 of the\n" +
+                " * License, or (at your option) any later version.\n" +
+                " *\n" +
+                " * This program is distributed in the hope that it will be useful, but\n" +
+                " * is provided AS IS, WITHOUT ANY WARRANTY; without even the implied\n" +
+                " * warranty of MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, and\n" +
+                " * NON-INFRINGEMENT.  See the GNU General Public License for more details.\n" +
+                " *\n" +
+                " * You should have received a copy of the GNU General Public License\n" +
+                " * along with this program; if not, write to the Free Software\n" +
+                " * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA\n" +
+                " *\n" +
+                " */\n" +
+                "\n" +
+                "#ifndef ZIM_TOOLS_H\n" +
+                "#define ZIM_TOOLS_H\n" +
+                "\n" +
+                "#include <zim/zim_config.h>\n" +
+                "\n" +
+                "\n" +
+                "namespace zim {\n" +
+                "#if defined(ENABLE_XAPIAN)\n" +
+                "\n" +
+                "  /** Helper function to set the icu data directory.\n" +
+                "   *\n" +
+                "   * On Android, we compile ICU without data integrated\n" +
+                "   * in the library. So android application needs to set\n" +
+                "   * the data directory where ICU can find its data.\n" +
+                "   */\n" +
+                "  void setICUDataDirectory(const std::string& path);\n" +
+                "\n" +
+                "#endif\n" +
+                "void setICUDataDirectory(const std::string& path);\n" +
+                "}\n" +
+                "\n" +
+                "#endif // ZIM_TOOLS_H\n")
+        printWriter.flush()
+        printWriter.close()
+    } catch (Exception e) {
+
+    }
 }
