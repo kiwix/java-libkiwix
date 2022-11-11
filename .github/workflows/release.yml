@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-18.04
 
     steps:
-      uses: actions/checkout@v2
+      - uses: actions/checkout@v2
         with:
           fetch-depth: 1
 
@@ -31,10 +31,12 @@ jobs:
       - name: Release build
         run: |
           cd android-libkiwixbuild
-          ./gradlew assemble
+          ./gradlew addSetICUDataDirectory assemble
 
       - name: Genrate Source jar
-        run: ./gradlew androidSourcesJar
+        run: |
+          cd android-libkiwixbuild
+          ./gradlew androidSourcesJar
 
       - name: Publish to MavenCentral
         run: ./gradlew publishReleasePublicationToSonatypeRepository --max-workers 1 closeAndReleaseSonatypeStagingRepository

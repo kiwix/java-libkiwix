@@ -27,7 +27,7 @@ jobs:
       - name: Compile Project
         run: |
           cd android-libkiwixbuild
-          ./gradlew build
+          ./gradlew addSetICUDataDirectory build
 
       - name: create unit coverage
         run: ./gradlew jacocoInstrumentationTestReport
