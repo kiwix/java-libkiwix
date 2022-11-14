@@ -1,10 +1,8 @@
-package org.kiwix.testing;
-
 import java.io.*;
 import java.util.*;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+import static org.junit.Assert.*;
 import org.kiwix.kiwixlib.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class test {
     static {
@@ -145,7 +143,7 @@ public class test {
         assertEquals(bookIds.length, 1);
         Book book = lib.getBookById(bookIds[0]);
         assertEquals(book.getTitle(), "Test ZIM file");
-        assertEquals(book.getTags(), "unit;androidTests");
+        assertEquals(book.getTags(), "unit;test");
         assertEquals(book.getFaviconUrl(), "http://localhost/meta?name=favicon&content=small");
         assertEquals(book.getUrl(), "http://localhost/small.zim");
     }
