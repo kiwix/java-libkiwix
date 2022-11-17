@@ -18,7 +18,6 @@
  * MA 02110-1301, USA.
  */
 
-#include <android/log.h>
 #include <jni.h>
 #include <exception>
 #include "org_kiwix_kiwixlib_JNIKiwixReader.h"
@@ -38,7 +37,7 @@
 #include "book.h"
 
 #include "zim/tools.h"
-#include "base64.cpp"
+#include "base64.h"
 
 class SuggestItem
 {

@@ -7,6 +7,8 @@ import org.kiwix.kiwixlib.*;
 public class test {
     static {
         System.loadLibrary("kiwix");
+        System.loadLibrary("zim");
+        System.loadLibrary("MyLib");
     }
 
     private static byte[] getFileContent(String path)
@@ -46,7 +48,7 @@ public class test {
     {
         JNIKiwixReader reader = new JNIKiwixReader("small.zim");
         assertEquals("Test ZIM file", reader.getTitle());
-        assertEquals(45, reader.getFileSize()); // The file size is in KiB
+        assertEquals(3, reader.getFileSize()); // The file size is in KiB
         assertEquals("A/main.html", reader.getMainPage());
         String s = getTextFileContent("small_zimfile_data/main.html");
         byte[] c = reader.getContent(new JNIKiwixString("A/main.html"),
@@ -76,7 +78,7 @@ public class test {
         FileInputStream fis = new FileInputStream("small.zim");
         JNIKiwixReader reader = new JNIKiwixReader(fis.getFD());
         assertEquals("Test ZIM file", reader.getTitle());
-        assertEquals(45, reader.getFileSize()); // The file size is in KiB
+        assertEquals(3, reader.getFileSize()); // The file size is in KiB
         assertEquals("A/main.html", reader.getMainPage());
         String s = getTextFileContent("small_zimfile_data/main.html");
         byte[] c = reader.getContent(new JNIKiwixString("A/main.html"),
@@ -107,7 +109,7 @@ public class test {
         FileInputStream fis = new FileInputStream("small.zim.embedded");
         JNIKiwixReader reader = new JNIKiwixReader(fis.getFD(), 8, plainArchive.length());
         assertEquals("Test ZIM file", reader.getTitle());
-        assertEquals(45, reader.getFileSize()); // The file size is in KiB
+        assertEquals(3, reader.getFileSize()); // The file size is in KiB
         assertEquals("A/main.html", reader.getMainPage());
         String s = getTextFileContent("small_zimfile_data/main.html");
         byte[] c = reader.getContent(new JNIKiwixString("A/main.html"),

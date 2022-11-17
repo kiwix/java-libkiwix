@@ -9,6 +9,8 @@ die()
   exit 1
 }
 
+cmake .
+make
 
 KIWIX_LIB_JAR=$1
 if [ -z $KIWIX_LIB_JAR ]

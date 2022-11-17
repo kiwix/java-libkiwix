@@ -22,7 +22,7 @@ printf  "\n${Green}Done! ${NC}\n"
 hash -r
 
 printf "${Green}Coping libkiwix header and so files ${NC}\n"
-./gradlew copyLibkiwixHeaderFiles copyLibkiwixAndroidArm copyLibkiwixAndroidArm64 copyLibkiwixAndroidx86 copyLibkiwixAndroidx86_64
+./gradlew copyLibkiwixHeaderFiles copyLibkiwixAndroidArm copyLibkiwixAndroidArm64 copyLibkiwixAndroidx86 copyLibkiwixAndroidx86_64 copyLibzimLinux_x86_64
 printf  "\n${Green}Done! ${NC}\n"
 
 cd app/src/main/java/org/kiwix/

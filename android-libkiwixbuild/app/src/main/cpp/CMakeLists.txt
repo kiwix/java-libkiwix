@@ -55,6 +55,7 @@ ${CMAKE_SOURCE_DIR}
 ${CMAKE_SOURCE_DIR}/include/libkiwix
 ${CMAKE_SOURCE_DIR}/include/libzim
 ${CMAKE_SOURCE_DIR}/include/javah_generated
+${CMAKE_SOURCE_DIR}/include/utils
 )
 
 find_library(
