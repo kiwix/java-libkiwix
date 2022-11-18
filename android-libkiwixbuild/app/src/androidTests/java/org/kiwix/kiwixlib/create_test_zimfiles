@@ -6,6 +6,7 @@ die()
   exit 1
 }
 
+sudo apt update
 sudo apt-get install zimwriterfs
 
 cd "$(dirname "$0")"
