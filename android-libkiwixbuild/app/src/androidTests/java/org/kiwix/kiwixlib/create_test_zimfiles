@@ -6,6 +6,8 @@ die()
   exit 1
 }
 
+sudo apt-get install zimwriterfs
+
 cd "$(dirname "$0")"
 rm -f small.zim
 zimwriterfs --withoutFTIndex \

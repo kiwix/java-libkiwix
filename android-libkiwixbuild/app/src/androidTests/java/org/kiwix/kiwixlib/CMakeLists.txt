@@ -35,6 +35,6 @@ ${CMAKE_SOURCE_DIR}/../../../../../main/cpp/include/utils
 
 target_link_libraries(buildkiwix
 LINK_PUBLIC 
-/home/hp-pc03/Desktop/libkiwix.so
+${CMAKE_SOURCE_DIR}/../../../../../../build/libkiwix.so
 ${CMAKE_SOURCE_DIR}/../../../../../../build/libzim.so
 )
