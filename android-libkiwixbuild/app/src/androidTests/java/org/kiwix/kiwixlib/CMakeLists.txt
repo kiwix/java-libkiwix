@@ -1,7 +1,6 @@
 cmake_minimum_required (VERSION 3.16)
 project (buildkiwix)
 
-# Adds the executable called "demo" that is built from the source files "main.cpp".
 add_library(buildkiwix
 SHARED 
 ${CMAKE_SOURCE_DIR}/../../../../../main/cpp/base64.cpp
@@ -24,8 +23,8 @@ if (JNI_FOUND)
 endif()
 
 include_directories(
-/usr/lib/jvm/java-11-openjdk-amd64/include
-/usr/lib/jvm/java-11-openjdk-amd64/include/linux
+/opt/hostedtoolcache/jdk/11.0.17/x64/include
+/opt/hostedtoolcache/jdk/11.0.17/x64/include/linux
 ${CMAKE_SOURCE_DIR}/../../../../../main/cpp
 ${CMAKE_SOURCE_DIR}/../../../../../main/cpp/include/libkiwix
 ${CMAKE_SOURCE_DIR}/../../../../../main/cpp/include/libzim
