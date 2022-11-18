@@ -32,7 +32,6 @@ jobs:
       - name: Running Test
         run: |
           cd android-libkiwixbuild/app/src/androidTests/java/org/kiwix/kiwixlib/
-          bash create_test_zimfiles
           bash compile_and_run_test.sh ../../../../../../libs/*app*.jar ./
 
 

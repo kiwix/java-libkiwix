@@ -6,10 +6,6 @@ die()
   exit 1
 }
 
-sudo apt update
-sudo apt upgrade
-sudo apt-get install zimwriterfs
-
 cd "$(dirname "$0")"
 rm -f small.zim
 zimwriterfs --withoutFTIndex \
