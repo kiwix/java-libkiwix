@@ -34,3 +34,7 @@ printf  "\n${Green}Done! ${NC}\n"
 hash -r
 
 cd ../../../../../../
+
+printf "${Green}Copy generated java wrapper class files to testing folder${NC}\n"
+./gradlew copyJavaGeneratedClassFileToTestingFolder
+printf  "\n${Green}Done! ${NC}\n"

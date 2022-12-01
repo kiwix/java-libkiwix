@@ -238,6 +238,12 @@ task copyBuildKiwixSoFile(type: Copy) {
     into buildDir.path
 }
 
+task copyJavaGeneratedClassFileToTestingFolder(type: Copy) {
+    // copying linux_x86_64 so file
+    from projectDir.path + "/src/main/java/org/kiwix/target/"
+    into projectDir.path + "/src/androidTests/java/org/kiwix/kiwixlib/"
+}
+
 // This is temporary task to edit zim/tools.h file should be removed when https://github.com/openzim/libzim/issues/739 this Pr merged
 task addSetICUDataDirectory(type: Copy) {
     File file = new File(projectDir.path, "/src/main/cpp/include/libzim/zim/tools.h")
