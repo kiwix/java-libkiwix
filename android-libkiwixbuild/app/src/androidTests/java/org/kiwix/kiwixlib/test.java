@@ -8,7 +8,7 @@ public class test {
     static {
         System.loadLibrary("kiwix");
         System.loadLibrary("zim");
-        System.loadLibrary("MyLib");
+        System.loadLibrary("buildkiwix");
     }
 
     private static byte[] getFileContent(String path)

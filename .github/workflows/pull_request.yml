@@ -32,7 +32,7 @@ jobs:
       - name: Running Test
         run: |
           cd android-libkiwixbuild/app/src/androidTests/java/org/kiwix/kiwixlib/
-          bash compile_and_run_test.sh ../../../../../../libs/*app*.jar ./
+          bash compile_and_run_test.sh ../../../../../../libs/*app*.jar ../../../../../../build/
 
 
       - name: create unit coverage
