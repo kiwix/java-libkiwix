@@ -4,6 +4,8 @@ plugins {
     id "de.undercouch.download"
 }
 
+import groovy.json.JsonSlurper
+
 Properties properties = new Properties()
 if (rootProject.file("local.properties").exists()) {
     properties.load(rootProject.file("local.properties").newDataInputStream())
@@ -82,9 +84,20 @@ ext.libzim_base_url = 'https://download.openzim.org/nightly/'
 // change this date to get latest libzim .so and header files
 ext.release_date = '2022-12-01'
 
-// change libkiwix and libzim versions to latest
-ext.libkiwix_version = '12.0.0'
-ext.libzim_version = '8.1.0'
+ext.libzim_version = project.properties["libzim_version"] ?: ""
+ext.libkiwix_version = project.properties["libkiwix_version"] ?: ""
+
+task checkLatestLibzimVersion {
+    def request = new URL('https://api.github.com/repos/openzim/libzim/releases/latest').openConnection()
+    def response = new JsonSlurper().parseText(request.getInputStream().getText())
+    project.ext.set("libzim_version", "${response.tag_name}")
+}
+
+task checkLatestLibkiwixVersion {
+    def request = new URL('https://api.github.com/repos/kiwix/libkiwix/releases/latest').openConnection()
+    def response = new JsonSlurper().parseText(request.getInputStream().getText())
+    project.ext.set("libkiwix_version", "${response.tag_name}")
+}
 
 task downloadLibzimSoAndHeaderFiles(type: Download) {
     src([
