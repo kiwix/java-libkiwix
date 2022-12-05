@@ -6,11 +6,11 @@ NC='\033[0m' # No Color
 cd android-libkiwixbuild/
 
 printf "${Green}Check latest libzim version${NC}\n"
-./gradlew checkLatestLibzimVersion
+./gradlew checkLatestNightlyForLibzim checkLatestLibzimVersion
 printf  "\n${Green}Done! ${NC}\n"
 
 printf "${Green}Check latest libkiwix version${NC}\n"
-./gradlew checkLatestLibkiwixVersion
+./gradlew checkLatestNightlyForLibkiwix checkLatestLibkiwixVersion
 printf  "\n${Green}Done! ${NC}\n"
 
 printf "${Green}Downloading libzim ${NC}\n"
