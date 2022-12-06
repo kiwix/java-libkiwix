@@ -5,12 +5,8 @@ NC='\033[0m' # No Color
 
 cd android-libkiwixbuild/
 
-printf "${Green}Check latest libzim version${NC}\n"
-./gradlew checkLatestNightlyForLibzim checkLatestLibzimVersion
-printf  "\n${Green}Done! ${NC}\n"
-
-printf "${Green}Check latest libkiwix version${NC}\n"
-./gradlew checkLatestNightlyForLibkiwix checkLatestLibkiwixVersion
+printf "${Green}Check Current Java version${NC}\n"
+./gradlew checkCurrentJavaVersion
 printf  "\n${Green}Done! ${NC}\n"
 
 printf "${Green}Downloading libzim ${NC}\n"
@@ -20,7 +16,7 @@ printf  "\n${Green}Done! ${NC}\n"
 hash -r
 
 printf "${Green}Coping libzim header and so files ${NC}\n"
-./gradlew copyLibzimHeaderFiles copyLibzimAndroidArm copyLibzimAndroidArm64 copyLibzimAndroidx86 copyLibzimAndroidx86_64 copyLibzimLinux_x86_64 renameLibzimSoFile
+./gradlew checkCurrentLibzimDate copyLibzimHeaderFiles copyLibzimAndroidArm copyLibzimAndroidArm64 copyLibzimAndroidx86 copyLibzimAndroidx86_64 copyLibzimLinux_x86_64 renameLibzimSoFile
 printf  "\n${Green}Down! ${NC}\n"
 
 printf "${Green}Downloading libkiwix ${NC}\n"
@@ -30,7 +26,7 @@ printf  "\n${Green}Done! ${NC}\n"
 hash -r
 
 printf "${Green}Coping libkiwix header and so files ${NC}\n"
-./gradlew copyLibkiwixHeaderFiles copyLibkiwixAndroidArm copyLibkiwixAndroidArm64 copyLibkiwixAndroidx86 copyLibkiwixAndroidx86_64 copyLibkiwixLinux_x86_64 renameLibkiwixSoFile
+./gradlew checkCurrentLibkiwixDate copyLibkiwixHeaderFiles copyLibkiwixAndroidArm copyLibkiwixAndroidArm64 copyLibkiwixAndroidx86 copyLibkiwixAndroidx86_64 copyLibkiwixLinux_x86_64 renameLibkiwixSoFile
 printf  "\n${Green}Done! ${NC}\n"
 
 cd app/src/main/java/org/kiwix/
