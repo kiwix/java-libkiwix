@@ -46,4 +46,4 @@ java -Djava.library.path="$KIWIX_LIB_DIR" \
 
 java -jar jacoco-0.8.7/lib/jacococli.jar report jacoco.exec \
 --classfiles org/kiwix/kiwixlib/ \
---html ../../../../../../../build/coverage-report
+--html ../../../../../../../build/coverage-report --xml coverage.xml
