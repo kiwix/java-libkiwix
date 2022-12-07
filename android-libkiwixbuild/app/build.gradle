@@ -25,6 +25,7 @@ ext {
 }
 
 apply from: 'publish.gradle'
+apply from: '../../jacoco.gradle'
 android {
     compileSdk 32
 
