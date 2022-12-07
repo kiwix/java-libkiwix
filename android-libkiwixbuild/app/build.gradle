@@ -1,12 +1,10 @@
+import java.util.stream.Collectors
+
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id "de.undercouch.download"
 }
-
-
-import groovy.json.JsonSlurper
-import java.text.SimpleDateFormat
 
 Properties properties = new Properties()
 if (rootProject.file("local.properties").exists()) {
@@ -27,7 +25,6 @@ ext {
 }
 
 apply from: 'publish.gradle'
-apply from: '../../jacoco.gradle'
 android {
     compileSdk 32
 
@@ -162,10 +159,12 @@ task copyLibzimLinux_x86_64(type: Copy) {
 }
 
 task renameLibzimSoFile(type: Copy) {
-    from(buildDir.path)
-    include libzim_version
-    destinationDir file(buildDir.path)
-    rename libzim_version, "libzim.so"
+    if (libzim_version != null) {
+        from(buildDir.path)
+        include libzim_version
+        destinationDir file(buildDir.path)
+        rename libzim_version, "libzim.so"
+    }
 }
 
 task downloadLibkiwixSoAndHeaderFiles(type: Download) {
@@ -185,16 +184,13 @@ task checkCurrentLibkiwixDate() {
 }
 
 static String getDateFromPath(String path, String matchesString) {
-    try {
-        File[] files = new File(path).listFiles()
-        for (int i = 0; i < files.length; i++) {
-            String fileName = files[i].name
-            if (fileName.startsWith(matchesString)) {
-                return fileName.substring(fileName.indexOf(matchesString) + matchesString.length(), fileName.length()).trim()
-            }
-        }
-    } catch (Exception e) {
-        return ""
+    File folder = new File(path)
+    if (folder.exists()) {
+        return folder.listFiles()
+                .stream()
+                .filter(f -> f.name.startsWith(matchesString))
+                .map(s -> s.name.replace(matchesString, ""))
+                .collect(Collectors.toList())[0]
     }
 }
 
@@ -254,24 +250,22 @@ task copyLibkiwixLinux_x86_64(type: Copy) {
 }
 
 static String getFileFromFolder(String path) {
-    try {
-        File[] files = new File(path).listFiles()
-        for (int i = 0; i < files.length; i++) {
-            File file = files[i]
-            if (file.length() != 0) {
-                return files[i].name
-            }
-        }
-    } catch (Exception e) {
-        return ""
+    File folderFile = new File(path)
+    if (folderFile.exists()) {
+        return folderFile.listFiles()
+                .stream()
+                .filter(f -> f.length() > 0)
+                .collect(Collectors.toList())[0].name
     }
 }
 
 task renameLibkiwixSoFile(type: Copy) {
-    from(buildDir.path)
-    include libkiwix_version
-    destinationDir file(buildDir.path)
-    rename libkiwix_version, "libkiwix.so"
+    if (libkiwix_version != null) {
+        from(buildDir.path)
+        include libkiwix_version
+        destinationDir file(buildDir.path)
+        rename libkiwix_version, "libkiwix.so"
+    }
 }
 
 task copyBuildKiwixSoFile(type: Copy) {
@@ -284,59 +278,6 @@ task copyJavaGeneratedClassFileToTestingFolder(type: Copy) {
     // copying linux_x86_64 so file
     from projectDir.path + "/src/main/java/org/kiwix/target/"
     into projectDir.path + "/src/androidTests/java/org/kiwix/kiwixlib/"
-}
-
-// This is temporary task to edit zim/tools.h file should be removed when https://github.com/openzim/libzim/issues/739 this Pr merged
-task addSetICUDataDirectory(type: Copy) {
-    File file = new File(projectDir.path, "/src/main/cpp/include/libzim/zim/tools.h")
-    try {
-        PrintWriter printWriter = new PrintWriter(file)
-        printWriter.write("/*\n" +
-                " * Copyright (C) 2022 Matthieu Gautier <mgautier@kymeria.fr>\n" +
-                " *\n" +
-                " * This program is free software; you can redistribute it and/or\n" +
-                " * modify it under the terms of the GNU General Public License as\n" +
-                " * published by the Free Software Foundation; either version 2 of the\n" +
-                " * License, or (at your option) any later version.\n" +
-                " *\n" +
-                " * This program is distributed in the hope that it will be useful, but\n" +
-                " * is provided AS IS, WITHOUT ANY WARRANTY; without even the implied\n" +
-                " * warranty of MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, and\n" +
-                " * NON-INFRINGEMENT.  See the GNU General Public License for more details.\n" +
-                " *\n" +
-                " * You should have received a copy of the GNU General Public License\n" +
-                " * along with this program; if not, write to the Free Software\n" +
-                " * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA\n" +
-                " *\n" +
-                " */\n" +
-                "\n" +
-                "#ifndef ZIM_TOOLS_H\n" +
-                "#define ZIM_TOOLS_H\n" +
-                "\n" +
-                "#include <zim/zim_config.h>\n" +
-                "\n" +
-                "\n" +
-                "namespace zim {\n" +
-                "#if defined(ENABLE_XAPIAN)\n" +
-                "\n" +
-                "  /** Helper function to set the icu data directory.\n" +
-                "   *\n" +
-                "   * On Android, we compile ICU without data integrated\n" +
-                "   * in the library. So android application needs to set\n" +
-                "   * the data directory where ICU can find its data.\n" +
-                "   */\n" +
-                "  void setICUDataDirectory(const std::string& path);\n" +
-                "\n" +
-                "#endif\n" +
-                "void setICUDataDirectory(const std::string& path);\n" +
-                "}\n" +
-                "\n" +
-                "#endif // ZIM_TOOLS_H\n")
-        printWriter.flush()
-        printWriter.close()
-    } catch (Exception e) {
-
-    }
 }
 
 task createCodeCoverageReport(type: Exec) {

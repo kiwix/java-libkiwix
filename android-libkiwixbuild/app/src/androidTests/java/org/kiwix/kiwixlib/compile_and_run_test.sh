@@ -40,6 +40,10 @@ javac -g -d . -s . -cp "junit-4.13.jar:$KIWIX_LIB_JAR" test.java \
   || die "Compilation failed"
 
 java -Djava.library.path="$KIWIX_LIB_DIR" \
-     -cp "junit-4.13.jar:hamcrest-core-1.3.jar:$KIWIX_LIB_JAR:." \
+     -javaagent:jacoco-0.8.7/lib/jacocoagent.jar -cp "junit-4.13.jar:hamcrest-core-1.3.jar:$KIWIX_LIB_JAR:." \
      org.junit.runner.JUnitCore test \
   || die "Unit test failed"
+
+java -jar jacoco-0.8.7/lib/jacococli.jar report jacoco.exec \
+--classfiles org/kiwix/kiwixlib/ \
+--html ../../../../../../../build/coverage-reports

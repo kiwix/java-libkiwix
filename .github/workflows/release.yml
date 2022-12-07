@@ -31,7 +31,7 @@ jobs:
       - name: Release build
         run: |
           cd android-libkiwixbuild
-          ./gradlew addSetICUDataDirectory assemble
+          ./gradlew assemble
 
       - name: Genrate Source jar
         run: |

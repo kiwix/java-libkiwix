@@ -32,7 +32,7 @@ jobs:
       - name: create unit coverage
         run: |
           cd android-libkiwixbuild
-          ./gradlew jacocoInstrumentationTestReport
+          ./gradlew createCodeCoverageReport
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
