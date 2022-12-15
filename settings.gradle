@@ -5,5 +5,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "android-libkiwixbuild"
-include ':app'
+rootProject.name = "java-libkiwix"
+include ':src'
