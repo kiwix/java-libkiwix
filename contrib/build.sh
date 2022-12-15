@@ -29,16 +29,8 @@ printf "${Green}Coping libkiwix header and so files ${NC}\n"
 ./gradlew checkCurrentLibkiwixDate copyLibkiwixHeaderFiles copyLibkiwixAndroidArm copyLibkiwixAndroidArm64 copyLibkiwixAndroidx86 copyLibkiwixAndroidx86_64 copyLibkiwixLinux_x86_64 renameLibkiwixSoFile
 printf  "\n${Green}Done! ${NC}\n"
 
-cd app/src/main/java/org/kiwix/
-
 printf "${Green}Generating header files from java wrapper files ${NC}\n"
-javac -h ../../../cpp/include/javah_generated/ -d target kiwixlib/Book.java kiwixlib/DirectAccessInfo.java kiwixlib/Filter.java kiwixlib/JNIICU.java kiwixlib/JNIKiwixBool.java kiwixlib/JNIKiwixException.java kiwixlib/JNIKiwixInt.java kiwixlib/JNIKiwixReader.java kiwixlib/JNIKiwixSearcher.java kiwixlib/JNIKiwixServer.java kiwixlib/JNIKiwixString.java kiwixlib/Library.java kiwixlib/Manager.java
+./gradlew generateHeaderFilesFromJavaWrapper
 printf  "\n${Green}Done! ${NC}\n"
 
 hash -r
-
-cd ../../../../../../
-
-printf "${Green}Copy generated java wrapper class files to testing folder${NC}\n"
-./gradlew copyJavaGeneratedClassFileToTestingFolder
-printf  "\n${Green}Done! ${NC}\n"

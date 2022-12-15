@@ -271,12 +271,6 @@ task copyBuildKiwixSoFile(type: Copy) {
     into buildDir.path
 }
 
-task copyJavaGeneratedClassFileToTestingFolder(type: Copy) {
-    // copying linux_x86_64 so file
-    from projectDir.path + "/src/main/java/org/kiwix/target/"
-    into projectDir.path + "/src/androidTests/java/org/kiwix/kiwixlib/"
-}
-
 task createCodeCoverageReport(type: Exec) {
     workingDir "${projectDir}/src/androidTests/java/org/kiwix/kiwixlib/"
     commandLine 'sh', '-c', "bash 'compile_and_run_test.sh' ${buildDir}/libs/*app*.jar $buildDir"
@@ -286,4 +280,10 @@ task checkCurrentJavaVersion() {
     if (JavaVersion.current() != JavaVersion.VERSION_11) {
         throw new RuntimeException("This build must be run with java 11. your current java version is ${JavaVersion.current()}")
     }
+}
+
+
+task generateHeaderFilesFromJavaWrapper(type: Exec) {
+    workingDir "${projectDir}/src/main/java/org/kiwix/"
+    commandLine 'bash', '-c', "javac -h ${projectDir}/src/main/cpp/include/javah_generated/ -d ${projectDir}/src/androidTests/java/org/kiwix/kiwixlib/ kiwixlib/Book.java kiwixlib/DirectAccessInfo.java kiwixlib/Filter.java kiwixlib/JNIICU.java kiwixlib/JNIKiwixBool.java kiwixlib/JNIKiwixException.java kiwixlib/JNIKiwixInt.java kiwixlib/JNIKiwixReader.java kiwixlib/JNIKiwixSearcher.java kiwixlib/JNIKiwixServer.java kiwixlib/JNIKiwixString.java kiwixlib/Library.java kiwixlib/Manager.java"
 }
