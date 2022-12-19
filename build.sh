@@ -1,9 +1,10 @@
 #!/bin/bash
 
+
+set -e
+
 Green='\e[32m'
 NC='\033[0m' # No Color
-
-cd android-libkiwixbuild/
 
 printf "${Green}Check Current Java version${NC}\n"
 ./gradlew checkCurrentJavaVersion
