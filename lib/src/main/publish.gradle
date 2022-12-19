@@ -1,0 +1,83 @@
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+task androidSourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    if (project.plugins.findPlugin("com.android.library")) {
+        // For Android libraries
+        from android.sourceSets.main.java.srcDirs
+        from android.sourceSets.main.kotlin.srcDirs
+    } else {
+        // For pure Kotlin libraries, in case you have them
+        from sourceSets.main.java.srcDirs
+        from sourceSets.main.kotlin.srcDirs
+    }
+}
+
+artifacts {
+    archives androidSourcesJar
+}
+
+def siteUrl = 'https://www.kiwix.org/en/'
+def gitUrl = 'https://github.com/kiwix/libkiwix.git'
+
+group = GROUP_ID
+version = VERSION
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+
+                groupId GROUP_ID
+                artifactId ARTIFACT_ID
+                version VERSION
+
+                from components.release
+
+                artifact androidSourcesJar
+                pom {
+                    name = ARTIFACT_ID
+                    description = 'LibKiwix Android library'
+                    url = siteUrl
+                    licenses {
+                        license {
+                            name = 'GPLv3'
+                            url = 'https://www.gnu.org/licenses/gpl-3.0.en.html'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = 'kiwix'
+                            name = 'kiwix'
+                            email = 'contact@kiwix.org'
+                        }
+                    }
+                    scm {
+                        connection = gitUrl
+                        developerConnection = gitUrl
+                        url = siteUrl
+                    }
+                }
+            }
+        }
+        repositories {
+            maven {
+                url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+                credentials {
+                    username = ossrhUsername
+                    password = ossrhPassword
+                }
+            }
+        }
+    }
+}
+
+signing {
+    useInMemoryPgpKeys(
+            keyId,
+            key,
+            password,
+    )
+    sign publishing.publications
+}
