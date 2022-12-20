@@ -27,6 +27,7 @@
 #include <mutex>
 #include <string>
 #include <vector>
+#include <set>
 #include <iostream>
 
 #if __ANDROID__
@@ -68,11 +69,11 @@ void dispose(JNIEnv* env, jobject thisObj)
 }
 
 #define METHOD0(retType, class, name) \
-JNIEXPORT retType JNICALL Java_org_kiwix_kiwixlib_##class##_##name( \
+JNIEXPORT retType JNICALL Java_org_kiwix_libzim_##class##_##name( \
  JNIEnv* env, jobject thisObj)
 
 #define METHOD(retType, class, name, ...) \
-JNIEXPORT retType JNICALL Java_org_kiwix_kiwixlib_##class##_##name( \
+JNIEXPORT retType JNICALL Java_org_kiwix_libzim_##class##_##name( \
   JNIEnv* env, jobject thisObj, __VA_ARGS__)
 
 inline jfieldID getHandleField(JNIEnv* env, jobject obj)
@@ -88,6 +89,9 @@ inline jobjectArray createArray(JNIEnv* env, size_t length, const std::string& t
   return env->NewObjectArray(length, c, NULL);
 }
 
+
+// A mixin class which will lock the globalLock when a instance is created
+// This avoid the cration of two instance inheriting from Lock in the same time.
 class Lock : public std::unique_lock<std::mutex>
 {
  public:
@@ -97,14 +101,19 @@ class Lock : public std::unique_lock<std::mutex>
 template <class T>
 class LockedHandle;
 
+
+/*
+ * A handle to a shared_ptr<T>
+ * Not usable by itself, you must get a LockedHandle to access the value.
+ */
 template <class T>
 class Handle
 {
  protected:
-  T* h;
+  std::shared_ptr<T> value;
 
  public:
-  Handle(T* h) : h(h){};
+  Handle(T* v) : value(v){};
 
   // No destructor. This must and will be handled by dispose method.
 
@@ -118,34 +127,42 @@ class Handle
   {
     auto lHandle = getHandle(env, obj);
     auto handle = lHandle.h;
-    delete handle->h;
     delete handle;
   }
   friend class LockedHandle<T>;
 };
 
+/*
+ * A locked handle.
+ * Only one LockedHandle can exist at the same time.
+ * As LockedHandle is the
+ */
 template <class T>
 struct LockedHandle : public Lock {
   Handle<T>* h;
   LockedHandle(Handle<T>* h) : h(h) {}
-  T* operator->() { return h->h; }
-  T* operator*() { return h->h; }
-  operator bool() const { return (h->h != nullptr); }
-  operator T*() const { return h->h; }
+  T* operator->() { return h->value.get(); }
+  T* operator*() { return h->value.get(); }
+  operator bool() const { return (h->value); }
+  operator T*() const { return h->value.get(); }
 };
+
+// ---------------------------------------------------------------------------
+// Convert things to JAVA
+// ---------------------------------------------------------------------------
 
 template<typename T>
 struct JType { };
 
 template<> struct JType<bool>{ typedef jboolean type_t; };
-template<> struct JType<int>{ typedef jint type_t; };
-template<> struct JType<long>{ typedef jlong type_t; };
+template<> struct JType<int32_t>{ typedef jint type_t; };
+template<> struct JType<int64_t>{ typedef jlong type_t; };
 template<> struct JType<uint64_t> { typedef jlong type_t; };
 template<> struct JType<uint32_t> { typedef jlong type_t; };
 template<> struct JType<std::string>{ typedef jstring type_t; };
-template<> struct JType<std::vector<std::string>>{ typedef jobjectArray type_t; };
 
-template<typename T>
+
+template<typename T, typename U=T>
 inline typename JType<T>::type_t c2jni(const T& val, JNIEnv* env) {
   return static_cast<typename JType<T>::type_t>(val);
 }
@@ -159,6 +176,70 @@ inline jstring c2jni(const std::string& val, JNIEnv* env)
   return env->NewStringUTF(val.c_str());
 }
 
+
+template<typename T>
+struct JTypeArray {};
+template<> struct JTypeArray<bool>{
+  typedef jbooleanArray type_t;
+  static jbooleanArray createArray(JNIEnv* env, size_t length) {
+    return env->NewBooleanArray(length);
+  }
+  static void setArray(JNIEnv* env, jbooleanArray array, const bool* data, size_t length) {
+    env->SetBooleanArrayRegion(array, 0, length, reinterpret_cast<const jboolean*>(data));
+  }
+};
+template<> struct JTypeArray<int32_t>{
+  typedef jintArray type_t;
+  static jintArray createArray(JNIEnv* env, size_t length) {
+    return env->NewIntArray(length);
+  }
+  static void setArray(JNIEnv* env, jintArray array, const int32_t* data, size_t length) {
+    env->SetIntArrayRegion(array, 0, length, data);
+  }
+};
+template<> struct JTypeArray<int64_t>{
+  typedef jlongArray type_t;
+  static jlongArray createArray(JNIEnv* env, size_t length) {
+    return env->NewLongArray(length);
+  }
+  static void setArray(JNIEnv* env, jlongArray array, const int64_t* data, size_t length) {
+    env->SetLongArrayRegion(array, 0, length, data);
+  }
+};
+template<> struct JTypeArray<uint64_t> {
+  typedef jlongArray type_t;
+  static jlongArray createArray(JNIEnv* env, size_t length) {
+    return env->NewLongArray(length);
+  }
+  static void setArray(JNIEnv* env, jlongArray array, const uint64_t* data, size_t length) {
+    env->SetLongArrayRegion(array, 0, length, reinterpret_cast<const jlong*>(data));
+  }
+};
+template<> struct JTypeArray<uint32_t> {
+  typedef jlongArray type_t;
+  static jlongArray createArray(JNIEnv* env, size_t length) {
+    return env->NewLongArray(length);
+  }
+  static void setArray(JNIEnv* env, jlongArray array, const uint32_t* data, size_t length) {
+    std::vector<jlong> temp(data, data+length);
+    env->SetLongArrayRegion(array, 0, length, temp.data());
+  }
+};
+template<> struct JTypeArray<std::string>{
+  typedef jobjectArray type_t;
+  static jobjectArray createArray(JNIEnv* env, size_t length) {
+    return ::createArray(env, length, "java/lang/String");
+  }
+  static void setArray(JNIEnv* env, jobjectArray array, const std::string* data, size_t length) {
+    size_t index = 0;
+    for(size_t index=0; index<length; index++) {
+      auto jElem = c2jni(data[index], env);
+      env->SetObjectArrayElement(array, index, jElem);
+    }
+  }
+};
+
+/*
 template<>
 inline jobjectArray c2jni(const std::vector<std::string>& val, JNIEnv* env)
 {
@@ -169,7 +250,30 @@ inline jobjectArray c2jni(const std::vector<std::string>& val, JNIEnv* env)
     env->SetObjectArrayElement(array, index++, jElem);
   }
   return array;
+}*/
+
+template<typename U>
+inline typename JTypeArray<U>::type_t c2jni(const std::vector<U>& val, JNIEnv* env)
+{
+  auto array = JTypeArray<U>::createArray(env, val.size());
+  JTypeArray<U>::setArray(env, array, val.data(), val.size());
+  return array;
 }
+
+template<typename U>
+inline typename JTypeArray<U>::type_t c2jni(const std::set<U>& val, JNIEnv* env)
+{
+  std::vector<U> temp(val.begin(), val.end());
+  return c2jni(temp, env);
+}
+
+#define TO_JNI(VAL) c2jni(VAL, env)
+
+
+// ---------------------------------------------------------------------------
+// Convert things to C
+// ---------------------------------------------------------------------------
+
 
 template<typename T, typename U=T>
 struct CType { };
@@ -215,6 +319,8 @@ inline typename CType<jobjectArray, U>::type_t jni2c(const jobjectArray& val, JN
   return v;
 }
 
+#define TO_C(VAL) jni2c(VAL, env)
+
 /* Method to deal with variable passed by reference */
 inline std::string getStringObjValue(const jobject obj, JNIEnv* env)
 {
@@ -255,5 +361,16 @@ inline void setDaiObjValue(const std::string& filename, const long offset,
   jfieldID offsetFid = env->GetFieldID(objClass, "offset", "J");
   env->SetLongField(obj, offsetFid, offset);
 }
+
+template<typename T>
+inline jobject createWrapper(const char* className, T && nativeObj, JNIEnv* env) {
+  jclass objClass = env->FindClass(className);
+  jmethodID initMethod = env->GetMethodID(objClass, "<init>", "(J)V");
+  jlong nativeHandle = reinterpret_cast<jlong>(new Handle<T>(new T(std::forward<T>(nativeObj))));
+  jobject object = env->NewObject(objClass, initMethod, nativeHandle);
+  return object;
+}
+
+#define CREATE_WRAPPER(CLASSNAME, OBJ) createWrapper(CLASSNAME, std::move(OBJ), env)
 
 #endif // _ANDROID_JNI_UTILS_H

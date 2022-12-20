@@ -59,7 +59,7 @@ android {
     }
     externalNativeBuild {
         cmake {
-            path file('src/cpp/CMakeLists.txt')
+            path file('src/main/cpp/CMakeLists.txt')
             version '3.18.1'
         }
     }
@@ -285,5 +285,5 @@ task checkCurrentJavaVersion() {
 
 task generateHeaderFilesFromJavaWrapper(type: Exec) {
     workingDir "${projectDir}/src/main/java/org/kiwix/"
-    commandLine 'bash', '-c', "javac -h ${buildDir}/include/javah_generated/ -d ${buildDir}/kiwixlib/ kiwixlib/Book.java kiwixlib/DirectAccessInfo.java kiwixlib/Filter.java kiwixlib/JNIICU.java kiwixlib/JNIKiwixBool.java kiwixlib/JNIKiwixException.java kiwixlib/JNIKiwixInt.java kiwixlib/JNIKiwixReader.java kiwixlib/JNIKiwixSearcher.java kiwixlib/JNIKiwixServer.java kiwixlib/JNIKiwixString.java kiwixlib/Library.java kiwixlib/Manager.java"
+    commandLine 'bash', '-c', "javac -h ${buildDir}/include/javah_generated/ -d ${buildDir}/libzim/ libzim/Archive.java libzim/Blob.java libzim/Entry.java libzim/Item.java libzim/ZimFileFormatException.java"
 }

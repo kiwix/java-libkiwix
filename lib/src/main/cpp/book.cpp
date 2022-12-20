@@ -23,6 +23,7 @@
 
 #include "utils.h"
 #include "book.h"
+#include <zim/archive.h>
 
 JNIEXPORT void JNICALL
 Java_org_kiwix_kiwixlib_Book_allocate(
@@ -46,7 +47,7 @@ METHOD(void, Book, update__Lorg_kiwix_kiwixlib_Book_2, jobject otherBook)
 
 METHOD(void, Book, update__Lorg_kiwix_kiwixlib_JNIKiwixReader_2, jobject reader)
 {
-  BOOK->update(**Handle<kiwix::Reader>::getHandle(env, reader));
+  BOOK->update(**Handle<zim::Archive>::getHandle(env, reader));
 }
 
 #define GETTER(retType, name) JNIEXPORT retType JNICALL \
