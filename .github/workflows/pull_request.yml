@@ -21,17 +21,16 @@ jobs:
         with:
           java-version: 11
 
-      - name: Build Project
-        run: bash contrib/build.sh
+      - name: Install dependencies
+        run: bash ./install_deps.sh
 
       - name: Compile Project
         run: |
-          cd android-libkiwixbuild
-          ./gradlew androidSourcesJar build
+          ./gradlew generateHeaderFilesFromJavaWrapper
+          ./gradlew build
 
       - name: create unit coverage
         run: |
-          cd android-libkiwixbuild
           ./gradlew createCodeCoverageReport
 
       - name: Upload coverage to Codecov

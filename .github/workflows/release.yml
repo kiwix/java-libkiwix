@@ -25,17 +25,20 @@ jobs:
           distribution: adopt
           java-version: 11
 
-      - name: Building Project
-        run: bash contrib/build.sh
+      - name: Install dependencies
+        run: bash ./install_deps.sh
+
+      - name: Compile Project
+        run: |
+          ./gradlew generateHeaderFilesFromJavaWrapper
+          ./gradlew build
 
       - name: Release build
         run: |
-          cd android-libkiwixbuild
           ./gradlew assemble
 
       - name: Genrate Source jar
         run: |
-          cd android-libkiwixbuild
           ./gradlew androidSourcesJar
 
       - name: Publish to MavenCentral
