@@ -28,19 +28,19 @@ import java.io.FileDescriptor;
 public class Searcher
 {
 
-  public Searcĥer(Archive archive) throws ZimFileFormatException
+  public Searcher(Archive archive) throws Exception
   {
-    nativeHandle = getNativeSearcher(archive);
+    setNativeSearcher(archive);
     if (nativeHandle == 0) {
-      throw new ZimFileFormatException("Cannot open zimfile "+filename);
+      throw new Exception("Cannot create searcher");
     }
   }
 
-  public Searcher(List<Archive> archives) throws ZimFileFormatException
+  public Searcher(Archive[] archives) throws Exception
   {
-    nativeHandle = getNativeSearcher(archives);
+    setNativeSearcherMulti(archives);
     if (nativeHandle == 0) {
-      throw new ZimFileFormatException("Cannot open zimfile by fd "+fd.toString());
+      throw new Exception("Cannot create searcher");
     }
   }
 
@@ -48,8 +48,8 @@ public class Searcher
   public native Search search(Query query);
   public native void setVerbose(boolean verbose);
 
-  private native long getNativeSearcher(Archive archive);
-  private native long getNativeSearcherMulti(List<Archive> archives);
+  private native void setNativeSearcher(Archive archive);
+  private native void setNativeSearcherMulti(Archive[] archives);
 
 ///--------- The wrapper thing
   // To delete our native wrapper

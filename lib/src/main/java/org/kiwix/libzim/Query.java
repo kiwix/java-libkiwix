@@ -21,8 +21,11 @@ package org.kiwix.libzim;
 
 public class Query
 {
-  public Query(string query);
-  public native Query setQuery(string query);
+  public Query(String query) {
+    setNativeQuery(query);
+  }
+
+  public native Query setQuery(String query);
   public native Query setGeorange(float latitude, float longitute, float distance);
 
 ///--------- The wrapper thing
@@ -30,5 +33,6 @@ public class Query
   public native void dispose();
 
   // A pointer (as a long) to a native Handle
+  private native long setNativeQuery(String query);
   private long nativeHandle;
 }

@@ -19,11 +19,11 @@
 
 package org.kiwix.libzim;
 
-import org.kiwix.libzim.SearchResultSet;
+import org.kiwix.libzim.SearchIterator;
 
 public class Search
 {
-  public native SearchResultSet getResults(int start, int maxResults);
+  public native SearchIterator getResults(int start, int maxResults);
   public native long getEstimatedMatches();
 
 ///--------- The wrapper thing

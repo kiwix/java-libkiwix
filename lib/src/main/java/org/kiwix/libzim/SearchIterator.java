@@ -20,17 +20,18 @@
 package org.kiwix.libzim;
 
 import org.kiwix.libzim.SearchIterator;
+import java.util.Iterator;
 
-public class SearchIterator implement Iterator<Entry>
+public class SearchIterator implements Iterator<Entry>
 {
-  public native string getPath();
-  public native string getTitle();
+  public native String getPath();
+  public native String getTitle();
   public native int getScore();
-  public native string getSnippet();
+  public native String getSnippet();
   public native int getWordCount();
   public native int getFileIndex();
   public native int size();
-  public native string getZimId();
+  public native String getZimId();
 
   public native boolean hasNext();
   public native Entry next();
@@ -41,4 +42,7 @@ public class SearchIterator implement Iterator<Entry>
 
   // A pointer (as a long) to a native Handle
   private long nativeHandle;
+
+  // A pointer (as a long) to the native end
+  private long nativeHandleEnd;
 }

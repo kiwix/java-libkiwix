@@ -15,6 +15,10 @@ add_library(
         libzim/entry.cpp
         libzim/item.cpp
         libzim/blob.cpp
+        libzim/searcher.cpp
+        libzim/query.cpp
+        libzim/search.cpp
+        libzim/search_iterator.cpp
 )
 
 find_library(libzim
