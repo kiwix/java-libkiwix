@@ -28,13 +28,14 @@
 
 #include <zim/blob.h>
 
+#define NATIVE_TYPE zim::Blob
+
 JNIEXPORT void JNICALL
 Java_org_kiwix_kiwixlib_libzim_Blob_dispose(JNIEnv* env, jobject thisObj)
 {
-  dispose<zim::Blob>(env, thisObj);
+  dispose<NATIVE_TYPE>(env, thisObj);
 }
-
-#define THIS (Handle<zim::Blob>::getHandle(env, thisObj))
+#define THIS GET_PTR(NATIVE_TYPE)
 #define GETTER(retType, name) JNIEXPORT retType JNICALL \
 Java_org_kiwix_libzim_Blob__##name (JNIEnv* env, jobject thisObj) \
 { \
@@ -42,6 +43,6 @@ Java_org_kiwix_libzim_Blob__##name (JNIEnv* env, jobject thisObj) \
 }
 
 METHOD0(jstring, Blob, getData) {
-  return TO_JNI(std::string(**THIS));
+  return TO_JNI(std::string(*THIS));
 }
 GETTER(jlong, size)

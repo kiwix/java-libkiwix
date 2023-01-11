@@ -23,8 +23,6 @@ import org.kiwix.libzim.Blob;
 
 public class Item
 {
-  private Item(long handle) {nativeHandle = handle;}
-
   public native String getTitle();
   public native String getPath();
   public native String getMimeType();

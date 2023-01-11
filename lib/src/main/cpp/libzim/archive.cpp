@@ -31,20 +31,19 @@
 #include <zim/item.h>
 
 /* Kiwix Reader JNI functions */
-JNIEXPORT jlong JNICALL Java_org_kiwix_libzim_Archive_getNativeArchive(
-    JNIEnv* env, jobject obj, jstring filename)
+JNIEXPORT void JNICALL Java_org_kiwix_libzim_Archive_setNativeArchive(
+    JNIEnv* env, jobject thisObj, jstring filename)
 {
   std::string cPath = TO_C(filename);
 
   LOG("Attempting to create reader with: %s", cPath.c_str());
   Lock l;
   try {
-    zim::Archive* reader = new zim::Archive(cPath);
-    return reinterpret_cast<jlong>(new Handle<zim::Archive>(reader));
+    auto archive = std::make_shared<zim::Archive>(cPath);
+    SET_PTR(archive);
   } catch (std::exception& e) {
     LOG("Error opening ZIM file");
       LOG("%s", e.what());
-    return 0;
   }
 }
 
@@ -68,8 +67,8 @@ int jni2fd(const jobject& fdObj, JNIEnv* env)
 
 } // unnamed namespace
 
-JNIEXPORT jlong JNICALL Java_org_kiwix_libzim_Archive_getNativeArchiveByFD(
-    JNIEnv* env, jobject obj, jobject fdObj)
+JNIEXPORT void JNICALL Java_org_kiwix_libzim_Archive_setNativeArchiveByFD(
+    JNIEnv* env, jobject thisObj, jobject fdObj)
 {
 #ifndef _WIN32
   int fd = jni2fd(fdObj, env);
@@ -77,22 +76,20 @@ JNIEXPORT jlong JNICALL Java_org_kiwix_libzim_Archive_getNativeArchiveByFD(
   LOG("Attempting to create reader with fd: %d", fd);
   Lock l;
   try {
-    zim::Archive* reader = new zim::Archive(fd);
-    return reinterpret_cast<jlong>(new Handle<zim::Archive>(reader));
+    auto archive = std::make_shared<zim::Archive>(fd);
+    SET_PTR(archive);
   } catch (std::exception& e) {
     LOG("Error opening ZIM file");
        LOG("%s", e.what());
-    return 0;
   }
 #else
   jclass exception = env->FindClass("java/lang/UnsupportedOperationException");
-  env->ThrowNew(exception, "org.kiwix.libzim.Archive.getNativeArchiveByFD() is not supported under Windows");
-  return 0;
+  env->ThrowNew(exception, "org.kiwix.libzim.Archive.setNativeArchiveByFD() is not supported under Windows");
 #endif
 }
 
-JNIEXPORT jlong JNICALL Java_org_kiwix_libzim_Archive_getNativeArchiveEmbedded(
-    JNIEnv* env, jobject obj, jobject fdObj, jlong offset, jlong size)
+JNIEXPORT void JNICALL Java_org_kiwix_libzim_Archive_setNativeArchiveEmbedded(
+    JNIEnv* env, jobject thisObj, jobject fdObj, jlong offset, jlong size)
 {
 #ifndef _WIN32
   int fd = jni2fd(fdObj, env);
@@ -100,17 +97,15 @@ JNIEXPORT jlong JNICALL Java_org_kiwix_libzim_Archive_getNativeArchiveEmbedded(
   LOG("Attempting to create reader with fd: %d", fd);
   Lock l;
   try {
-    zim::Archive* reader = new zim::Archive(fd, offset, size);
-    return reinterpret_cast<jlong>(new Handle<zim::Archive>(reader));
+    auto archive = std::make_shared<zim::Archive>(fd, offset, size);
+    SET_PTR(archive);
   } catch (std::exception& e) {
     LOG("Error opening ZIM file");
        LOG("%s", e.what());
-    return 0;
   }
 #else
   jclass exception = env->FindClass("java/lang/UnsupportedOperationException");
-  env->ThrowNew(exception, "org.kiwix.libzim.Archive.getNativeArchiveEmbedded() is not supported under Windows");
-  return 0;
+  env->ThrowNew(exception, "org.kiwix.libzim.Archive.setNativeArchiveEmbedded() is not supported under Windows");
 #endif
 }
 
@@ -120,7 +115,7 @@ Java_org_kiwix_libzim_Archive_dispose(JNIEnv* env, jobject thisObj)
   dispose<zim::Archive>(env, thisObj);
 }
 
-#define THIS (Handle<zim::Archive>::getHandle(env, thisObj))
+#define THIS GET_PTR(zim::Archive)
 #define GETTER(retType, name) JNIEXPORT retType JNICALL \
 Java_org_kiwix_libzim_Archive_##name (JNIEnv* env, jobject thisObj) \
 { \
@@ -144,16 +139,16 @@ METHOD(jstring, Archive, getMetadata, jstring name) {
 }
 
 METHOD(jobject, Archive, getMetadataItem, jstring name) {
-  auto item = THIS->getMetadataItem(TO_C(name));
-  auto obj = CREATE_WRAPPER("org/kiwix/libzim/Item", item);
+  auto obj = NEW_OBJECT("org/kiwix/libzim/Item");
+  SET_HANDLE(zim::Item, obj, THIS->getMetadataItem(TO_C(name)));
   return obj;
 }
 
 GETTER(jobjectArray, getMetadataKeys)
 
 METHOD(jobject, Archive, getIllustrationItem, jint size) {
-  auto item = THIS->getIllustrationItem(TO_C(size));
-  auto obj = CREATE_WRAPPER("org/kiwix/libzim/Item", item);
+  auto obj = NEW_OBJECT("org/kiwix/libzim/Item");
+  SET_HANDLE(zim::Item, obj, THIS->getIllustrationItem(TO_C(size)));
   return obj;
 }
 
@@ -164,44 +159,44 @@ METHOD(jboolean, Archive, hasIllustration, jint size) {
 GETTER(jlongArray, getIllustrationSizes)
 
 METHOD(jobject, Archive, getEntryByPath, jlong index) {
-  auto entry = THIS->getEntryByPath(TO_C(index));
-  auto obj = CREATE_WRAPPER("org/kiwix/libzim/Entry", entry);
+  auto obj = NEW_OBJECT("org/kiwix/libzim/Entry");
+  SET_HANDLE(zim::Entry, obj, THIS->getEntryByPath(TO_C(index)));
   return obj;
 }
 
 METHOD(jobject, Archive, getEntryByPath, jstring path) {
-  auto entry = THIS->getEntryByPath(TO_C(path));
-  auto obj = CREATE_WRAPPER("org/kiwix/libzim/Entry", entry);
+  auto obj = NEW_OBJECT("org/kiwix/libzim/Entry");
+  SET_HANDLE(zim::Entry, obj, THIS->getEntryByPath(TO_C(path)));
   return obj;
 }
 
 METHOD(jobject, Archive, getEntryByTitle, jlong index) {
-  auto entry = THIS->getEntryByTitle(TO_C(index));
-  auto obj = CREATE_WRAPPER("org/kiwix/libzim/Entry", entry);
+  auto obj = NEW_OBJECT("org/kiwix/libzim/Entry");
+  SET_HANDLE(zim::Entry, obj, THIS->getEntryByTitle(TO_C(index)));
   return obj;
 }
 
 METHOD(jobject, Archive, getEntryByTitle, jstring title) {
-  auto entry = THIS->getEntryByTitle(TO_C(title));
-  auto obj = CREATE_WRAPPER("org/kiwix/libzim/Entry", entry);
+  auto obj = NEW_OBJECT("org/kiwix/libzim/Entry");
+  SET_HANDLE(zim::Entry, obj, THIS->getEntryByTitle(TO_C(title)));
   return obj;
 }
 
 METHOD(jobject, Archive, getEntryByClusterOrder, jlong index) {
-  auto entry = THIS->getEntryByClusterOrder(TO_C(index));
-  auto obj = CREATE_WRAPPER("org/kiwix/libzim/Entry", entry);
+  auto obj = NEW_OBJECT("org/kiwix/libzim/Entry");
+  SET_HANDLE(zim::Entry, obj, THIS->getEntryByClusterOrder(TO_C(index)));
   return obj;
 }
 
 METHOD0(jobject, Archive, getMainEntry) {
-  auto entry = THIS->getMainEntry();
-  auto obj = CREATE_WRAPPER("org/kiwix/libzim/Entry", entry);
+  auto obj = NEW_OBJECT("org/kiwix/libzim/Entry");
+  SET_HANDLE(zim::Entry, obj, THIS->getMainEntry());
   return obj;
 }
 
 METHOD0(jobject, Archive, getRandomEntry) {
-  auto entry = THIS->getRandomEntry();
-  auto obj = CREATE_WRAPPER("org/kiwix/libzim/Entry", entry);
+  auto obj = NEW_OBJECT("org/kiwix/libzim/Entry");
+  SET_HANDLE(zim::Entry, obj, THIS->getRandomEntry());
   return obj;
 }
 

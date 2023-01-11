@@ -23,8 +23,6 @@ import org.kiwix.libzim.Item;
 
 public class Entry
 {
-  private Entry(long handle) {nativeHandle = handle;}
-
   public native boolean isRedirect();
   public native String getTitle();
   public native String getPath();

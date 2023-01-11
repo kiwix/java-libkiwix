@@ -29,7 +29,7 @@ public class Archive
 
   public Archive(String filename) throws ZimFileFormatException
   {
-    nativeHandle = getNativeArchive(filename);
+    setNativeArchive(filename);
     if (nativeHandle == 0) {
       throw new ZimFileFormatException("Cannot open zimfile "+filename);
     }
@@ -37,7 +37,7 @@ public class Archive
 
   public Archive(FileDescriptor fd) throws ZimFileFormatException
   {
-    nativeHandle = getNativeArchiveByFD(fd);
+    setNativeArchiveByFD(fd);
     if (nativeHandle == 0) {
       throw new ZimFileFormatException("Cannot open zimfile by fd "+fd.toString());
     }
@@ -46,7 +46,7 @@ public class Archive
   public Archive(FileDescriptor fd, long offset, long size)
           throws ZimFileFormatException
   {
-    nativeHandle = getNativeArchiveEmbedded(fd, offset, size);
+    setNativeArchiveEmbedded(fd, offset, size);
     if (nativeHandle == 0) {
       throw new ZimFileFormatException(String.format("Cannot open embedded zimfile (fd=%s, offset=%d, size=%d)", fd, offset, size));
     }
@@ -93,9 +93,9 @@ public class Archive
   public native boolean hasNewNamespaceScheme();
 
 
-  private native long getNativeArchive(String filename);
-  private native long getNativeArchiveByFD(FileDescriptor fd);
-  private native long getNativeArchiveEmbedded(FileDescriptor fd, long offset, long size);
+  private native void setNativeArchive(String filename);
+  private native void setNativeArchiveByFD(FileDescriptor fd);
+  private native void setNativeArchiveEmbedded(FileDescriptor fd, long offset, long size);
 
 
 ///--------- The wrapper thing

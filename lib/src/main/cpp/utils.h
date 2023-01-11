@@ -38,34 +38,74 @@
 #endif
 
 extern std::mutex globalLock;
+using std::shared_ptr;
 
+// Here is the wrapping structure.
+// All java class wrapping a `Native` instance must contain a pointer (cast as a long (J)) called "nativeHandle".
+// They also need a constructor taking no argument (or they can, but helper here cannot be used.)
+// The "nativeHandle" pointer points to a  heap allocated `Handle<Native>`. The handle itself IS a shared_ptr.
+// !!! This is a shared_ptr heap allocated instance which contains a `Native` heap allocated.
+// So if the `Native` instance is own by a smart pointer (shared_ptr), the shared_ptr itself is "own" by a raw pointer.
+
+// From the jobject and the pointer field ("nativeHandle"), we can access a shared_ptr (not a pointer to a shared_ptr).
+// To avoid a memory leak, we must at java wrapper destruction (dispose), delete the heap shared_ptr.
+
+// Create a java object using a default constructor. No field is set.
+inline jobject newObject(const char* className, JNIEnv* env) {
+  jclass objClass = env->FindClass(className);
+  jmethodID initMethod = env->GetMethodID(objClass, "<init>", "()V");
+  jobject wrapper = env->NewObject(objClass, initMethod);
+  return wrapper;
+}
+#define NEW_OBJECT(CLASSNAME) newObject(CLASSNAME, env)
+
+
+// Set the pointer to the wrapped object.
 template<typename T>
-void setPtr(JNIEnv* env, jobject thisObj, T* ptr)
+inline void setPtr(JNIEnv* env, jobject thisObj, shared_ptr<T>&& ptr, const char* handleName = "nativeHandle")
 {
   jclass thisClass = env->GetObjectClass(thisObj);
-  jfieldID fieldId = env->GetFieldID(thisClass, "nativeHandle", "J");
-  env->SetLongField(thisObj, fieldId, reinterpret_cast<jlong>(ptr));
+  jfieldID fieldId = env->GetFieldID(thisClass, handleName, "J");
+  // if field id is not null, we are leaking the currently stored handle
+  assert(env->GetLongField(thisObj, fieldId) == 0);
+  // allocate a shared_ptr on the head
+  shared_ptr<T>* handle = new shared_ptr<T>(ptr);
+  env->SetLongField(thisObj, fieldId, reinterpret_cast<jlong>(handle));
 }
+#define SET_PTR(SHARED_PTR) setPtr(env, thisObj, std::move(SHARED_PTR))
 
+// This create a object and set it in the wrapper
 template<typename T, typename ...Args>
-void allocate(JNIEnv* env, jobject thisObj, Args && ...args)
+inline void setHandle(JNIEnv* env, jobject thisObj, Args && ...args)
 {
-  T* ptr = new T(std::forward<Args>(args)...);
-  setPtr(env, thisObj, ptr);
+  auto ptr = std::make_shared<T>(std::forward<Args>(args)...);
+  setPtr(env, thisObj, std::move(ptr));
 }
+#define SET_HANDLE(NATIVE_TYPE, OBJ, VALUE) setHandle<NATIVE_TYPE>(env, OBJ, VALUE)
 
+
+// Return a shared_ptr for the handle
 template<typename T>
-T* getPtr(JNIEnv* env, jobject thisObj)
+shared_ptr<T> getPtr(JNIEnv* env, jobject thisObj, const char* handleName = "nativeHandle")
 {
   jclass thisClass = env->GetObjectClass(thisObj);
-  jfieldID fidNumber = env->GetFieldID(thisClass, "nativeHandle", "J");
-  return reinterpret_cast<T*>(env->GetLongField(thisObj, fidNumber));
+  jfieldID fidNumber = env->GetFieldID(thisClass, handleName, "J");
+  auto handle = reinterpret_cast<shared_ptr<T>*>(env->GetLongField(thisObj, fidNumber));
+  return *handle;
 }
+#define GET_PTR(NATIVE_TYPE) getPtr<NATIVE_TYPE>(env, thisObj)
 
+// Delete the heap allocated handle
 template<typename T>
-void dispose(JNIEnv* env, jobject thisObj)
+void dispose(JNIEnv* env, jobject thisObj, const char* handleName = "nativeHandle")
 {
-  delete getPtr<T>(env, thisObj);
+  jclass thisClass = env->GetObjectClass(thisObj);
+  jfieldID fieldId = env->GetFieldID(thisClass, handleName, "J");
+  auto handle = reinterpret_cast<shared_ptr<T>*>(env->GetLongField(thisObj, fieldId));
+  if (handle != 0) {
+    delete handle;
+  }
+  env->SetLongField(thisObj, fieldId, 0);
 }
 
 #define METHOD0(retType, class, name) \
@@ -76,11 +116,11 @@ JNIEXPORT retType JNICALL Java_org_kiwix_libzim_##class##_##name( \
 JNIEXPORT retType JNICALL Java_org_kiwix_libzim_##class##_##name( \
   JNIEnv* env, jobject thisObj, __VA_ARGS__)
 
-inline jfieldID getHandleField(JNIEnv* env, jobject obj)
+inline jfieldID getHandleField(JNIEnv* env, jobject obj, const char* handleName)
 {
   jclass c = env->GetObjectClass(obj);
   // J is the type signature for long:
-  return env->GetFieldID(c, "nativeHandle", "J");
+  return env->GetFieldID(c, handleName, "J");
 }
 
 inline jobjectArray createArray(JNIEnv* env, size_t length, const std::string& type_sig)
@@ -98,55 +138,6 @@ class Lock : public std::unique_lock<std::mutex>
   Lock() : std::unique_lock<std::mutex>(globalLock) { }
 };
 
-template <class T>
-class LockedHandle;
-
-
-/*
- * A handle to a shared_ptr<T>
- * Not usable by itself, you must get a LockedHandle to access the value.
- */
-template <class T>
-class Handle
-{
- protected:
-  std::shared_ptr<T> value;
-
- public:
-  Handle(T* v) : value(v){};
-
-  // No destructor. This must and will be handled by dispose method.
-
-  static LockedHandle<T> getHandle(JNIEnv* env, jobject obj)
-  {
-    jlong handle = env->GetLongField(obj, getHandleField(env, obj));
-    return LockedHandle<T>(reinterpret_cast<Handle<T>*>(handle));
-  }
-
-  static void dispose(JNIEnv* env, jobject obj)
-  {
-    auto lHandle = getHandle(env, obj);
-    auto handle = lHandle.h;
-    delete handle;
-  }
-  friend class LockedHandle<T>;
-};
-
-/*
- * A locked handle.
- * Only one LockedHandle can exist at the same time.
- * As LockedHandle is the
- */
-template <class T>
-struct LockedHandle : public Lock {
-  Handle<T>* h;
-  LockedHandle(Handle<T>* h) : h(h) {}
-  T* operator->() { return h->value.get(); }
-  T* operator*() { return h->value.get(); }
-  operator bool() const { return (h->value); }
-  operator T*() const { return h->value.get(); }
-};
-
 // ---------------------------------------------------------------------------
 // Convert things to JAVA
 // ---------------------------------------------------------------------------
@@ -160,6 +151,8 @@ template<> struct JType<int64_t>{ typedef jlong type_t; };
 template<> struct JType<uint64_t> { typedef jlong type_t; };
 template<> struct JType<uint32_t> { typedef jlong type_t; };
 template<> struct JType<std::string>{ typedef jstring type_t; };
+template<> struct JType<float> { typedef jfloat type_t;};
+template<> struct JType<double> { typedef jdouble type_t;};
 
 
 template<typename T, typename U=T>
@@ -282,6 +275,8 @@ template<> struct CType<jboolean>{ typedef bool type_t; };
 template<> struct CType<jint>{ typedef int type_t; };
 template<> struct CType<jlong>{ typedef long type_t; };
 template<> struct CType<jstring>{ typedef std::string type_t; };
+template<> struct CType<jfloat> { typedef float type_t; };
+template<> struct CType<jdouble> { typedef double type_t; };
 
 template<typename U>
 struct CType<jobjectArray, U>{ typedef std::vector<typename CType<U>::type_t> type_t; };
@@ -361,16 +356,5 @@ inline void setDaiObjValue(const std::string& filename, const long offset,
   jfieldID offsetFid = env->GetFieldID(objClass, "offset", "J");
   env->SetLongField(obj, offsetFid, offset);
 }
-
-template<typename T>
-inline jobject createWrapper(const char* className, T && nativeObj, JNIEnv* env) {
-  jclass objClass = env->FindClass(className);
-  jmethodID initMethod = env->GetMethodID(objClass, "<init>", "(J)V");
-  jlong nativeHandle = reinterpret_cast<jlong>(new Handle<T>(new T(std::forward<T>(nativeObj))));
-  jobject object = env->NewObject(objClass, initMethod, nativeHandle);
-  return object;
-}
-
-#define CREATE_WRAPPER(CLASSNAME, OBJ) createWrapper(CLASSNAME, std::move(OBJ), env)
 
 #endif // _ANDROID_JNI_UTILS_H

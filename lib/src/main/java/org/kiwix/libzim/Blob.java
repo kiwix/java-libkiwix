@@ -23,8 +23,6 @@ import org.kiwix.libzim.Blob;
 
 public class Blob
 {
-  private Blob(long handle) {nativeHandle = handle;}
-
   public native String getData();
   public native long size();
 
