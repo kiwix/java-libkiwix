@@ -19,6 +19,10 @@ add_library(
         libzim/query.cpp
         libzim/search.cpp
         libzim/search_iterator.cpp
+        libzim/suggestion_searcher.cpp
+        libzim/suggestion_search.cpp
+        libzim/suggestion_iterator.cpp
+        libzim/suggestion_item.cpp
 )
 
 find_library(libzim
