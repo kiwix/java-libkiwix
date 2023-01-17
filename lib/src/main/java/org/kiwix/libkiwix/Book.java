@@ -1,13 +1,15 @@
 
 package org.kiwix.libkiwix;
 
+import org.kiwix.libzim.Archive;
+
 public class Book
 {
   public Book() { allocate(); }
 
 
   public native void update(Book book);
-  public native void update(JNIKiwixReader reader);
+  public native void update(Archive archive);
 
   @Override
   protected void finalize() { dispose();  }
