@@ -13,6 +13,7 @@ add_library(
         common.cpp
         libzim/archive.cpp
         libzim/entry.cpp
+        libzim/entry_iterator.cpp
         libzim/item.cpp
         libzim/blob.cpp
         libzim/searcher.cpp

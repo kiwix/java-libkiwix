@@ -223,5 +223,65 @@ GETTER(jboolean, check)
 GETTER(jboolean, isMultiPart)
 GETTER(jboolean, hasNewNamespaceScheme)
 
+#define ITER_BY_PATH 0
+#define ITER_BY_TITLE 1
+#define ITER_EFFICIENT 2
+METHOD0(jobject, Archive, iterByPath) {
+  auto range = THIS->iterByPath();
+  jclass objClass = env->FindClass("org/kiwix/libzim/EntryIterator");
+  jmethodID initMethod = env->GetMethodID(objClass, "<init>", "(I)V");
+  jobject obj = env->NewObject(objClass, initMethod, ITER_BY_PATH);
+  SET_HANDLE(zim::Archive::iterator<zim::EntryOrder::pathOrder>, obj, range.begin());
 
+  auto end_ptr = std::make_shared<zim::Archive::iterator<zim::EntryOrder::pathOrder>>(range.end());
+  setPtr(env, obj, std::move(end_ptr), "nativeHandleEnd");
+  return obj;
+}
 
+METHOD0(jobject, Archive, iterByTitle) {
+  auto range = THIS->iterByTitle();
+  jclass objClass = env->FindClass("org/kiwix/libzim/EntryIterator");
+  jmethodID initMethod = env->GetMethodID(objClass, "<init>", "(I)V");
+  jobject obj = env->NewObject(objClass, initMethod, ITER_BY_TITLE);
+  SET_HANDLE(zim::Archive::iterator<zim::EntryOrder::titleOrder>, obj, range.begin());
+
+  auto end_ptr = std::make_shared<zim::Archive::iterator<zim::EntryOrder::titleOrder>>(range.end());
+  setPtr(env, obj, std::move(end_ptr), "nativeHandleEnd");
+  return obj;
+}
+
+METHOD0(jobject, Archive, iterEfficient) {
+  auto range = THIS->iterEfficient();
+  jclass objClass = env->FindClass("org/kiwix/libzim/EntryIterator");
+  jmethodID initMethod = env->GetMethodID(objClass, "<init>", "(I)V");
+  jobject obj = env->NewObject(objClass, initMethod, ITER_EFFICIENT);
+  SET_HANDLE(zim::Archive::iterator<zim::EntryOrder::efficientOrder>, obj, range.begin());
+
+  auto end_ptr = std::make_shared<zim::Archive::iterator<zim::EntryOrder::efficientOrder>>(range.end());
+  setPtr(env, obj, std::move(end_ptr), "nativeHandleEnd");
+  return obj;
+}
+
+METHOD(jobject, Archive, findByPath, jstring path) {
+  auto range = THIS->findByPath(TO_C(path));
+  jclass objClass = env->FindClass("org/kiwix/libzim/EntryIterator");
+  jmethodID initMethod = env->GetMethodID(objClass, "<init>", "(I)V");
+  jobject obj = env->NewObject(objClass, initMethod, ITER_BY_PATH);
+  SET_HANDLE(zim::Archive::iterator<zim::EntryOrder::pathOrder>, obj, range.begin());
+
+  auto end_ptr = std::make_shared<zim::Archive::iterator<zim::EntryOrder::pathOrder>>(range.end());
+  setPtr(env, obj, std::move(end_ptr), "nativeHandleEnd");
+  return obj;
+}
+
+METHOD(jobject, Archive, findByTitle, jstring title) {
+  auto range = THIS->findByTitle(TO_C(title));
+  jclass objClass = env->FindClass("org/kiwix/libzim/EntryIterator");
+  jmethodID initMethod = env->GetMethodID(objClass, "<init>", "(I)V");
+  jobject obj = env->NewObject(objClass, initMethod, ITER_BY_TITLE);
+  SET_HANDLE(zim::Archive::iterator<zim::EntryOrder::titleOrder>, obj, range.begin());
+
+  auto end_ptr = std::make_shared<zim::Archive::iterator<zim::EntryOrder::titleOrder>>(range.end());
+  setPtr(env, obj, std::move(end_ptr), "nativeHandleEnd");
+  return obj;
+}

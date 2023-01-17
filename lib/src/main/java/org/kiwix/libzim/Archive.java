@@ -22,6 +22,7 @@ package org.kiwix.libzim;
 import org.kiwix.libzim.ZimFileFormatException;
 import org.kiwix.libzim.Entry;
 import org.kiwix.libzim.Item;
+import org.kiwix.libzim.EntryIterator;
 import java.io.FileDescriptor;
 
 public class Archive
@@ -91,6 +92,12 @@ public class Archive
 
   public native boolean isMultiPart();
   public native boolean hasNewNamespaceScheme();
+
+  public native EntryIterator iterByPath();
+  public native EntryIterator iterByTitle();
+  public native EntryIterator iterEfficient();
+  public native EntryIterator findByPath(String path);
+  public native EntryIterator findByTitle(String path);
 
 
   private native void setNativeArchive(String filename);
