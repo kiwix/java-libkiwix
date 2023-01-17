@@ -18,11 +18,11 @@
  * MA 02110-1301, USA.
  */
 
-package org.kiwix.kiwixlib;
+package org.kiwix.libkiwix;
 
 import android.content.Context;
 import com.getkeepsafe.relinker.ReLinker;
-import org.kiwix.kiwixlib.JNIICU;
+import org.kiwix.libkiwix.JNIICU;
 
 public class JNIKiwix
 {

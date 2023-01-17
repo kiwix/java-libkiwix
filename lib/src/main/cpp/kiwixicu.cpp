@@ -19,7 +19,7 @@
  */
 
 #include <jni.h>
-#include "org_kiwix_kiwixlib_JNIICU.h"
+#include "org_kiwix_libkiwix_JNIICU.h"
 
 #include <iostream>
 #include <string>

@@ -19,7 +19,7 @@
 
 
 #include <jni.h>
-#include "org_kiwix_kiwixlib_Filter.h"
+#include "org_kiwix_libkiwix_Filter.h"
 
 #include "library.h"
 #include "utils.h"

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Matthieu Gautier <mgautier@kymeria.org>
+ * Copyright (C) 2013 Emmanuel Engelhart <kelson@kiwix.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU  General Public License as published by
@@ -17,11 +17,21 @@
  * MA 02110-1301, USA.
  */
 
-package org.kiwix.kiwixlib;
+package org.kiwix.libkiwix;
 
-public class JNIKiwixException extends Exception
+public class JNIKiwixString
 {
-  public JNIKiwixException(String message) {
-    super(message);
+  public String value;
+
+  public JNIKiwixString(String value) {
+    this.value = value;
+  }
+
+  public JNIKiwixString() {
+    this("");
+  }
+
+  public String getValue() {
+    return value;
   }
 }

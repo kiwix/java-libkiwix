@@ -19,7 +19,7 @@
 
 
 #include <jni.h>
-#include "org_kiwix_kiwixlib_Manager.h"
+#include "org_kiwix_libkiwix_Manager.h"
 
 #include "manager.h"
 #include "utils.h"

@@ -18,7 +18,7 @@
  * MA 02110-1301, USA.
  */
 
-package org.kiwix.kiwixlib;
+package org.kiwix.libkiwix;
 
 public class JNIICU
 {

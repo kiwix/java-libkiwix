@@ -17,21 +17,9 @@
  * MA 02110-1301, USA.
  */
 
-package org.kiwix.kiwixlib;
+package org.kiwix.libkiwix;
 
-public class JNIKiwixString
+public class JNIKiwixInt
 {
-  public String value;
-
-  public JNIKiwixString(String value) {
-    this.value = value;
-  }
-
-  public JNIKiwixString() {
-    this("");
-  }
-
-  public String getValue() {
-    return value;
-  }
+  public int value;
 }

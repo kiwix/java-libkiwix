@@ -17,24 +17,29 @@
  * MA 02110-1301, USA.
  */
 
-package org.kiwix.kiwixlib;
+package org.kiwix.libkiwix;
 
-public class Filter
+import org.kiwix.libkiwix.Book;
+import org.kiwix.libkiwix.JNIKiwixException;
+
+public class Library
 {
+  public native boolean addBook(String path) throws JNIKiwixException;
 
-  public native Filter local(boolean accept);
-  public native Filter remote(boolean accept);
-  public native Filter valid(boolean accept);
-  public native Filter acceptTags(String[] tags);
-  public native Filter rejectTags(String[] tags);
-  public native Filter lang(String lang);
-  public native Filter publisher(String publisher);
-  public native Filter creator(String creator);
-  public native Filter maxSize(long size);
-  public native Filter query(String query);
+  public native Book getBookById(String id);
+  public native int  getBookCount(boolean localBooks, boolean remoteBooks);
 
+  public native String[] getBooksIds();
+  public native String[] filter(Filter filter);
 
-  public Filter() { allocate(); }
+  public native String[] getBooksLanguages();
+  public native String[] getBooksCreators();
+  public native String[] getBooksPublishers();
+
+  public Library()
+  {
+    allocate();
+  }
 
   @Override
   protected void finalize() { dispose(); }
