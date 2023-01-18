@@ -147,8 +147,10 @@ template<typename T>
 struct JType { };
 
 template<> struct JType<bool>{ typedef jboolean type_t; };
+template<> struct JType<int16_t>{ typedef jint type_t; };
 template<> struct JType<int32_t>{ typedef jint type_t; };
 template<> struct JType<int64_t>{ typedef jlong type_t; };
+template<> struct JType<uint16_t>{ typedef jint type_t; };
 template<> struct JType<uint64_t> { typedef jlong type_t; };
 template<> struct JType<uint32_t> { typedef jlong type_t; };
 template<> struct JType<std::string>{ typedef jstring type_t; };

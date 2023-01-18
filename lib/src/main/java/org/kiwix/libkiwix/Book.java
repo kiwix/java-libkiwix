@@ -2,6 +2,7 @@
 package org.kiwix.libkiwix;
 
 import org.kiwix.libzim.Archive;
+import org.kiwix.libkiwix.Illustration;
 
 public class Book
 {
@@ -40,9 +41,8 @@ public class Book
   public native long getMediaCount();
   public native long getSize();
 
-  public native String getFavicon();
-  public native String getFaviconUrl();
-  public native String getFaviconMimeType();
+  public native Illustration[] getIllustrations();
+  public native Illustration getIllustration(int size);
 
   private native void allocate();
   private native void dispose();

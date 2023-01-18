@@ -66,10 +66,21 @@ GETTER(jstring, getTags)
 GETTER(jlong, getArticleCount)
 GETTER(jlong, getMediaCount)
 GETTER(jlong, getSize)
-GETTER(jstring, getFavicon)
-GETTER(jstring, getFaviconUrl)
-GETTER(jstring, getFaviconMimeType)
 
+METHOD0(jobjectArray, getIllustrations) {
+  auto illustrations = THIS->getIllustrations();
+  jobjectArray retArray = createArray(env, illustrations.size(), "org/kiwix/libkiwix/Illustration");
+  size_t index = 0;
+  for (auto illu: illustrations) {
+    auto wrapper = BUILD_WRAPPER("org/kiwix/libkiwx/Illustration", illu);
+    env->SetObjectArrayElement(retArray, index++, wrapper);
+  }
+  return retArray;
+}
+
+METHOD(jobject, getIllustration, jint size) {
+  return BUILD_WRAPPER("org/kiwix/libkiwix/Illustration", THIS->getIllustration(TO_C(size)));
+}
 METHOD(jstring, getTagStr, jstring tagName) try {
   return TO_JNI(THIS->getTagStr(TO_C(tagName)));
 } catch(...) {

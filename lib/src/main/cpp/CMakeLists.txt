@@ -52,6 +52,7 @@ add_library(
         libkiwix/kiwixserver.cpp
         libkiwix/library.cpp
         libkiwix/manager.cpp
+        libkiwix/illustration.cpp
 )
 
 find_library(libkiwix
