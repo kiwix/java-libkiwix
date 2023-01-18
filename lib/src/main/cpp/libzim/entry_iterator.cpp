@@ -83,6 +83,9 @@ METHOD0(jboolean, hasNext) {
       auto end = getPtr<EFFICIENT_NATIVE_TYPE>(env, thisObj, "nativeHandleEnd");
       return next == *end;
     }
+    default:
+      // unreachable!()
+      return false;
   }
 }
 
@@ -103,6 +106,9 @@ METHOD0(jobject, next) {
       zim::Entry entry = **GET_PTR(EFFICIENT_NATIVE_TYPE);
       return BUILD_WRAPPER("org/kiwix/libzim/Entry", entry);
     }
+    default:
+      // unreachable!()
+      return nullptr;
   }
 }
 
