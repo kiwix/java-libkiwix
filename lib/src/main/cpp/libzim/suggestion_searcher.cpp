@@ -46,26 +46,24 @@ JNIEXPORT void JNICALL Java_org_kiwix_libzim_SuggestionSearcher_setNativeSearche
 }
 
 
-JNIEXPORT void JNICALL
-Java_org_kiwix_kiwixlib_libzim_SuggestionSearcher_dispose(JNIEnv* env, jobject thisObj)
+METHOD0(void, libzim_SuggestionSearcher, dispose)
 {
   dispose<NATIVE_TYPE>(env, thisObj);
 }
 
 #define THIS GET_PTR(NATIVE_TYPE)
-#define GETTER(retType, name) JNIEXPORT retType JNICALL \
-Java_org_kiwix_libzim_SuggestionSearcher__##name (JNIEnv* env, jobject thisObj) \
+#define GETTER(retType, name) METHOD0(retType, libzim_SuggestionSearcher, name) \
 { \
   return TO_JNI(THIS->name()); \
 }
 
-METHOD(jobject, SuggestionSearcher, suggest, jstring query) {
+METHOD(jobject, libzim_SuggestionSearcher, suggest, jstring query) {
   auto obj = NEW_OBJECT("org/kiwix/libzim/SuggestionSearch");
   SET_HANDLE(zim::SuggestionSearch, obj, THIS->suggest(TO_C(query)));
   return obj;
 }
 
-METHOD(void, SuggestionSearcher, setVerbose, jboolean verbose) {
+METHOD(void, libzim_SuggestionSearcher, setVerbose, jboolean verbose) {
   THIS->setVerbose(TO_C(verbose));
 }
 

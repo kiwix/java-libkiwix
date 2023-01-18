@@ -30,15 +30,14 @@
 
 #define NATIVE_TYPE zim::SuggestionSearch
 
-JNIEXPORT void JNICALL
-Java_org_kiwix_kiwixlib_libzim_SuggestionSearch_dispose(JNIEnv* env, jobject thisObj)
+METHOD0(void, libzim_SuggestionSearch, dispose)
 {
   dispose<NATIVE_TYPE>(env, thisObj);
 }
 
 #define THIS GET_PTR(NATIVE_TYPE)
 
-METHOD(jobject, SuggestionSearch, getResults, jint start, jint maxResults) {
+METHOD(jobject, libzim_SuggestionSearch, getResults, jint start, jint maxResults) {
   auto results = THIS->getResults(TO_C(start), TO_C(maxResults));
   auto obj = NEW_OBJECT("ork/kiwix/libzim/SuggestionIterator");
   SET_HANDLE(zim::SuggestionIterator, obj, results.begin());
@@ -49,7 +48,7 @@ METHOD(jobject, SuggestionSearch, getResults, jint start, jint maxResults) {
   return obj;
 }
 
-METHOD0(jlong, SuggestionSearch, getEstimatedMatches) {
+METHOD0(jlong, libzim_SuggestionSearch, getEstimatedMatches) {
   return TO_JNI(THIS->getEstimatedMatches());
 }
 

@@ -46,33 +46,31 @@ JNIEXPORT void JNICALL Java_org_kiwix_libzim_Searcher_setNativeSearcher(
 }
 
 
-JNIEXPORT void JNICALL
-Java_org_kiwix_kiwixlib_libzim_Searcher_dispose(JNIEnv* env, jobject thisObj)
+METHOD0(void, libzim_Searcher, dispose)
 {
   dispose<NATIVE_TYPE>(env, thisObj);
 }
 
 #define THIS GET_PTR(NATIVE_TYPE)
-#define GETTER(retType, name) JNIEXPORT retType JNICALL \
-Java_org_kiwix_libzim_Searcher__##name (JNIEnv* env, jobject thisObj) \
+#define GETTER(retType, name) METHOD0(retType, libzim_Searcher, name) \
 { \
   return TO_JNI(THIS->name()); \
 }
 
-METHOD(jobject, Searcher, addArchive, jobject archive) {
+METHOD(jobject, libzim_Searcher, addArchive, jobject archive) {
   auto cArchive = getPtr<zim::Archive>(env, archive);
   THIS->addArchive(*cArchive);
   return thisObj;
 }
 
-METHOD(jobject, Searcher, search, jobject query) {
+METHOD(jobject, libzim_Searcher, search, jobject query) {
   auto cQuery = getPtr<zim::Query>(env, query);
   auto obj = NEW_OBJECT("org/kiwix/libzim/Search");
   SET_HANDLE(zim::Search, obj, THIS->search(*cQuery));
   return obj;
 }
 
-METHOD(void, Searcher, setVerbose, jboolean verbose) {
+METHOD(void, libzim_Searcher, setVerbose, jboolean verbose) {
   THIS->setVerbose(TO_C(verbose));
 }
 

@@ -53,12 +53,12 @@ Java_org_kiwix_kiwixlib_libzim_Query_dispose(JNIEnv* env, jobject thisObj)
 
 #define THIS GET_PTR(NATIVE_TYPE)
 
-METHOD(jobject, Query, setQuery, jstring query) {
+METHOD(jobject, libzim_Query, setQuery, jstring query) {
   THIS->setQuery(TO_C(query));
   return thisObj;
 }
 
-METHOD(jobject, Query, setGeorange, jfloat latitude, jfloat longitude, jfloat distance) {
+METHOD(jobject, libzim_Query, setGeorange, jfloat latitude, jfloat longitude, jfloat distance) {
   THIS->setGeorange(TO_C(latitude), TO_C(longitude), TO_C(distance));
   return thisObj;
 }

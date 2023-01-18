@@ -30,15 +30,13 @@
 
 #define NATIVE_TYPE zim::SuggestionItem
 
-JNIEXPORT void JNICALL
-Java_org_kiwix_kiwixlib_libzim_SuggestionItem_dispose(JNIEnv* env, jobject thisObj)
+METHOD0(void, libzim_SuggestionItem, dispose)
 {
   dispose<NATIVE_TYPE>(env, thisObj);
 }
 
 #define THIS GET_PTR(NATIVE_TYPE)
-#define GETTER(retType, name) JNIEXPORT retType JNICALL \
-Java_org_kiwix_libzim_SuggestionItem__##name (JNIEnv* env, jobject thisObj) \
+#define GETTER(retType, name) METHOD0(retType, libzim_SuggestionItem, name) \
 { \
   return TO_JNI(THIS->name()); \
 }

@@ -30,8 +30,7 @@
 
 #define NATIVE_TYPE zim::SuggestionIterator
 
-JNIEXPORT void JNICALL
-Java_org_kiwix_kiwixlib_libzim_SuggestionIterator_dispose(JNIEnv* env, jobject thisObj)
+METHOD0(void, libzim_SuggestionIterator, dispose)
 {
   // Delete end iterator
   dispose<NATIVE_TYPE>(env, thisObj, "nativeHandleEnd");
@@ -39,20 +38,19 @@ Java_org_kiwix_kiwixlib_libzim_SuggestionIterator_dispose(JNIEnv* env, jobject t
 }
 
 #define THIS GET_PTR(NATIVE_TYPE)
-#define GETTER(retType, name) JNIEXPORT retType JNICALL \
-Java_org_kiwix_libzim_SuggestionIterator__##name (JNIEnv* env, jobject thisObj) \
+#define GETTER(retType, name) METHOD0(retType, libzim_SuggestionIterator, name) \
 { \
   return TO_JNI(THIS->name()); \
 }
 
-METHOD0(jboolean, SearchIterator, hasNext) {
+METHOD0(jboolean, libzim_SearchIterator, hasNext) {
   NATIVE_TYPE next(*THIS);
   next++;
   auto end = getPtr<NATIVE_TYPE>(env, thisObj, "nativeHandleEnd");
   return next == *end;
 }
 
-METHOD0(jobject, SearchIterator, next) {
+METHOD0(jobject, libzim_SearchIterator, next) {
   (*THIS)++;
   zim::SuggestionItem item = **THIS;
   auto obj = NEW_OBJECT("org/kiwix/libzim/SuggestionItem");

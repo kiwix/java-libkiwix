@@ -109,11 +109,11 @@ void dispose(JNIEnv* env, jobject thisObj, const char* handleName = "nativeHandl
 }
 
 #define METHOD0(retType, class, name) \
-JNIEXPORT retType JNICALL Java_org_kiwix_libzim_##class##_##name( \
+JNIEXPORT retType JNICALL Java_org_kiwix_##class##_##name( \
  JNIEnv* env, jobject thisObj)
 
 #define METHOD(retType, class, name, ...) \
-JNIEXPORT retType JNICALL Java_org_kiwix_libzim_##class##_##name( \
+JNIEXPORT retType JNICALL Java_org_kiwix_##class##_##name( \
   JNIEnv* env, jobject thisObj, __VA_ARGS__)
 
 inline jfieldID getHandleField(JNIEnv* env, jobject obj, const char* handleName)

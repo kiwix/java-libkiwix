@@ -39,8 +39,7 @@ inline int get_order(JNIEnv* env, jobject thisObj) {
   return TO_C(env->GetIntField(thisObj, fieldId));
 }
 
-JNIEXPORT void JNICALL
-Java_org_kiwix_kiwixlib_libzim_EntryIterotar_dispose(JNIEnv* env, jobject thisObj)
+METHOD0(void, libzim_EntryIterotar, dispose)
 {
   // Delete end iterator
   switch (get_order(env, thisObj)) {
@@ -60,7 +59,7 @@ Java_org_kiwix_kiwixlib_libzim_EntryIterotar_dispose(JNIEnv* env, jobject thisOb
 }
 
 
-METHOD0(jboolean, EntryIterator, hasNext) {
+METHOD0(jboolean, libzim_EntryIterator, hasNext) {
   switch (get_order(env, thisObj)) {
     case 0: {
       PATH_NATIVE_TYPE next(*GET_PTR(PATH_NATIVE_TYPE));
@@ -83,7 +82,7 @@ METHOD0(jboolean, EntryIterator, hasNext) {
   }
 }
 
-METHOD0(jobject, EntryIterator, next) {
+METHOD0(jobject, libzim_EntryIterator, next) {
   switch (get_order(env, thisObj)) {
     case 0: {
       (*GET_PTR(PATH_NATIVE_TYPE))++;

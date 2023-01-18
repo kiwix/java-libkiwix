@@ -38,8 +38,7 @@ Java_org_kiwix_kiwixlib_libzim_Entry_dispose(JNIEnv* env, jobject thisObj)
 }
 
 #define THIS GET_PTR(NATIVE_TYPE)
-#define GETTER(retType, name) JNIEXPORT retType JNICALL \
-Java_org_kiwix_libzim_Entry__##name (JNIEnv* env, jobject thisObj) \
+#define GETTER(retType, name) METHOD0(retType, libzim_Entry, name) \
 { \
   return TO_JNI(THIS->name()); \
 }
@@ -48,19 +47,19 @@ Java_org_kiwix_libzim_Entry__##name (JNIEnv* env, jobject thisObj) \
 GETTER(jboolean, isRedirect)
 GETTER(jstring, getTitle)
 GETTER(jstring, getPath)
-METHOD(jobject, Entry, getItem, jboolean follow) {
+METHOD(jobject, libzim_Entry, getItem, jboolean follow) {
   auto obj = NEW_OBJECT("org/kiwix/libzim/Item");
   SET_HANDLE(zim::Item, obj, THIS->getItem(TO_C(follow)));
   return obj;
 }
 
-METHOD0(jobject, Entry, getRedirect) {
+METHOD0(jobject, libzim_Entry, getRedirect) {
   auto obj = NEW_OBJECT("org/kiwix/libzim/Item");
   SET_HANDLE(zim::Item, obj, THIS->getRedirect());
   return obj;
 }
 
-METHOD0(jobject, Entry, getRedirectEntry) {
+METHOD0(jobject, libzim_Entry, getRedirectEntry) {
   auto obj = NEW_OBJECT("org/kiwix/libzim/Entry");
   SET_HANDLE(zim::Entry, obj, THIS->getRedirectEntry());
   return obj;
