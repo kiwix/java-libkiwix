@@ -43,9 +43,7 @@ GETTER(jstring, getPath)
 GETTER(jstring, getMimetype)
 
 METHOD0(jobject, getData) {
-  auto obj = NEW_OBJECT("org/kiwix/libzim/Blob");
-  SET_HANDLE(zim::Blob, obj, THIS->getData());
-  return obj;
+  return BUILD_WRAPPER("org/kiwix/libzim/Blob", THIS->getData());
 }
 
 GETTER(jlong, getSize)

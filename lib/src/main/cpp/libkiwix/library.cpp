@@ -53,15 +53,11 @@ METHOD(jboolean, addBook, jobject book)
 }
 
 METHOD(jobject, getBookById, jstring id) {
-  auto obj = NEW_OBJECT("org/kiwix/libkiwix/Book");
-  SET_HANDLE(kiwix::Book, obj, THIS->getBookById(TO_C(id)));
-  return obj;
+  return BUILD_WRAPPER("org/kiwix/libkiwix/Book", THIS->getBookById(TO_C(id)));
 }
 
 METHOD(jobject, getArchiveById, jstring id) {
-  auto obj = NEW_OBJECT("org/kiwix/libzim/Archive");
-  setPtr(env, obj, THIS->getArchiveById(TO_C(id)));
-  return obj;
+  return BUILD_WRAPPER("org/kiwix/libzim/Archive", THIS->getArchiveById(TO_C(id)));
 }
 
 METHOD(jboolean, removeBookById, jstring id) {

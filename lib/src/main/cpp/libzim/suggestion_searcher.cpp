@@ -54,9 +54,7 @@ METHOD0(void, dispose)
 }
 
 METHOD(jobject, suggest, jstring query) {
-  auto obj = NEW_OBJECT("org/kiwix/libzim/SuggestionSearch");
-  SET_HANDLE(zim::SuggestionSearch, obj, THIS->suggest(TO_C(query)));
-  return obj;
+  return BUILD_WRAPPER("org/kiwix/libzim/SuggestionSearch", THIS->suggest(TO_C(query)));
 }
 
 METHOD(void, setVerbose, jboolean verbose) {

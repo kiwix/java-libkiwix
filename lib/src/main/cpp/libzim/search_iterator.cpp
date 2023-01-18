@@ -64,8 +64,6 @@ METHOD0(jboolean, hasNext) {
 METHOD0(jobject, next) {
   (*THIS)++;
   zim::Entry entry = **THIS;
-  auto obj = NEW_OBJECT("org/kiwix/libzim/Entry");
-  SET_HANDLE(zim::Entry, obj, entry);
-  return obj;
+  return BUILD_WRAPPER("org/kiwix/libzim/Entry", entry);
 }
 

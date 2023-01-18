@@ -91,23 +91,17 @@ METHOD0(jobject, next) {
     case 0: {
       (*GET_PTR(PATH_NATIVE_TYPE))++;
       zim::Entry entry = **GET_PTR(PATH_NATIVE_TYPE);
-      auto obj = NEW_OBJECT("org/kiwix/libzim/Entry");
-      SET_HANDLE(zim::Entry, obj, entry);
-      return obj;
+      return BUILD_WRAPPER("org/kiwix/libzim/Entry", entry);
     }
     case 1: {
       (*GET_PTR(TITLE_NATIVE_TYPE))++;
       zim::Entry entry = **GET_PTR(TITLE_NATIVE_TYPE);
-      auto obj = NEW_OBJECT("org/kiwix/libzim/Entry");
-      SET_HANDLE(zim::Entry, obj, entry);
-      return obj;
+      return BUILD_WRAPPER("org/kiwix/libzim/Entry", entry);
     }
     case 2: {
       (*GET_PTR(EFFICIENT_NATIVE_TYPE))++;
       zim::Entry entry = **GET_PTR(EFFICIENT_NATIVE_TYPE);
-      auto obj = NEW_OBJECT("org/kiwix/libzim/Entry");
-      SET_HANDLE(zim::Entry, obj, entry);
-      return obj;
+      return BUILD_WRAPPER("org/kiwix/libzim/Entry", entry);
     }
   }
 }

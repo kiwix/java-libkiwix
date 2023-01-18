@@ -135,17 +135,13 @@ METHOD(jstring, getMetadata, jstring name) {
 }
 
 METHOD(jobject, getMetadataItem, jstring name) {
-  auto obj = NEW_OBJECT("org/kiwix/libzim/Item");
-  SET_HANDLE(zim::Item, obj, THIS->getMetadataItem(TO_C(name)));
-  return obj;
+  return BUILD_WRAPPER("org/kiwix/libzim/Item", THIS->getMetadataItem(TO_C(name)));
 }
 
 GETTER(jobjectArray, getMetadataKeys)
 
 METHOD(jobject, getIllustrationItem, jint size) {
-  auto obj = NEW_OBJECT("org/kiwix/libzim/Item");
-  SET_HANDLE(zim::Item, obj, THIS->getIllustrationItem(TO_C(size)));
-  return obj;
+  return BUILD_WRAPPER("org/kiwix/libzim/Item", THIS->getIllustrationItem(TO_C(size)));
 }
 
 METHOD(jboolean, hasIllustration, jint size) {
@@ -155,45 +151,31 @@ METHOD(jboolean, hasIllustration, jint size) {
 GETTER(jlongArray, getIllustrationSizes)
 
 METHOD(jobject, getEntryByPath, jlong index) {
-  auto obj = NEW_OBJECT("org/kiwix/libzim/Entry");
-  SET_HANDLE(zim::Entry, obj, THIS->getEntryByPath(TO_C(index)));
-  return obj;
+  return BUILD_WRAPPER("org/kiwix/libzim/Entry", THIS->getEntryByPath(TO_C(index)));
 }
 
 METHOD(jobject, getEntryByPath, jstring path) {
-  auto obj = NEW_OBJECT("org/kiwix/libzim/Entry");
-  SET_HANDLE(zim::Entry, obj, THIS->getEntryByPath(TO_C(path)));
-  return obj;
+  return BUILD_WRAPPER("org/kiwix/libzim/Entry", THIS->getEntryByPath(TO_C(path)));
 }
 
 METHOD(jobject, getEntryByTitle, jlong index) {
-  auto obj = NEW_OBJECT("org/kiwix/libzim/Entry");
-  SET_HANDLE(zim::Entry, obj, THIS->getEntryByTitle(TO_C(index)));
-  return obj;
+  return BUILD_WRAPPER("org/kiwix/libzim/Entry", THIS->getEntryByTitle(TO_C(index)));
 }
 
 METHOD(jobject, getEntryByTitle, jstring title) {
-  auto obj = NEW_OBJECT("org/kiwix/libzim/Entry");
-  SET_HANDLE(zim::Entry, obj, THIS->getEntryByTitle(TO_C(title)));
-  return obj;
+  return BUILD_WRAPPER("org/kiwix/libzim/Entry", THIS->getEntryByTitle(TO_C(title)));
 }
 
 METHOD(jobject, getEntryByClusterOrder, jlong index) {
-  auto obj = NEW_OBJECT("org/kiwix/libzim/Entry");
-  SET_HANDLE(zim::Entry, obj, THIS->getEntryByClusterOrder(TO_C(index)));
-  return obj;
+  return BUILD_WRAPPER("org/kiwix/libzim/Entry", THIS->getEntryByClusterOrder(TO_C(index)));
 }
 
 METHOD0(jobject, getMainEntry) {
-  auto obj = NEW_OBJECT("org/kiwix/libzim/Entry");
-  SET_HANDLE(zim::Entry, obj, THIS->getMainEntry());
-  return obj;
+  return BUILD_WRAPPER("org/kiwix/libzim/Entry", THIS->getMainEntry());
 }
 
 METHOD0(jobject, getRandomEntry) {
-  auto obj = NEW_OBJECT("org/kiwix/libzim/Entry");
-  SET_HANDLE(zim::Entry, obj, THIS->getRandomEntry());
-  return obj;
+  return BUILD_WRAPPER("org/kiwix/libzim/Entry", THIS->getRandomEntry());
 }
 
 METHOD(jboolean, hasEntryByPath, jstring path) {

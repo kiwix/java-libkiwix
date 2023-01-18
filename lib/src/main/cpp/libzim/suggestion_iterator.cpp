@@ -51,8 +51,6 @@ METHOD0(jboolean, hasNext) {
 METHOD0(jobject, next) {
   (*THIS)++;
   zim::SuggestionItem item = **THIS;
-  auto obj = NEW_OBJECT("org/kiwix/libzim/SuggestionItem");
-  SET_HANDLE(zim::SuggestionItem, obj, item);
-  return obj;
+  return BUILD_WRAPPER("org/kiwix/libzim/SuggestionItem", item);
 }
 

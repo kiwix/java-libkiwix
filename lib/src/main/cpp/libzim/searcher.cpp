@@ -61,9 +61,7 @@ METHOD(jobject, addArchive, jobject archive) {
 
 METHOD(jobject, search, jobject query) {
   auto cQuery = getPtr<zim::Query>(env, query);
-  auto obj = NEW_OBJECT("org/kiwix/libzim/Search");
-  SET_HANDLE(zim::Search, obj, THIS->search(*cQuery));
-  return obj;
+  return BUILD_WRAPPER("org/kiwix/libzim/Search", THIS->search(*cQuery));
 }
 
 METHOD(void, setVerbose, jboolean verbose) {

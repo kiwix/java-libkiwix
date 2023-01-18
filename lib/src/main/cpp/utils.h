@@ -121,6 +121,15 @@ inline jobjectArray createArray(JNIEnv* env, size_t length, const std::string& t
   return env->NewObjectArray(length, c, NULL);
 }
 
+template<typename T>
+inline jobject buildWrapper(JNIEnv* env, const char* class_name, T&& obj, const char* handleName = "nativeHandle") {
+  auto wrapper = newObject(class_name, env);
+  auto ptr = std::make_shared<T>(std::move(obj));
+  setPtr(env, wrapper, std::move(ptr));
+  return wrapper;
+}
+#define BUILD_WRAPPER(CLASSNAME, OBJ) buildWrapper(env, CLASSNAME, std::move(OBJ))
+
 
 // A mixin class which will lock the globalLock when a instance is created
 // This avoid the cration of two instance inheriting from Lock in the same time.

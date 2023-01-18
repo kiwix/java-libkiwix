@@ -44,19 +44,13 @@ GETTER(jboolean, isRedirect)
 GETTER(jstring, getTitle)
 GETTER(jstring, getPath)
 METHOD(jobject, getItem, jboolean follow) {
-  auto obj = NEW_OBJECT("org/kiwix/libzim/Item");
-  SET_HANDLE(zim::Item, obj, THIS->getItem(TO_C(follow)));
-  return obj;
+  return BUILD_WRAPPER("org/kiwix/libzim/Item", THIS->getItem(TO_C(follow)));
 }
 
 METHOD0(jobject, getRedirect) {
-  auto obj = NEW_OBJECT("org/kiwix/libzim/Item");
-  SET_HANDLE(zim::Item, obj, THIS->getRedirect());
-  return obj;
+  return BUILD_WRAPPER("org/kiwix/libzim/Item", THIS->getRedirect());
 }
 
 METHOD0(jobject, getRedirectEntry) {
-  auto obj = NEW_OBJECT("org/kiwix/libzim/Entry");
-  SET_HANDLE(zim::Entry, obj, THIS->getRedirectEntry());
-  return obj;
+  return BUILD_WRAPPER("org/kiwix/libzim/Entry", THIS->getRedirectEntry());
 }
