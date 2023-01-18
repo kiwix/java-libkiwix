@@ -38,10 +38,7 @@ METHOD0(void, libzim_SuggestionIterator, dispose)
 }
 
 #define THIS GET_PTR(NATIVE_TYPE)
-#define GETTER(retType, name) METHOD0(retType, libzim_SuggestionIterator, name) \
-{ \
-  return TO_JNI(THIS->name()); \
-}
+#define GETTER(retType, name) GETTER_METHOD(retType, libzim_SuggestionIterator, THIS, name)
 
 METHOD0(jboolean, libzim_SearchIterator, hasNext) {
   NATIVE_TYPE next(*THIS);

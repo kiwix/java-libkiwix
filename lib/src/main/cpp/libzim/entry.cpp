@@ -38,10 +38,7 @@ Java_org_kiwix_kiwixlib_libzim_Entry_dispose(JNIEnv* env, jobject thisObj)
 }
 
 #define THIS GET_PTR(NATIVE_TYPE)
-#define GETTER(retType, name) METHOD0(retType, libzim_Entry, name) \
-{ \
-  return TO_JNI(THIS->name()); \
-}
+#define GETTER(retType, name) GETTER_METHOD(retType, libzim_Entry, THIS, name)
 
 
 GETTER(jboolean, isRedirect)

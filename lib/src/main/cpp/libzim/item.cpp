@@ -37,10 +37,7 @@ Java_org_kiwix_kiwixlib_libzim_Item_dispose(JNIEnv* env, jobject thisObj)
 }
 
 #define THIS GET_PTR(NATIVE_TYPE)
-#define GETTER(retType, name) METHOD0(retType, libzim_Item, name) \
-{ \
-  return TO_JNI(THIS->name()); \
-}
+#define GETTER(retType, name) GETTER_METHOD(retType, libzim_Item, THIS, name)
 
 GETTER(jstring, getTitle)
 GETTER(jstring, getPath)

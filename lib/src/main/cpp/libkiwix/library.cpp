@@ -69,11 +69,7 @@ METHOD(jint, Library, getBookCount, jboolean localBooks, jboolean remoteBooks) {
   return THIS->getBookCount(localBooks, remoteBooks);
 }
 
-#define GETTER(retType, name) JNIEXPORT retType JNICALL \
-Java_org_kiwix_libkiwix_Library_##name (JNIEnv* env, jobject thisObj) \
-{ \
-  return TO_JNI(THIS->name()); \
-}
+#define GETTER(retType, name) GETTER_METHOD(retType, libkiwix_Library, THIS, name)
 
 GETTER(jobjectArray, getBooksIds)
 GETTER(jobjectArray, getBooksLanguages)

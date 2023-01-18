@@ -116,6 +116,10 @@ JNIEXPORT retType JNICALL Java_org_kiwix_##class##_##name( \
 JNIEXPORT retType JNICALL Java_org_kiwix_##class##_##name( \
   JNIEnv* env, jobject thisObj, __VA_ARGS__)
 
+#define GETTER_METHOD(retType, class, THIS, name) METHOD0(retType, class, name) { \
+  return TO_JNI(THIS->name()); \
+}
+
 inline jfieldID getHandleField(JNIEnv* env, jobject obj, const char* handleName)
 {
   jclass c = env->GetObjectClass(obj);

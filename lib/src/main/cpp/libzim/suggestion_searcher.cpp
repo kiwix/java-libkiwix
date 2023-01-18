@@ -52,10 +52,7 @@ METHOD0(void, libzim_SuggestionSearcher, dispose)
 }
 
 #define THIS GET_PTR(NATIVE_TYPE)
-#define GETTER(retType, name) METHOD0(retType, libzim_SuggestionSearcher, name) \
-{ \
-  return TO_JNI(THIS->name()); \
-}
+#define GETTER(retType, name) GETTER_METHOD(retType, libzim_SuggestionSearcher, THIS, name)
 
 METHOD(jobject, libzim_SuggestionSearcher, suggest, jstring query) {
   auto obj = NEW_OBJECT("org/kiwix/libzim/SuggestionSearch");

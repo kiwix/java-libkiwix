@@ -116,10 +116,7 @@ Java_org_kiwix_libzim_Archive_dispose(JNIEnv* env, jobject thisObj)
 }
 
 #define THIS GET_PTR(zim::Archive)
-#define GETTER(retType, name) METHOD0(retType, libzim_Archive, name) \
-{ \
-  return TO_JNI(THIS->name()); \
-}
+#define GETTER(retType, name) GETTER_METHOD(retType, libzim_Archive, THIS, name)
 
 
 GETTER(jstring, getFilename)

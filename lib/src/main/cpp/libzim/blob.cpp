@@ -36,10 +36,7 @@ Java_org_kiwix_kiwixlib_libzim_Blob_dispose(JNIEnv* env, jobject thisObj)
   dispose<NATIVE_TYPE>(env, thisObj);
 }
 #define THIS GET_PTR(NATIVE_TYPE)
-#define GETTER(retType, name) METHOD0(retType, libzim_Blob, name) \
-{ \
-  return TO_JNI(THIS->name()); \
-}
+#define GETTER(retType, name) GETTER_METHOD(retType, libzim_Blob, THIS, name)
 
 METHOD0(jstring, libzim_Blob, getData) {
   return TO_JNI(std::string(*THIS));

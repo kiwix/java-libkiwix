@@ -51,11 +51,7 @@ METHOD(void, Book, update__Lorg_kiwix_libkiwix_JNIKiwixReader_2, jobject archive
   THIS->update(*getPtr<zim::Archive>(env, archive));
 }
 
-#define GETTER(retType, name) JNIEXPORT retType JNICALL \
-Java_org_kiwix_libkiwix_Book_##name (JNIEnv* env, jobject thisObj) \
-{ \
-  return TO_JNI(THIS->name()); \
-}
+#define GETTER(retType, name) GETTER_METHOD(retType, libkiwix_Book, THIS, name)
 
 GETTER(jstring, getId)
 GETTER(jstring, getPath)

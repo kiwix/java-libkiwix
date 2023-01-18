@@ -36,10 +36,7 @@ METHOD0(void, libzim_SuggestionItem, dispose)
 }
 
 #define THIS GET_PTR(NATIVE_TYPE)
-#define GETTER(retType, name) METHOD0(retType, libzim_SuggestionItem, name) \
-{ \
-  return TO_JNI(THIS->name()); \
-}
+#define GETTER(retType, name) GETTER_METHOD(retType, libzim_SuggestionItem, THIS, name)
 
 
 GETTER(jstring, getTitle)
