@@ -25,18 +25,16 @@
 #include "utils.h"
 
 #define NATIVE_TYPE kiwix::Library
-#define THIS GET_PTR(NATIVE_TYPE)
+#define TYPENAME libkiwix_Library
+#include "macros.h"
 
 /* Kiwix Reader JNI functions */
-JNIEXPORT void JNICALL
-Java_org_kiwix_kiwixlib_Library_allocate(
-    JNIEnv* env, jobject thisObj)
+METHOD0(void, allocate)
 {
   SET_PTR(std::make_shared<NATIVE_TYPE>());
 }
 
-JNIEXPORT void JNICALL
-Java_org_kiwix_kiwixlib_Library_dispose(JNIEnv* env, jobject thisObj)
+METHOD0(void, dispose)
 {
   dispose<NATIVE_TYPE>(env, thisObj);
 }
@@ -59,24 +57,22 @@ Java_org_kiwix_kiwixlib_Library_addBook(
   return false;
 }*/
 
-METHOD(jobject, Library, getBookById, jstring id) {
+METHOD(jobject, getBookById, jstring id) {
   auto obj = NEW_OBJECT("org/kiwix/libkiwix/Book");
   SET_HANDLE(kiwix::Book, obj, THIS->getBookById(TO_C(id)));
   return obj;
 }
 
-METHOD(jint, Library, getBookCount, jboolean localBooks, jboolean remoteBooks) {
+METHOD(jint, getBookCount, jboolean localBooks, jboolean remoteBooks) {
   return THIS->getBookCount(localBooks, remoteBooks);
 }
-
-#define GETTER(retType, name) GETTER_METHOD(retType, libkiwix_Library, THIS, name)
 
 GETTER(jobjectArray, getBooksIds)
 GETTER(jobjectArray, getBooksLanguages)
 GETTER(jobjectArray, getBooksCreators)
 GETTER(jobjectArray, getBooksPublishers)
 
-METHOD(jobjectArray, Library, filter, jobject filterObj) {
+METHOD(jobjectArray, filter, jobject filterObj) {
   auto filter = getPtr<kiwix::Filter>(env, filterObj);
   return c2jni(THIS->filter(*filter), env);
 }

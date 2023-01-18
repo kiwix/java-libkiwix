@@ -26,32 +26,28 @@
 #include <zim/archive.h>
 
 #define NATIVE_TYPE kiwix::Book
-#define THIS GET_PTR(NATIVE_TYPE)
+#define TYPENAME libkiwix_Book
+#include <macros.h>
 
-JNIEXPORT void JNICALL
-Java_org_kiwix_libkiwix_Book_allocate(
-  JNIEnv* env, jobject thisObj)
+METHOD0(void, allocate)
 {
   SET_PTR(std::make_shared<NATIVE_TYPE>());
 }
 
-JNIEXPORT void JNICALL
-Java_org_kiwix_libkiwix_Book_dispose(JNIEnv* env, jobject thisObj)
+METHOD0(void, dispose)
 {
   dispose<NATIVE_TYPE>(env, thisObj);
 }
 
-METHOD(void, Book, update__Lorg_kiwix_libkiwix_Book_2, jobject otherBook)
+METHOD(void, update__Lorg_kiwix_libkiwix_Book_2, jobject otherBook)
 {
   THIS->update(*getPtr<kiwix::Book>(env, otherBook));
 }
 
-METHOD(void, Book, update__Lorg_kiwix_libkiwix_JNIKiwixReader_2, jobject archive)
+METHOD(void, update__Lorg_kiwix_libkiwix_JNIKiwixReader_2, jobject archive)
 {
   THIS->update(*getPtr<zim::Archive>(env, archive));
 }
-
-#define GETTER(retType, name) GETTER_METHOD(retType, libkiwix_Book, THIS, name)
 
 GETTER(jstring, getId)
 GETTER(jstring, getPath)
@@ -74,10 +70,8 @@ GETTER(jstring, getFavicon)
 GETTER(jstring, getFaviconUrl)
 GETTER(jstring, getFaviconMimeType)
 
-METHOD(jstring, Book, getTagStr, jstring tagName) try {
+METHOD(jstring, getTagStr, jstring tagName) try {
   return TO_JNI(THIS->getTagStr(TO_C(tagName)));
 } catch(...) {
   return c2jni<std::string>("", env);
 }
-
-#undef GETTER

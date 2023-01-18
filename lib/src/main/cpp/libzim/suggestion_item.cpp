@@ -28,16 +28,15 @@
 
 #include <zim/suggestion.h>
 
+#define CLASSNAME "org/kiwix/libzim/SuggestionItem"
 #define NATIVE_TYPE zim::SuggestionItem
+#define TYPENAME libzim_SuggestionItem
+#include <macros.h>
 
-METHOD0(void, libzim_SuggestionItem, dispose)
+METHOD0(void, dispose)
 {
   dispose<NATIVE_TYPE>(env, thisObj);
 }
-
-#define THIS GET_PTR(NATIVE_TYPE)
-#define GETTER(retType, name) GETTER_METHOD(retType, libzim_SuggestionItem, THIS, name)
-
 
 GETTER(jstring, getTitle)
 GETTER(jstring, getPath)

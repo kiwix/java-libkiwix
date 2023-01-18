@@ -18,29 +18,24 @@
  * MA 02110-1301, USA.
  */
 
-#include <jni.h>
-#include <exception>
-#include "org_kiwix_libzim_Blob.h"
 
-#include "utils.h"
-
-#include <string>
-
-#include <zim/blob.h>
-
-#define CLASSNAME "org/kiwix/libzim/Blob"
-#define NATIVE_TYPE zim::Blob
-#define TYPENAME libzim_Blob
-#include <macros.h>
+// You must define NATIVE_TYPE("zim::Archive") and TYPENAME("zim__Archive")
 
 
+#define BUILD_METHOD_NX(TYPE, NAME) Java_org_kiwix_ ## TYPE ## _ ## NAME
+#define BUILD_METHOD(TYPE, NAME) BUILD_METHOD_NX(TYPE, NAME)
 
-METHOD0(void, dispose)
-{
-  dispose<NATIVE_TYPE>(env, thisObj);
+#define THIS getPtr<NATIVE_TYPE>(env, thisObj)
+
+#define METHOD0(retType, name) \
+JNIEXPORT retType JNICALL BUILD_METHOD(TYPENAME, name) ( \
+  JNIEnv* env, jobject thisObj)
+
+#define METHOD(retType, name, ...) \
+JNIEXPORT retType JNICALL BUILD_METHOD(TYPENAME ,name) ( \
+  JNIEnv* env, jobject thisObj, __VA_ARGS__)
+
+#define GETTER(retType, name) METHOD0(retType, name) { \
+  return TO_JNI(THIS->name()); \
 }
 
-METHOD0(jstring, getData) {
-  return TO_JNI(std::string(*THIS));
-}
-GETTER(jlong, size)

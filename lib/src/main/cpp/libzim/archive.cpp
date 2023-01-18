@@ -30,9 +30,13 @@
 #include <zim/archive.h>
 #include <zim/item.h>
 
+#define CLASSNAME "org/kiwix/libzim/Archive"
+#define NATIVE_TYPE zim::Archive
+#define TYPENAME libzim_Archive
+#include <macros.h>
+
 /* Kiwix Reader JNI functions */
-JNIEXPORT void JNICALL Java_org_kiwix_libzim_Archive_setNativeArchive(
-    JNIEnv* env, jobject thisObj, jstring filename)
+METHOD(void, setNativeArchive, jstring filename)
 {
   std::string cPath = TO_C(filename);
 
@@ -115,10 +119,6 @@ Java_org_kiwix_libzim_Archive_dispose(JNIEnv* env, jobject thisObj)
   dispose<zim::Archive>(env, thisObj);
 }
 
-#define THIS GET_PTR(zim::Archive)
-#define GETTER(retType, name) GETTER_METHOD(retType, libzim_Archive, THIS, name)
-
-
 GETTER(jstring, getFilename)
 GETTER(jlong, getFilesize)
 GETTER(jint, getAllEntryCount)
@@ -126,15 +126,15 @@ GETTER(jint, getEntryCount)
 GETTER(jint, getArticleCount)
 GETTER(jint, getMediaCount)
 
-METHOD0(jstring, libzim_Archive, getUuid) {
+METHOD0(jstring, getUuid) {
   return TO_JNI(std::string(THIS->getUuid()));
 }
 
-METHOD(jstring, libzim_Archive, getMetadata, jstring name) {
+METHOD(jstring, getMetadata, jstring name) {
   return TO_JNI(THIS->getMetadata(TO_C(name)));
 }
 
-METHOD(jobject, libzim_Archive, getMetadataItem, jstring name) {
+METHOD(jobject, getMetadataItem, jstring name) {
   auto obj = NEW_OBJECT("org/kiwix/libzim/Item");
   SET_HANDLE(zim::Item, obj, THIS->getMetadataItem(TO_C(name)));
   return obj;
@@ -142,71 +142,71 @@ METHOD(jobject, libzim_Archive, getMetadataItem, jstring name) {
 
 GETTER(jobjectArray, getMetadataKeys)
 
-METHOD(jobject, libzim_Archive, getIllustrationItem, jint size) {
+METHOD(jobject, getIllustrationItem, jint size) {
   auto obj = NEW_OBJECT("org/kiwix/libzim/Item");
   SET_HANDLE(zim::Item, obj, THIS->getIllustrationItem(TO_C(size)));
   return obj;
 }
 
-METHOD(jboolean, libzim_Archive, hasIllustration, jint size) {
+METHOD(jboolean, hasIllustration, jint size) {
   return TO_JNI(THIS->hasIllustration(TO_C(size)));
 }
 
 GETTER(jlongArray, getIllustrationSizes)
 
-METHOD(jobject, libzim_Archive, getEntryByPath, jlong index) {
+METHOD(jobject, getEntryByPath, jlong index) {
   auto obj = NEW_OBJECT("org/kiwix/libzim/Entry");
   SET_HANDLE(zim::Entry, obj, THIS->getEntryByPath(TO_C(index)));
   return obj;
 }
 
-METHOD(jobject, libzim_Archive, getEntryByPath, jstring path) {
+METHOD(jobject, getEntryByPath, jstring path) {
   auto obj = NEW_OBJECT("org/kiwix/libzim/Entry");
   SET_HANDLE(zim::Entry, obj, THIS->getEntryByPath(TO_C(path)));
   return obj;
 }
 
-METHOD(jobject, libzim_Archive, getEntryByTitle, jlong index) {
+METHOD(jobject, getEntryByTitle, jlong index) {
   auto obj = NEW_OBJECT("org/kiwix/libzim/Entry");
   SET_HANDLE(zim::Entry, obj, THIS->getEntryByTitle(TO_C(index)));
   return obj;
 }
 
-METHOD(jobject, libzim_Archive, getEntryByTitle, jstring title) {
+METHOD(jobject, getEntryByTitle, jstring title) {
   auto obj = NEW_OBJECT("org/kiwix/libzim/Entry");
   SET_HANDLE(zim::Entry, obj, THIS->getEntryByTitle(TO_C(title)));
   return obj;
 }
 
-METHOD(jobject, libzim_Archive, getEntryByClusterOrder, jlong index) {
+METHOD(jobject, getEntryByClusterOrder, jlong index) {
   auto obj = NEW_OBJECT("org/kiwix/libzim/Entry");
   SET_HANDLE(zim::Entry, obj, THIS->getEntryByClusterOrder(TO_C(index)));
   return obj;
 }
 
-METHOD0(jobject, libzim_Archive, getMainEntry) {
+METHOD0(jobject, getMainEntry) {
   auto obj = NEW_OBJECT("org/kiwix/libzim/Entry");
   SET_HANDLE(zim::Entry, obj, THIS->getMainEntry());
   return obj;
 }
 
-METHOD0(jobject, libzim_Archive, getRandomEntry) {
+METHOD0(jobject, getRandomEntry) {
   auto obj = NEW_OBJECT("org/kiwix/libzim/Entry");
   SET_HANDLE(zim::Entry, obj, THIS->getRandomEntry());
   return obj;
 }
 
-METHOD(jboolean, libzim_Archive, hasEntryByPath, jstring path) {
+METHOD(jboolean, hasEntryByPath, jstring path) {
   return TO_JNI(THIS->hasEntryByPath(TO_C(path)));
 }
 
-METHOD(jboolean, libzim_Archive, hasEntryByTitle, jstring title) {
+METHOD(jboolean, hasEntryByTitle, jstring title) {
   return TO_JNI(THIS->hasEntryByPath(TO_C(title)));
 }
 
 GETTER(jboolean, hasMainEntry)
 
-METHOD(jboolean, libzim_Archive, hasIllustration, jlong size) {
+METHOD(jboolean, hasIllustration, jlong size) {
   return TO_JNI(THIS->hasIllustration(TO_C(size)));
 }
 
@@ -222,7 +222,7 @@ GETTER(jboolean, hasNewNamespaceScheme)
 #define ITER_BY_PATH 0
 #define ITER_BY_TITLE 1
 #define ITER_EFFICIENT 2
-METHOD0(jobject, libzim_Archive, iterByPath) {
+METHOD0(jobject, iterByPath) {
   auto range = THIS->iterByPath();
   jclass objClass = env->FindClass("org/kiwix/libzim/EntryIterator");
   jmethodID initMethod = env->GetMethodID(objClass, "<init>", "(I)V");
@@ -234,7 +234,7 @@ METHOD0(jobject, libzim_Archive, iterByPath) {
   return obj;
 }
 
-METHOD0(jobject, libzim_Archive, iterByTitle) {
+METHOD0(jobject, iterByTitle) {
   auto range = THIS->iterByTitle();
   jclass objClass = env->FindClass("org/kiwix/libzim/EntryIterator");
   jmethodID initMethod = env->GetMethodID(objClass, "<init>", "(I)V");
@@ -246,7 +246,7 @@ METHOD0(jobject, libzim_Archive, iterByTitle) {
   return obj;
 }
 
-METHOD0(jobject, libzim_Archive, iterEfficient) {
+METHOD0(jobject, iterEfficient) {
   auto range = THIS->iterEfficient();
   jclass objClass = env->FindClass("org/kiwix/libzim/EntryIterator");
   jmethodID initMethod = env->GetMethodID(objClass, "<init>", "(I)V");
@@ -258,7 +258,7 @@ METHOD0(jobject, libzim_Archive, iterEfficient) {
   return obj;
 }
 
-METHOD(jobject, libzim_Archive, findByPath, jstring path) {
+METHOD(jobject, findByPath, jstring path) {
   auto range = THIS->findByPath(TO_C(path));
   jclass objClass = env->FindClass("org/kiwix/libzim/EntryIterator");
   jmethodID initMethod = env->GetMethodID(objClass, "<init>", "(I)V");
@@ -270,7 +270,7 @@ METHOD(jobject, libzim_Archive, findByPath, jstring path) {
   return obj;
 }
 
-METHOD(jobject, libzim_Archive, findByTitle, jstring title) {
+METHOD(jobject, findByTitle, jstring title) {
   auto range = THIS->findByTitle(TO_C(title));
   jclass objClass = env->FindClass("org/kiwix/libzim/EntryIterator");
   jmethodID initMethod = env->GetMethodID(objClass, "<init>", "(I)V");

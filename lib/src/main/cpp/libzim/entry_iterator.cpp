@@ -29,6 +29,10 @@
 #include <zim/entry.h>
 #include <zim/search.h>
 
+#define CLASSNAME "org/kiwix/libzim/EntryIterator"
+#define TYPENAME libzim_EntryIterator
+#include "macros.h"
+
 #define PATH_NATIVE_TYPE zim::Archive::iterator<zim::EntryOrder::pathOrder>
 #define TITLE_NATIVE_TYPE zim::Archive::iterator<zim::EntryOrder::titleOrder>
 #define EFFICIENT_NATIVE_TYPE zim::Archive::iterator<zim::EntryOrder::efficientOrder>
@@ -39,7 +43,7 @@ inline int get_order(JNIEnv* env, jobject thisObj) {
   return TO_C(env->GetIntField(thisObj, fieldId));
 }
 
-METHOD0(void, libzim_EntryIterotar, dispose)
+METHOD0(void, dispose)
 {
   // Delete end iterator
   switch (get_order(env, thisObj)) {
@@ -59,7 +63,7 @@ METHOD0(void, libzim_EntryIterotar, dispose)
 }
 
 
-METHOD0(jboolean, libzim_EntryIterator, hasNext) {
+METHOD0(jboolean, hasNext) {
   switch (get_order(env, thisObj)) {
     case 0: {
       PATH_NATIVE_TYPE next(*GET_PTR(PATH_NATIVE_TYPE));
@@ -82,7 +86,7 @@ METHOD0(jboolean, libzim_EntryIterator, hasNext) {
   }
 }
 
-METHOD0(jobject, libzim_EntryIterator, next) {
+METHOD0(jobject, next) {
   switch (get_order(env, thisObj)) {
     case 0: {
       (*GET_PTR(PATH_NATIVE_TYPE))++;

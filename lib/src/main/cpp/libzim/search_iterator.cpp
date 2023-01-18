@@ -29,17 +29,18 @@
 #include <zim/entry.h>
 #include <zim/search.h>
 
+#define CLASSNAME "org/kiwix/libzim/SearchIterator"
 #define NATIVE_TYPE zim::SearchIterator
+#define TYPENAME libzim_SearchIterator
+#include <macros.h>
 
-METHOD0(void, libzim_SearchIterator, dispose)
+METHOD0(void, dispose)
 {
   // Delete end iterator
   dispose<NATIVE_TYPE>(env, thisObj, "nativeHandleEnd");
   dispose<NATIVE_TYPE>(env, thisObj);
 }
 
-#define THIS GET_PTR(NATIVE_TYPE)
-#define GETTER(retType, name) GETTER_METHOD(retType, libzim_SearchIterator, THIS, name)
 
 GETTER(jstring, getPath)
 GETTER(jstring, getTitle)
@@ -49,18 +50,18 @@ GETTER(jint, getWordCount)
 GETTER(jint, getFileIndex)
 GETTER(jint, getSize)
 
-METHOD0(jstring, libzim_SearchIterator, getZimId) {
+METHOD0(jstring, getZimId) {
     return TO_JNI(std::string(THIS->getZimId()));
 }
 
-METHOD0(jboolean, libzim_SearchIterator, hasNext) {
+METHOD0(jboolean, hasNext) {
   zim::SearchIterator next(*THIS);
   next++;
   auto end = getPtr<NATIVE_TYPE>(env, thisObj, "nativeHandleEnd");
   return next == *end;
 }
 
-METHOD0(jobject, libzim_SearchIterator, next) {
+METHOD0(jobject, next) {
   (*THIS)++;
   zim::Entry entry = **THIS;
   auto obj = NEW_OBJECT("org/kiwix/libzim/Entry");

@@ -29,34 +29,33 @@
 #include <zim/entry.h>
 #include <zim/item.h>
 
+#define CLASSNAME "org/kiwix/libzim/Entry"
 #define NATIVE_TYPE zim::Entry
+#define TYPENAME libzim_Entry
+#include <macros.h>
 
-JNIEXPORT void JNICALL
-Java_org_kiwix_kiwixlib_libzim_Entry_dispose(JNIEnv* env, jobject thisObj)
+
+METHOD0(void, dispose)
 {
   dispose<NATIVE_TYPE>(env, thisObj);
 }
 
-#define THIS GET_PTR(NATIVE_TYPE)
-#define GETTER(retType, name) GETTER_METHOD(retType, libzim_Entry, THIS, name)
-
-
 GETTER(jboolean, isRedirect)
 GETTER(jstring, getTitle)
 GETTER(jstring, getPath)
-METHOD(jobject, libzim_Entry, getItem, jboolean follow) {
+METHOD(jobject, getItem, jboolean follow) {
   auto obj = NEW_OBJECT("org/kiwix/libzim/Item");
   SET_HANDLE(zim::Item, obj, THIS->getItem(TO_C(follow)));
   return obj;
 }
 
-METHOD0(jobject, libzim_Entry, getRedirect) {
+METHOD0(jobject, getRedirect) {
   auto obj = NEW_OBJECT("org/kiwix/libzim/Item");
   SET_HANDLE(zim::Item, obj, THIS->getRedirect());
   return obj;
 }
 
-METHOD0(jobject, libzim_Entry, getRedirectEntry) {
+METHOD0(jobject, getRedirectEntry) {
   auto obj = NEW_OBJECT("org/kiwix/libzim/Entry");
   SET_HANDLE(zim::Entry, obj, THIS->getRedirectEntry());
   return obj;

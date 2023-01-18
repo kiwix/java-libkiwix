@@ -28,22 +28,21 @@
 
 #include <zim/item.h>
 
+#define CLASSNAME "org/kiwix/libzim/Item"
 #define NATIVE_TYPE zim::Item
+#define TYPENAME libzim_Item
+#include <macros.h>
 
-JNIEXPORT void JNICALL
-Java_org_kiwix_kiwixlib_libzim_Item_dispose(JNIEnv* env, jobject thisObj)
+METHOD0(void, dispose)
 {
   dispose<NATIVE_TYPE>(env, thisObj);
 }
-
-#define THIS GET_PTR(NATIVE_TYPE)
-#define GETTER(retType, name) GETTER_METHOD(retType, libzim_Item, THIS, name)
 
 GETTER(jstring, getTitle)
 GETTER(jstring, getPath)
 GETTER(jstring, getMimetype)
 
-METHOD0(jobject, libzim_Item, getData) {
+METHOD0(jobject, getData) {
   auto obj = NEW_OBJECT("org/kiwix/libzim/Blob");
   SET_HANDLE(zim::Blob, obj, THIS->getData());
   return obj;

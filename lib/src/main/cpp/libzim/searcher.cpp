@@ -28,10 +28,12 @@
 
 #include <zim/search.h>
 
+#define CLASSNAME "org/kiwix/libzim/Searcher"
 #define NATIVE_TYPE zim::Searcher
+#define TYPENAME libzim_Searcher
+#include <macros.h>
 
-JNIEXPORT void JNICALL Java_org_kiwix_libzim_Searcher_setNativeSearcher(
-    JNIEnv* env, jobject thisObj, jobject archive)
+METHOD(void, setNativeSearcher, jobject archive)
 {
 
   Lock l;
@@ -46,28 +48,25 @@ JNIEXPORT void JNICALL Java_org_kiwix_libzim_Searcher_setNativeSearcher(
 }
 
 
-METHOD0(void, libzim_Searcher, dispose)
+METHOD0(void, dispose)
 {
   dispose<NATIVE_TYPE>(env, thisObj);
 }
 
-#define THIS GET_PTR(NATIVE_TYPE)
-#define GETTER(retType, name) GETTER_METHOD(retType, libzim_Searcher, THIS, name)
-
-METHOD(jobject, libzim_Searcher, addArchive, jobject archive) {
+METHOD(jobject, addArchive, jobject archive) {
   auto cArchive = getPtr<zim::Archive>(env, archive);
   THIS->addArchive(*cArchive);
   return thisObj;
 }
 
-METHOD(jobject, libzim_Searcher, search, jobject query) {
+METHOD(jobject, search, jobject query) {
   auto cQuery = getPtr<zim::Query>(env, query);
   auto obj = NEW_OBJECT("org/kiwix/libzim/Search");
   SET_HANDLE(zim::Search, obj, THIS->search(*cQuery));
   return obj;
 }
 
-METHOD(void, libzim_Searcher, setVerbose, jboolean verbose) {
+METHOD(void, setVerbose, jboolean verbose) {
   THIS->setVerbose(TO_C(verbose));
 }
 

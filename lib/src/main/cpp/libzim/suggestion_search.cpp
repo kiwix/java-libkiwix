@@ -28,16 +28,17 @@
 
 #include <zim/suggestion.h>
 
+#define CLASSNAME "org/kiwix/libzim/SuggestionSearch"
 #define NATIVE_TYPE zim::SuggestionSearch
+#define TYPENAME libzim_SuggestionSearch
+#include <macros.h>
 
-METHOD0(void, libzim_SuggestionSearch, dispose)
+METHOD0(void, dispose)
 {
   dispose<NATIVE_TYPE>(env, thisObj);
 }
 
-#define THIS GET_PTR(NATIVE_TYPE)
-
-METHOD(jobject, libzim_SuggestionSearch, getResults, jint start, jint maxResults) {
+METHOD(jobject, getResults, jint start, jint maxResults) {
   auto results = THIS->getResults(TO_C(start), TO_C(maxResults));
   auto obj = NEW_OBJECT("ork/kiwix/libzim/SuggestionIterator");
   SET_HANDLE(zim::SuggestionIterator, obj, results.begin());
@@ -48,7 +49,4 @@ METHOD(jobject, libzim_SuggestionSearch, getResults, jint start, jint maxResults
   return obj;
 }
 
-METHOD0(jlong, libzim_SuggestionSearch, getEstimatedMatches) {
-  return TO_JNI(THIS->getEstimatedMatches());
-}
-
+GETTER(jlong, getEstimatedMatches)

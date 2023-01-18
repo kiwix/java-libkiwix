@@ -29,9 +29,11 @@
 #include <zim/suggestion.h>
 
 #define NATIVE_TYPE zim::SuggestionSearcher
+#define TYPENAME libzim_SuggestionSearcher
+#include <macros.h>
 
-JNIEXPORT void JNICALL Java_org_kiwix_libzim_SuggestionSearcher_setNativeSearcher(
-    JNIEnv* env, jobject thisObj, jobject archive)
+
+METHOD(void, setNativeSearcher, jobject archive)
 {
 
   Lock l;
@@ -46,21 +48,18 @@ JNIEXPORT void JNICALL Java_org_kiwix_libzim_SuggestionSearcher_setNativeSearche
 }
 
 
-METHOD0(void, libzim_SuggestionSearcher, dispose)
+METHOD0(void, dispose)
 {
   dispose<NATIVE_TYPE>(env, thisObj);
 }
 
-#define THIS GET_PTR(NATIVE_TYPE)
-#define GETTER(retType, name) GETTER_METHOD(retType, libzim_SuggestionSearcher, THIS, name)
-
-METHOD(jobject, libzim_SuggestionSearcher, suggest, jstring query) {
+METHOD(jobject, suggest, jstring query) {
   auto obj = NEW_OBJECT("org/kiwix/libzim/SuggestionSearch");
   SET_HANDLE(zim::SuggestionSearch, obj, THIS->suggest(TO_C(query)));
   return obj;
 }
 
-METHOD(void, libzim_SuggestionSearcher, setVerbose, jboolean verbose) {
+METHOD(void, setVerbose, jboolean verbose) {
   THIS->setVerbose(TO_C(verbose));
 }
 

@@ -28,10 +28,12 @@
 
 #include <zim/search.h>
 
+#define CLASSNAME "org/kiwix/libzim/Query"
 #define NATIVE_TYPE zim::Query
+#define TYPENAME libzim_Query
+#include <macros.h>
 
-JNIEXPORT void JNICALL Java_org_kiwix_libzim_Query_getNativeQuery(
-    JNIEnv* env, jobject thisObj, jstring query)
+METHOD(void, setNativeQuery, jstring query)
 {
   auto cQuery = TO_C(query);
   Lock l;
@@ -44,21 +46,17 @@ JNIEXPORT void JNICALL Java_org_kiwix_libzim_Query_getNativeQuery(
   }
 }
 
-
-JNIEXPORT void JNICALL
-Java_org_kiwix_kiwixlib_libzim_Query_dispose(JNIEnv* env, jobject thisObj)
+METHOD0(void, dispose)
 {
   dispose<NATIVE_TYPE>(env, thisObj);
 }
 
-#define THIS GET_PTR(NATIVE_TYPE)
-
-METHOD(jobject, libzim_Query, setQuery, jstring query) {
+METHOD(jobject, setQuery, jstring query) {
   THIS->setQuery(TO_C(query));
   return thisObj;
 }
 
-METHOD(jobject, libzim_Query, setGeorange, jfloat latitude, jfloat longitude, jfloat distance) {
+METHOD(jobject, setGeorange, jfloat latitude, jfloat longitude, jfloat distance) {
   THIS->setGeorange(TO_C(latitude), TO_C(longitude), TO_C(distance));
   return thisObj;
 }

@@ -25,33 +25,26 @@
 #include "utils.h"
 
 #define NATIVE_TYPE kiwix::Manager
-#define THIS GET_PTR(NATIVE_TYPE)
+#define TYPENAME libkiwix_Manager
+#include <macros.h>
 
-JNIEXPORT void JNICALL
-Java_org_kiwix_libkiwix_Manager_allocate(
-  JNIEnv* env, jobject thisObj, jobject libraryObj)
+METHOD(void, allocate, jobject libraryObj)
 {
   auto lib = getPtr<kiwix::Library>(env, libraryObj);
   SET_PTR(std::make_shared<NATIVE_TYPE>(lib.get()));
 }
 
-JNIEXPORT void JNICALL
-Java_org_kiwix_libkiwix_Manager_dispose(JNIEnv* env, jobject thisObj)
+METHOD0(void, dispose)
 {
-  dispose<kiwix::Manager>(env, thisObj);
+  dispose<NATIVE_TYPE>(env, thisObj);
 }
-
-#define MANAGER (getPtr<kiwix::Manager>(env, thisObj))
-
 /* Kiwix manager functions */
-JNIEXPORT jboolean JNICALL
-Java_org_kiwix_libkiwix_Manager_readFile(
-  JNIEnv* env, jobject thisObj, jstring path)
+METHOD(jboolean, readFile, jstring path)
 {
-  auto cPath = jni2c(path, env);
+  auto cPath = TO_C(path);
 
   try {
-    return MANAGER->readFile(cPath);
+    return THIS->readFile(cPath);
   } catch (std::exception& e) {
     LOG("Unable to get readFile");
     LOG("%s", e.what());
@@ -59,15 +52,13 @@ Java_org_kiwix_libkiwix_Manager_readFile(
   return false;
 }
 
-JNIEXPORT jboolean JNICALL
-Java_org_kiwix_libkiwix_Manager_readXml(
-  JNIEnv* env, jobject thisObj, jstring content, jstring libraryPath)
+METHOD(jboolean, readXml, jstring content, jstring libraryPath)
 {
-  auto cContent = jni2c(content, env);
-  auto cPath = jni2c(libraryPath, env);
+  auto cContent = TO_C(content);
+  auto cPath = TO_C(libraryPath);
 
   try {
-    return MANAGER->readXml(cContent, false, cPath);
+    return THIS->readXml(cContent, false, cPath);
   } catch (std::exception& e) {
     LOG("Unable to get ZIM id");
     LOG("%s", e.what());
@@ -76,15 +67,13 @@ Java_org_kiwix_libkiwix_Manager_readXml(
   return false;
 }
 
-JNIEXPORT jboolean JNICALL
-Java_org_kiwix_libkiwix_Manager_readOpds(
-  JNIEnv* env, jobject thisObj, jstring content, jstring urlHost)
+METHOD(jboolean, readOpds, jstring content, jstring urlHost)
 {
-  auto cContent = jni2c(content, env);
-  auto cUrl = jni2c(urlHost, env);
+  auto cContent = TO_C(content);
+  auto cUrl = TO_C(urlHost);
 
   try {
-    return MANAGER->readOpds(cContent, cUrl);
+    return THIS->readOpds(cContent, cUrl);
   } catch (std::exception& e) {
     LOG("Unable to get ZIM id");
     LOG("%s", e.what());
@@ -93,14 +82,12 @@ Java_org_kiwix_libkiwix_Manager_readOpds(
   return false;
 }
 
-JNIEXPORT jboolean JNICALL
-Java_org_kiwix_libkiwix_Manager_readBookmarkFile(
-  JNIEnv* env, jobject thisObj, jstring path)
+METHOD(jboolean, readBookmarkFile, jstring path)
 {
-  auto cPath = jni2c(path, env);
+  auto cPath = TO_C(path);
 
   try {
-    return MANAGER->readBookmarkFile(cPath);
+    return THIS->readBookmarkFile(cPath);
   } catch (std::exception& e) {
     LOG("Unable to get ZIM id");
     LOG("%s", e.what());
@@ -109,18 +96,15 @@ Java_org_kiwix_libkiwix_Manager_readBookmarkFile(
   return false;
 }
 
-JNIEXPORT jstring JNICALL
-Java_org_kiwix_libkiwix_Manager_addBookFromPath(
-  JNIEnv* env, jobject thisObj,
-  jstring pathToOpen, jstring pathToSave, jstring url, jboolean checkMetaData)
+METHOD(jstring, addBookFromPath, jstring pathToOpen, jstring pathToSave, jstring url, jboolean checkMetaData)
 {
-  auto cPathToOpen = jni2c(pathToOpen, env);
-  auto cPathToSave = jni2c(pathToSave, env);
-  auto cUrl = jni2c(url, env);
+  auto cPathToOpen = TO_C(pathToOpen);
+  auto cPathToSave = TO_C(pathToSave);
+  auto cUrl = TO_C(url);
   jstring id = NULL;
 
   try {
-    auto cId = MANAGER->addBookFromPathAndGetId(cPathToOpen, cPathToSave, cUrl, checkMetaData);
+    auto cId = THIS->addBookFromPathAndGetId(cPathToOpen, cPathToSave, cUrl, checkMetaData);
     if ( !cId.empty() ) {
       id = c2jni(cId, env);
     }

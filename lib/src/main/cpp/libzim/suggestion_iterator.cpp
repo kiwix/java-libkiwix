@@ -28,26 +28,27 @@
 
 #include <zim/suggestion.h>
 
+#define CLASSNAME "org/kiwix/libzim/SuggestionIterator"
 #define NATIVE_TYPE zim::SuggestionIterator
+#define TYPENAME libzim_SuggestionIterator
+#include <macros.h>
 
-METHOD0(void, libzim_SuggestionIterator, dispose)
+
+METHOD0(void, dispose)
 {
   // Delete end iterator
   dispose<NATIVE_TYPE>(env, thisObj, "nativeHandleEnd");
   dispose<NATIVE_TYPE>(env, thisObj);
 }
 
-#define THIS GET_PTR(NATIVE_TYPE)
-#define GETTER(retType, name) GETTER_METHOD(retType, libzim_SuggestionIterator, THIS, name)
-
-METHOD0(jboolean, libzim_SearchIterator, hasNext) {
+METHOD0(jboolean, hasNext) {
   NATIVE_TYPE next(*THIS);
   next++;
   auto end = getPtr<NATIVE_TYPE>(env, thisObj, "nativeHandleEnd");
   return next == *end;
 }
 
-METHOD0(jobject, libzim_SearchIterator, next) {
+METHOD0(jobject, next) {
   (*THIS)++;
   zim::SuggestionItem item = **THIS;
   auto obj = NEW_OBJECT("org/kiwix/libzim/SuggestionItem");
