@@ -19,31 +19,42 @@
 
 package org.kiwix.libkiwix;
 
+import org.kiwix.libzim.Archive;
+import org.kiwix.libzim.Searcher;
 import org.kiwix.libkiwix.Book;
 import org.kiwix.libkiwix.JNIKiwixException;
 
 public class Library
 {
-  public native boolean addBook(String path) throws JNIKiwixException;
+  public Library()
+  {
+    setNativeHandler();
+  }
+  public native boolean addBook(Book book) throws JNIKiwixException;
 
   public native Book getBookById(String id);
-  public native int  getBookCount(boolean localBooks, boolean remoteBooks);
+
+  public native Archive getArchiveById(String id);
+  //public native Searcher getSearcherById(String id);
+  //public native Searcher getSearcherByIds(String ids[]);
+
+  public native boolean removeBookById(String id);
+
+  public native boolean writeToFile(String path);
+
+  public native int getBookCount(boolean localBooks, boolean remoteBooks);
 
   public native String[] getBooksIds();
   public native String[] filter(Filter filter);
 
   public native String[] getBooksLanguages();
+  public native String[] getBooksCategories();
   public native String[] getBooksCreators();
   public native String[] getBooksPublishers();
 
-  public Library()
-  {
-    allocate();
-  }
-
   @Override
   protected void finalize() { dispose(); }
-  private native void allocate();
+  private native void setNativeHandler();
   private native void dispose();
   private long nativeHandle;
 }

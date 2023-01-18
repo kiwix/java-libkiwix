@@ -29,7 +29,7 @@
 #include "macros.h"
 
 /* Kiwix Reader JNI functions */
-METHOD0(void, allocate)
+METHOD0(void, setNativeHandler)
 {
   SET_PTR(std::make_shared<NATIVE_TYPE>());
 }
@@ -40,22 +40,17 @@ METHOD0(void, dispose)
 }
 
 /* Kiwix library functions */
-/*JNIEXPORT jboolean JNICALL
-Java_org_kiwix_kiwixlib_Library_addBook(
-  JNIEnv* env, jobject thisObj, jstring path)
+METHOD(jboolean, addBook, jobject book)
 {
-  auto cPath = TO_C(path);
+  auto cBook = getPtr<kiwix::Book>(env, book);
 
   try {
-    kiwix::Reader reader(cPath);
-    kiwix::Book book;
-    book.update(reader);
-    return LIBRARY->addBook(book);
+    return THIS->addBook(*cBook);
   } catch (std::exception& e) {
     LOG("Unable to add the book");
-    LOG(e.what()); }
+    LOG("%s", e.what()); }
   return false;
-}*/
+}
 
 METHOD(jobject, getBookById, jstring id) {
   auto obj = NEW_OBJECT("org/kiwix/libkiwix/Book");
@@ -63,12 +58,27 @@ METHOD(jobject, getBookById, jstring id) {
   return obj;
 }
 
+METHOD(jobject, getArchiveById, jstring id) {
+  auto obj = NEW_OBJECT("org/kiwix/libzim/Archive");
+  setPtr(env, obj, THIS->getArchiveById(TO_C(id)));
+  return obj;
+}
+
+METHOD(jboolean, removeBookById, jstring id) {
+  return TO_JNI(THIS->removeBookById(TO_C(id)));
+}
+
+METHOD(jboolean, writeToFile, jstring path) {
+  return TO_JNI(THIS->writeToFile(TO_C(path)));
+}
+
 METHOD(jint, getBookCount, jboolean localBooks, jboolean remoteBooks) {
-  return THIS->getBookCount(localBooks, remoteBooks);
+  return TO_JNI(THIS->getBookCount(TO_C(localBooks), TO_C(remoteBooks)));
 }
 
 GETTER(jobjectArray, getBooksIds)
 GETTER(jobjectArray, getBooksLanguages)
+GETTER(jobjectArray, getBooksCategories)
 GETTER(jobjectArray, getBooksCreators)
 GETTER(jobjectArray, getBooksPublishers)
 
