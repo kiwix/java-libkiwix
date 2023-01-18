@@ -24,26 +24,29 @@
 #include "library.h"
 #include "utils.h"
 
+#define NATIVE_TYPE kiwix::Filter
+#define THIS GET_PTR(NATIVE_TYPE)
+
+
 /* Kiwix Reader JNI functions */
 METHOD0(void, Filter, allocate) {
-  allocate<kiwix::Filter>(env, thisObj);
+  SET_PTR(std::make_shared<NATIVE_TYPE>());
 }
 
 METHOD0(void, Filter, dispose) {
   dispose<kiwix::Library>(env, thisObj);
 }
 
-#define FILTER (getPtr<kiwix::Filter>(env, thisObj))
 
 #define FORWARD(name, args_type) \
 METHOD(jobject, Filter, name, args_type value) { \
-  FILTER->name(jni2c(value, env)); \
+  THIS->name(jni2c(value, env)); \
   return thisObj; \
 }
 
 #define FORWARDA(name, args_type) \
 METHOD(jobject, Filter, name, jobjectArray value) { \
-  FILTER->name(jni2c<args_type>(value, env)); \
+  THIS->name(jni2c<args_type>(value, env)); \
   return thisObj; \
 }
 

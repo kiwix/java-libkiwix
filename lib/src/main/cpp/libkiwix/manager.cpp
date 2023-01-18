@@ -24,17 +24,19 @@
 #include "manager.h"
 #include "utils.h"
 
+#define NATIVE_TYPE kiwix::Manager
+#define THIS GET_PTR(NATIVE_TYPE)
 
 JNIEXPORT void JNICALL
-Java_org_kiwix_kiwixlib_Manager_allocate(
+Java_org_kiwix_libkiwix_Manager_allocate(
   JNIEnv* env, jobject thisObj, jobject libraryObj)
 {
   auto lib = getPtr<kiwix::Library>(env, libraryObj);
-  allocate<kiwix::Manager>(env, thisObj, lib);
+  SET_PTR(std::make_shared<NATIVE_TYPE>(lib.get()));
 }
 
 JNIEXPORT void JNICALL
-Java_org_kiwix_kiwixlib_Manager_dispose(JNIEnv* env, jobject thisObj)
+Java_org_kiwix_libkiwix_Manager_dispose(JNIEnv* env, jobject thisObj)
 {
   dispose<kiwix::Manager>(env, thisObj);
 }
@@ -43,7 +45,7 @@ Java_org_kiwix_kiwixlib_Manager_dispose(JNIEnv* env, jobject thisObj)
 
 /* Kiwix manager functions */
 JNIEXPORT jboolean JNICALL
-Java_org_kiwix_kiwixlib_Manager_readFile(
+Java_org_kiwix_libkiwix_Manager_readFile(
   JNIEnv* env, jobject thisObj, jstring path)
 {
   auto cPath = jni2c(path, env);
@@ -52,13 +54,13 @@ Java_org_kiwix_kiwixlib_Manager_readFile(
     return MANAGER->readFile(cPath);
   } catch (std::exception& e) {
     LOG("Unable to get readFile");
-    LOG(e.what());
+    LOG("%s", e.what());
   }
   return false;
 }
 
 JNIEXPORT jboolean JNICALL
-Java_org_kiwix_kiwixlib_Manager_readXml(
+Java_org_kiwix_libkiwix_Manager_readXml(
   JNIEnv* env, jobject thisObj, jstring content, jstring libraryPath)
 {
   auto cContent = jni2c(content, env);
@@ -68,14 +70,14 @@ Java_org_kiwix_kiwixlib_Manager_readXml(
     return MANAGER->readXml(cContent, false, cPath);
   } catch (std::exception& e) {
     LOG("Unable to get ZIM id");
-    LOG(e.what());
+    LOG("%s", e.what());
   }
 
   return false;
 }
 
 JNIEXPORT jboolean JNICALL
-Java_org_kiwix_kiwixlib_Manager_readOpds(
+Java_org_kiwix_libkiwix_Manager_readOpds(
   JNIEnv* env, jobject thisObj, jstring content, jstring urlHost)
 {
   auto cContent = jni2c(content, env);
@@ -85,14 +87,14 @@ Java_org_kiwix_kiwixlib_Manager_readOpds(
     return MANAGER->readOpds(cContent, cUrl);
   } catch (std::exception& e) {
     LOG("Unable to get ZIM id");
-    LOG(e.what());
+    LOG("%s", e.what());
   }
 
   return false;
 }
 
 JNIEXPORT jboolean JNICALL
-Java_org_kiwix_kiwixlib_Manager_readBookmarkFile(
+Java_org_kiwix_libkiwix_Manager_readBookmarkFile(
   JNIEnv* env, jobject thisObj, jstring path)
 {
   auto cPath = jni2c(path, env);
@@ -101,14 +103,14 @@ Java_org_kiwix_kiwixlib_Manager_readBookmarkFile(
     return MANAGER->readBookmarkFile(cPath);
   } catch (std::exception& e) {
     LOG("Unable to get ZIM id");
-    LOG(e.what());
+    LOG("%s", e.what());
   }
 
   return false;
 }
 
 JNIEXPORT jstring JNICALL
-Java_org_kiwix_kiwixlib_Manager_addBookFromPath(
+Java_org_kiwix_libkiwix_Manager_addBookFromPath(
   JNIEnv* env, jobject thisObj,
   jstring pathToOpen, jstring pathToSave, jstring url, jboolean checkMetaData)
 {
@@ -124,7 +126,7 @@ Java_org_kiwix_kiwixlib_Manager_addBookFromPath(
     }
   } catch (std::exception& e) {
     LOG("Unable to get ZIM file size");
-    LOG(e.what());
+    LOG("%s", e.what());
   }
 
   return id;

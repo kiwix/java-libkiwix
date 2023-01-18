@@ -24,21 +24,18 @@
 #include <iostream>
 #include <string>
 
-#include "unicode/putil.h"
-
 #include "utils.h"
+#include "zim/tools.h"
 
 std::mutex globalLock;
 
 JNIEXPORT void JNICALL Java_org_kiwix_kiwixlib_JNIICU_setDataDirectory(
     JNIEnv* env, jclass kclass, jstring dirStr)
 {
-  std::string cPath = jni2c(dirStr, env);
-
   Lock l;
   try {
-    u_setDataDirectory(cPath.c_str());
+    zim::setICUDataDirectory(TO_C(dirStr));
   } catch (...) {
-    std::cerr << "Unable to set data directory " << cPath << std::endl;
+    std::cerr << "Unable to set data directory " << TO_C(dirStr) << std::endl;
   }
 }

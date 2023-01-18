@@ -22,82 +22,78 @@
 #include <jni.h>
 #include "org_kiwix_libkiwix_JNIKiwixServer.h"
 
-#include "tools/base64.h"
 #include "server.h"
 #include "utils.h"
 
+#define NATIVE_TYPE kiwix::Server
+#define THIS GET_PTR(NATIVE_TYPE)
+
 /* Kiwix Reader JNI functions */
-JNIEXPORT jlong JNICALL Java_org_kiwix_kiwixlib_JNIKiwixServer_getNativeServer(
-    JNIEnv* env, jobject obj, jobject jLibrary)
+JNIEXPORT void JNICALL Java_org_kiwix_kiwixlib_JNIKiwixServer_setNativeServer(
+    JNIEnv* env, jobject thisObj, jobject jLibrary)
 {
   LOG("Attempting to create server");
   Lock l;
   try {
     auto library = getPtr<kiwix::Library>(env, jLibrary);
-    kiwix::Server* server = new kiwix::Server(library);
-    return reinterpret_cast<jlong>(new Handle<kiwix::Server>(server));
+    SET_PTR(std::make_shared<NATIVE_TYPE>(library.get()));
   } catch (std::exception& e) {
     LOG("Error creating the server");
-    LOG(e.what());
-    return 0;
+    LOG("%s", e.what());
   }
 }
 
 JNIEXPORT void JNICALL
 Java_org_kiwix_kiwixlib_JNIKiwixServer_dispose(JNIEnv* env, jobject obj)
 {
-  Handle<kiwix::Server>::dispose(env, obj);
+  dispose<NATIVE_TYPE>(env, obj);
 }
-
-#define SERVER (Handle<kiwix::Server>::getHandle(env, obj))
 
 /* Kiwix library functions */
 JNIEXPORT void JNICALL
-Java_org_kiwix_kiwixlib_JNIKiwixServer_setRoot(JNIEnv* env, jobject obj, jstring jRoot)
+Java_org_kiwix_kiwixlib_JNIKiwixServer_setRoot(JNIEnv* env, jobject thisObj, jstring root)
 {
-  std::string root = jni2c(jRoot, env);
-  SERVER->setRoot(root);
+  THIS->setRoot(TO_C(root));
 }
 
 JNIEXPORT void JNICALL
-Java_org_kiwix_kiwixlib_JNIKiwixServer_setAddress(JNIEnv* env, jobject obj, jstring jAddress)
+Java_org_kiwix_kiwixlib_JNIKiwixServer_setAddress(JNIEnv* env, jobject thisObj, jstring address)
 {
-  std::string address = jni2c(jAddress, env);
-  SERVER->setAddress(address);
+  THIS->setAddress(TO_C(address));
 }
 
 JNIEXPORT void JNICALL
-Java_org_kiwix_kiwixlib_JNIKiwixServer_setPort(JNIEnv* env, jobject obj, int port)
+Java_org_kiwix_kiwixlib_JNIKiwixServer_setPort(JNIEnv* env, jobject thisObj, int port)
 {
-  SERVER->setPort(port);
+  THIS->setPort(TO_C(port));
 }
 
 JNIEXPORT void JNICALL
-Java_org_kiwix_kiwixlib_JNIKiwixServer_setNbThreads(JNIEnv* env, jobject obj, int threads)
+Java_org_kiwix_kiwixlib_JNIKiwixServer_setNbThreads(JNIEnv* env, jobject thisObj, int threads)
 {
-  SERVER->setNbThreads(threads);
+  THIS->setNbThreads(TO_C(threads));
 }
 
 JNIEXPORT void JNICALL
-Java_org_kiwix_kiwixlib_JNIKiwixServer_setTaskbar(JNIEnv* env, jobject obj, jboolean withTaskbar, jboolean withLibraryButton)
+Java_org_kiwix_kiwixlib_JNIKiwixServer_setTaskbar(JNIEnv* env, jobject thisObj, jboolean withTaskbar, jboolean withLibraryButton)
 {
-  SERVER->setTaskbar(withTaskbar, withLibraryButton);
+  THIS->setTaskbar(TO_C(withTaskbar), TO_C(withLibraryButton));
 }
 
 JNIEXPORT void JNICALL
-Java_org_kiwix_kiwixlib_JNIKiwixServer_setBlockExternalLinks(JNIEnv* env, jobject obj, jboolean blockExternalLinks)
+Java_org_kiwix_kiwixlib_JNIKiwixServer_setBlockExternalLinks(JNIEnv* env, jobject thisObj, jboolean blockExternalLinks)
 {
-  SERVER->setBlockExternalLinks(blockExternalLinks);
+  THIS->setBlockExternalLinks(TO_C(blockExternalLinks));
 }
 
 JNIEXPORT jboolean JNICALL
-Java_org_kiwix_kiwixlib_JNIKiwixServer_start(JNIEnv* env, jobject obj)
+Java_org_kiwix_kiwixlib_JNIKiwixServer_start(JNIEnv* env, jobject thisObj)
 {
-  return SERVER->start();
+  return THIS->start();
 }
 
 JNIEXPORT void JNICALL
-Java_org_kiwix_kiwixlib_JNIKiwixServer_stop(JNIEnv* env, jobject obj)
+Java_org_kiwix_kiwixlib_JNIKiwixServer_stop(JNIEnv* env, jobject thisObj)
 {
-  SERVER->stop();
+  THIS->stop();
 }

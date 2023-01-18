@@ -25,37 +25,36 @@
 #include "book.h"
 #include <zim/archive.h>
 
+#define NATIVE_TYPE kiwix::Book
+#define THIS GET_PTR(NATIVE_TYPE)
+
 JNIEXPORT void JNICALL
-Java_org_kiwix_kiwixlib_Book_allocate(
+Java_org_kiwix_libkiwix_Book_allocate(
   JNIEnv* env, jobject thisObj)
 {
-  allocate<kiwix::Book>(env, thisObj);
+  SET_PTR(std::make_shared<NATIVE_TYPE>());
 }
 
 JNIEXPORT void JNICALL
-Java_org_kiwix_kiwixlib_Book_dispose(JNIEnv* env, jobject thisObj)
+Java_org_kiwix_libkiwix_Book_dispose(JNIEnv* env, jobject thisObj)
 {
-  dispose<kiwix::Book>(env, thisObj);
+  dispose<NATIVE_TYPE>(env, thisObj);
 }
 
-#define BOOK (getPtr<kiwix::Book>(env, thisObj))
-
-METHOD(void, Book, update__Lorg_kiwix_kiwixlib_Book_2, jobject otherBook)
+METHOD(void, Book, update__Lorg_kiwix_libkiwix_Book_2, jobject otherBook)
 {
-  BOOK->update(*getPtr<kiwix::Book>(env, otherBook));
+  THIS->update(*getPtr<kiwix::Book>(env, otherBook));
 }
 
-METHOD(void, Book, update__Lorg_kiwix_kiwixlib_JNIKiwixReader_2, jobject reader)
+METHOD(void, Book, update__Lorg_kiwix_libkiwix_JNIKiwixReader_2, jobject archive)
 {
-  BOOK->update(**Handle<zim::Archive>::getHandle(env, reader));
+  THIS->update(*getPtr<zim::Archive>(env, archive));
 }
 
 #define GETTER(retType, name) JNIEXPORT retType JNICALL \
-Java_org_kiwix_kiwixlib_Book_##name (JNIEnv* env, jobject thisObj) \
+Java_org_kiwix_libkiwix_Book_##name (JNIEnv* env, jobject thisObj) \
 { \
-  auto cRet = BOOK->name(); \
-  retType ret = c2jni(cRet, env); \
-  return ret; \
+  return TO_JNI(THIS->name()); \
 }
 
 GETTER(jstring, getId)
@@ -80,8 +79,7 @@ GETTER(jstring, getFaviconUrl)
 GETTER(jstring, getFaviconMimeType)
 
 METHOD(jstring, Book, getTagStr, jstring tagName) try {
-  auto cRet = BOOK->getTagStr(jni2c(tagName, env));
-  return c2jni(cRet, env);
+  return TO_JNI(THIS->getTagStr(TO_C(tagName)));
 } catch(...) {
   return c2jni<std::string>("", env);
 }

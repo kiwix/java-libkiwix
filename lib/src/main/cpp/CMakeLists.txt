@@ -4,10 +4,10 @@ cmake_minimum_required(VERSION 3.18.1)
 
 set(CMAKE_ANDROID_STL_TYPE llvm-libc++_static)
 
-project("libzim_wrapper")
+project("libkiwix_wrapper")
 
 add_library(
-        libzim_wrapper
+        zim_wrapper
 
         SHARED
         common.cpp
@@ -41,6 +41,34 @@ set_property(TARGET
         IMPORTED_LOCATION
         ${BUILD_DIR}/jniLibs/${CMAKE_ANDROID_ARCH_ABI}/libzim/libzim.so)
 
+
+add_library(
+        kiwix_wrapper
+
+        SHARED
+        libkiwix/book.cpp
+        libkiwix/filter.cpp
+        libkiwix/kiwixicu.cpp
+        libkiwix/kiwixserver.cpp
+        libkiwix/library.cpp
+        libkiwix/manager.cpp
+)
+
+find_library(libkiwix
+        kiwix
+        PATHS
+        ${BUILD_DIR}/jniLibs/${CMAKE_ANDROID_ARCH_ABI}/libkiwix)
+if (NOT libkiwix)
+        message(FATAL_ERROR "libkiwix not found!")
+endif()
+add_library(libkiwix SHARED IMPORTED)
+
+set_property(TARGET
+        libkiwix
+        PROPERTY
+        IMPORTED_LOCATION
+        ${BUILD_DIR}/jniLibs/${CMAKE_ANDROID_ARCH_ABI}/libkiwix/libkiwix.so)
+
 include_directories(
 ${CMAKE_SOURCE_DIR}
 ${BUILD_DIR}/include/libkiwix
@@ -54,9 +82,15 @@ find_library(
         log)
 
 target_link_libraries(
-        libzim_wrapper
+        zim_wrapper
         libzim
+        ${log-lib}
+)
 
+target_link_libraries(
+        kiwix_wrapper
+        libkiwix
+        libzim
         ${log-lib}
         )
 

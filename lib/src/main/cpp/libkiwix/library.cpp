@@ -22,31 +22,31 @@
 #include "org_kiwix_libkiwix_Library.h"
 
 #include "library.h"
-#include "reader.h"
 #include "utils.h"
+
+#define NATIVE_TYPE kiwix::Library
+#define THIS GET_PTR(NATIVE_TYPE)
 
 /* Kiwix Reader JNI functions */
 JNIEXPORT void JNICALL
 Java_org_kiwix_kiwixlib_Library_allocate(
     JNIEnv* env, jobject thisObj)
 {
-  allocate<kiwix::Library>(env, thisObj);
+  SET_PTR(std::make_shared<NATIVE_TYPE>());
 }
 
 JNIEXPORT void JNICALL
 Java_org_kiwix_kiwixlib_Library_dispose(JNIEnv* env, jobject thisObj)
 {
-  dispose<kiwix::Library>(env, thisObj);
+  dispose<NATIVE_TYPE>(env, thisObj);
 }
 
-#define LIBRARY (getPtr<kiwix::Library>(env, thisObj))
-
 /* Kiwix library functions */
-JNIEXPORT jboolean JNICALL
+/*JNIEXPORT jboolean JNICALL
 Java_org_kiwix_kiwixlib_Library_addBook(
   JNIEnv* env, jobject thisObj, jstring path)
 {
-  auto cPath = jni2c(path, env);
+  auto cPath = TO_C(path);
 
   try {
     kiwix::Reader reader(cPath);
@@ -57,40 +57,31 @@ Java_org_kiwix_kiwixlib_Library_addBook(
     LOG("Unable to add the book");
     LOG(e.what()); }
   return false;
-}
+}*/
 
 METHOD(jobject, Library, getBookById, jstring id) {
-  auto cId = jni2c(id, env);
-  auto cBook = new kiwix::Book(LIBRARY->getBookById(cId));
-  jclass cls = env->FindClass("org/kiwix/kiwixlib/Book");
-  jmethodID constructorId = env->GetMethodID(cls, "<init>", "()V");
-  jobject book = env->NewObject(cls, constructorId);
-  setPtr(env, book, cBook);
-  return book;
+  auto obj = NEW_OBJECT("org/kiwix/libkiwix/Book");
+  SET_HANDLE(kiwix::Book, obj, THIS->getBookById(TO_C(id)));
+  return obj;
 }
 
 METHOD(jint, Library, getBookCount, jboolean localBooks, jboolean remoteBooks) {
-  return LIBRARY->getBookCount(localBooks, remoteBooks);
+  return THIS->getBookCount(localBooks, remoteBooks);
 }
 
-METHOD0(jobjectArray, Library, getBooksIds) {
-  return c2jni(LIBRARY->getBooksIds(), env);
+#define GETTER(retType, name) JNIEXPORT retType JNICALL \
+Java_org_kiwix_libkiwix_Library_##name (JNIEnv* env, jobject thisObj) \
+{ \
+  return TO_JNI(THIS->name()); \
 }
+
+GETTER(jobjectArray, getBooksIds)
+GETTER(jobjectArray, getBooksLanguages)
+GETTER(jobjectArray, getBooksCreators)
+GETTER(jobjectArray, getBooksPublishers)
 
 METHOD(jobjectArray, Library, filter, jobject filterObj) {
   auto filter = getPtr<kiwix::Filter>(env, filterObj);
-  return c2jni(LIBRARY->filter(*filter), env);
-}
-
-METHOD0(jobjectArray, Library, getBooksLanguages) {
-  return c2jni(LIBRARY->getBooksLanguages(), env);
-}
-
-METHOD0(jobjectArray, Library, getBooksCreators) {
-  return c2jni(LIBRARY->getBooksCreators(), env);
-}
-
-METHOD0(jobjectArray, Library, getBooksPublisher) {
-  return c2jni(LIBRARY->getBooksPublishers(), env);
+  return c2jni(THIS->filter(*filter), env);
 }
 

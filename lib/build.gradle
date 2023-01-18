@@ -285,5 +285,5 @@ task checkCurrentJavaVersion() {
 
 task generateHeaderFilesFromJavaWrapper(type: Exec) {
     workingDir "${projectDir}/src/main/java/org/kiwix/"
-    commandLine 'bash', '-c', "javac -h ${buildDir}/include/javah_generated/ -d ${buildDir}/libzim/ libzim/*.java"
+    commandLine 'bash', '-c', "javac -h ${buildDir}/include/javah_generated/ -d ${buildDir}/libzim/ libzim/*.java libkiwix/*.java"
 }
