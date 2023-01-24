@@ -146,23 +146,31 @@ METHOD(jboolean, hasIllustration, jint size) {
 
 GETTER(jlongArray, getIllustrationSizes)
 
-METHOD(jobject, getEntryByPath, jlong index) {
-  return BUILD_WRAPPER("org/kiwix/libzim/Entry", THIS->getEntryByPath(TO_C(index)));
-}
-
-METHOD(jobject, getEntryByPath, jstring path) {
+METHOD(jobject, getEntryByPath__Ljava_lang_String_2, jstring path) {
   return BUILD_WRAPPER("org/kiwix/libzim/Entry", THIS->getEntryByPath(TO_C(path)));
 }
 
-METHOD(jobject, getEntryByTitle, jlong index) {
-  return BUILD_WRAPPER("org/kiwix/libzim/Entry", THIS->getEntryByTitle(TO_C(index)));
+METHOD(jobject, getEntryByPath__I, jint index) {
+  return BUILD_WRAPPER("org/kiwix/libzim/Entry", THIS->getEntryByPath(TO_C(index)));
 }
 
-METHOD(jobject, getEntryByTitle, jstring title) {
+METHOD(jboolean, hasEntryByPath, jstring path) {
+  return TO_JNI(THIS->hasEntryByPath(TO_C(path)));
+}
+
+METHOD(jobject, getEntryByTitle__Ljava_lang_String_2, jstring title) {
   return BUILD_WRAPPER("org/kiwix/libzim/Entry", THIS->getEntryByTitle(TO_C(title)));
 }
 
-METHOD(jobject, getEntryByClusterOrder, jlong index) {
+METHOD(jobject, getEntryByTitle__I, jint index) {
+  return BUILD_WRAPPER("org/kiwix/libzim/Entry", THIS->getEntryByTitle(TO_C(index)));
+}
+
+METHOD(jboolean, hasEntryByTitle, jstring title) {
+  return TO_JNI(THIS->hasEntryByPath(TO_C(title)));
+}
+
+METHOD(jobject, getEntryByClusterOrder, jint index) {
   return BUILD_WRAPPER("org/kiwix/libzim/Entry", THIS->getEntryByClusterOrder(TO_C(index)));
 }
 
@@ -170,22 +178,10 @@ METHOD0(jobject, getMainEntry) {
   return BUILD_WRAPPER("org/kiwix/libzim/Entry", THIS->getMainEntry());
 }
 
-METHOD0(jobject, getRandomEntry) {
-  return BUILD_WRAPPER("org/kiwix/libzim/Entry", THIS->getRandomEntry());
-}
-
-METHOD(jboolean, hasEntryByPath, jstring path) {
-  return TO_JNI(THIS->hasEntryByPath(TO_C(path)));
-}
-
-METHOD(jboolean, hasEntryByTitle, jstring title) {
-  return TO_JNI(THIS->hasEntryByPath(TO_C(title)));
-}
-
 GETTER(jboolean, hasMainEntry)
 
-METHOD(jboolean, hasIllustration, jlong size) {
-  return TO_JNI(THIS->hasIllustration(TO_C(size)));
+METHOD0(jobject, getRandomEntry) {
+  return BUILD_WRAPPER("org/kiwix/libzim/Entry", THIS->getRandomEntry());
 }
 
 GETTER(jboolean, hasFulltextIndex)
@@ -193,7 +189,6 @@ GETTER(jboolean, hasTitleIndex)
 GETTER(jboolean, hasChecksum)
 GETTER(jstring, getChecksum)
 GETTER(jboolean, check)
-
 GETTER(jboolean, isMultiPart)
 GETTER(jboolean, hasNewNamespaceScheme)
 
