@@ -47,11 +47,7 @@ METHOD(void, setNativeSearcher, jobject archive)
   }
 }
 
-
-METHOD0(void, dispose)
-{
-  dispose<NATIVE_TYPE>(env, thisObj);
-}
+DISPOSE
 
 METHOD(jobject, suggest, jstring query) {
   return BUILD_WRAPPER("org/kiwix/libzim/SuggestionSearch", THIS->suggest(TO_C(query)));

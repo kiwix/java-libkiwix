@@ -46,10 +46,7 @@ METHOD(void, setNativeQuery, jstring query)
   }
 }
 
-METHOD0(void, dispose)
-{
-  dispose<NATIVE_TYPE>(env, thisObj);
-}
+DISPOSE
 
 METHOD(jobject, setQuery, jstring query) {
   THIS->setQuery(TO_C(query));

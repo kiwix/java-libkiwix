@@ -33,10 +33,7 @@
 #define TYPENAME libzim_SuggestionSearch
 #include <macros.h>
 
-METHOD0(void, dispose)
-{
-  dispose<NATIVE_TYPE>(env, thisObj);
-}
+DISPOSE
 
 METHOD(jobject, getResults, jint start, jint maxResults) {
   auto results = THIS->getResults(TO_C(start), TO_C(maxResults));

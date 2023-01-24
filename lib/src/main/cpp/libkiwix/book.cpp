@@ -34,10 +34,7 @@ METHOD0(void, allocate)
   SET_PTR(std::make_shared<NATIVE_TYPE>());
 }
 
-METHOD0(void, dispose)
-{
-  dispose<NATIVE_TYPE>(env, thisObj);
-}
+DISPOSE
 
 METHOD(void, update__Lorg_kiwix_libkiwix_Book_2, jobject otherBook)
 {

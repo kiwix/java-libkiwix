@@ -35,10 +35,7 @@ METHOD0(void, allocate) {
   SET_PTR(std::make_shared<NATIVE_TYPE>());
 }
 
-METHOD0(void, dispose) {
-  dispose<kiwix::Library>(env, thisObj);
-}
-
+DISPOSE
 
 #define FORWARD(name, args_type) \
 METHOD(jobject, name, args_type value) { \

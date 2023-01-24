@@ -33,10 +33,7 @@
 #define TYPENAME libzim_SuggestionItem
 #include <macros.h>
 
-METHOD0(void, dispose)
-{
-  dispose<NATIVE_TYPE>(env, thisObj);
-}
+DISPOSE
 
 GETTER(jstring, getTitle)
 GETTER(jstring, getPath)

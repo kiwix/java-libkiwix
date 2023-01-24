@@ -34,10 +34,8 @@ METHOD(void, allocate, jobject libraryObj)
   SET_PTR(std::make_shared<NATIVE_TYPE>(lib.get()));
 }
 
-METHOD0(void, dispose)
-{
-  dispose<NATIVE_TYPE>(env, thisObj);
-}
+DISPOSE
+
 /* Kiwix manager functions */
 METHOD(jboolean, readFile, jstring path)
 {

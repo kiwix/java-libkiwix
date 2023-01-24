@@ -35,10 +35,7 @@
 #include <macros.h>
 
 
-METHOD0(void, dispose)
-{
-  dispose<NATIVE_TYPE>(env, thisObj);
-}
+DISPOSE
 
 GETTER(jboolean, isRedirect)
 GETTER(jstring, getTitle)

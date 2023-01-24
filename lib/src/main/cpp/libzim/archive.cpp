@@ -113,11 +113,7 @@ JNIEXPORT void JNICALL Java_org_kiwix_libzim_Archive_setNativeArchiveEmbedded(
 #endif
 }
 
-JNIEXPORT void JNICALL
-Java_org_kiwix_libzim_Archive_dispose(JNIEnv* env, jobject thisObj)
-{
-  dispose<zim::Archive>(env, thisObj);
-}
+DISPOSE
 
 GETTER(jstring, getFilename)
 GETTER(jlong, getFilesize)

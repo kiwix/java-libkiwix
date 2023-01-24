@@ -34,10 +34,7 @@ METHOD0(void, setNativeHandler)
   SET_PTR(std::make_shared<NATIVE_TYPE>());
 }
 
-METHOD0(void, dispose)
-{
-  dispose<NATIVE_TYPE>(env, thisObj);
-}
+DISPOSE
 
 /* Kiwix library functions */
 METHOD(jboolean, addBook, jobject book)

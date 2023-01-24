@@ -45,10 +45,8 @@ METHOD(void, setNativeServer, jobject jLibrary)
   }
 }
 
-METHOD0(void, dispose)
-{
-  dispose<NATIVE_TYPE>(env, thisObj);
-}
+
+DISPOSE
 
 /* Kiwix library functions */
 METHOD(void, setRoot, jstring root)

@@ -39,3 +39,4 @@ JNIEXPORT retType JNICALL BUILD_METHOD(TYPENAME ,name) ( \
   return TO_JNI(THIS->name()); \
 }
 
+#define DISPOSE  METHOD0(void, dispose)  { dispose<NATIVE_TYPE>(env, thisObj); }

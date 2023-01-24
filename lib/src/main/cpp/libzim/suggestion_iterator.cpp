@@ -33,7 +33,7 @@
 #define TYPENAME libzim_SuggestionIterator
 #include <macros.h>
 
-
+// We cannot use the default macro to implement `dispose` as we need to delete the end handle
 METHOD0(void, dispose)
 {
   // Delete end iterator

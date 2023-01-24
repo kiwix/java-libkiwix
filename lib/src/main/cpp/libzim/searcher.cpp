@@ -48,10 +48,8 @@ METHOD(void, setNativeSearcher, jobject archive)
 }
 
 
-METHOD0(void, dispose)
-{
-  dispose<NATIVE_TYPE>(env, thisObj);
-}
+
+DISPOSE
 
 METHOD(jobject, addArchive, jobject archive) {
   auto cArchive = getPtr<zim::Archive>(env, archive);

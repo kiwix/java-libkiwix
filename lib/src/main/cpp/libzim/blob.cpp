@@ -33,12 +33,7 @@
 #define TYPENAME libzim_Blob
 #include <macros.h>
 
-
-
-METHOD0(void, dispose)
-{
-  dispose<NATIVE_TYPE>(env, thisObj);
-}
+DISPOSE
 
 METHOD0(jstring, getData) {
   return TO_JNI(std::string(*THIS));
