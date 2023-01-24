@@ -20,7 +20,7 @@
 
 
 #include <jni.h>
-#include "org_kiwix_libkiwix_JNIKiwixServer.h"
+#include "org_kiwix_libkiwix_Server.h"
 
 #include "server.h"
 #include "utils.h"
