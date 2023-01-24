@@ -41,7 +41,7 @@ METHOD(void, update__Lorg_kiwix_libkiwix_Book_2, jobject otherBook)
   THIS->update(*getPtr<kiwix::Book>(env, otherBook));
 }
 
-METHOD(void, update__Lorg_kiwix_libkiwix_JNIKiwixReader_2, jobject archive)
+METHOD(void, update__Lorg_kiwix_libzim_Archive_2, jobject archive)
 {
   THIS->update(*getPtr<zim::Archive>(env, archive));
 }
