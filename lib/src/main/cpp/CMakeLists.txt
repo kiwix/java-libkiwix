@@ -10,7 +10,6 @@ add_library(
         zim_wrapper
 
         SHARED
-        common.cpp
         libzim/archive.cpp
         libzim/entry.cpp
         libzim/entry_iterator.cpp

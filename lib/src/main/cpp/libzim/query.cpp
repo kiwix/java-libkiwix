@@ -36,7 +36,6 @@
 METHOD(void, setNativeQuery, jstring query)
 {
   auto cQuery = TO_C(query);
-  Lock l;
   try {
     auto query = std::make_shared<NATIVE_TYPE>(cQuery);
     SET_PTR(query);

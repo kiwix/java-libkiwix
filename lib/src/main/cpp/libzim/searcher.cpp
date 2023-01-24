@@ -35,8 +35,6 @@
 
 METHOD(void, setNativeSearcher, jobject archive)
 {
-
-  Lock l;
   auto cArchive = getPtr<zim::Archive>(env, archive);
   try {
     auto searcher = std::make_shared<zim::Searcher>(*cArchive);

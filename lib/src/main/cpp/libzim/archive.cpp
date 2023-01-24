@@ -41,7 +41,6 @@ METHOD(void, setNativeArchive, jstring filename)
   std::string cPath = TO_C(filename);
 
   LOG("Attempting to create reader with: %s", cPath.c_str());
-  Lock l;
   try {
     auto archive = std::make_shared<zim::Archive>(cPath);
     SET_PTR(archive);
@@ -78,7 +77,6 @@ JNIEXPORT void JNICALL Java_org_kiwix_libzim_Archive_setNativeArchiveByFD(
   int fd = jni2fd(fdObj, env);
 
   LOG("Attempting to create reader with fd: %d", fd);
-  Lock l;
   try {
     auto archive = std::make_shared<zim::Archive>(fd);
     SET_PTR(archive);
@@ -99,7 +97,6 @@ JNIEXPORT void JNICALL Java_org_kiwix_libzim_Archive_setNativeArchiveEmbedded(
   int fd = jni2fd(fdObj, env);
 
   LOG("Attempting to create reader with fd: %d", fd);
-  Lock l;
   try {
     auto archive = std::make_shared<zim::Archive>(fd, offset, size);
     SET_PTR(archive);

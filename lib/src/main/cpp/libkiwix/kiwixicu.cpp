@@ -27,12 +27,9 @@
 #include "utils.h"
 #include "zim/tools.h"
 
-std::mutex globalLock;
-
 JNIEXPORT void JNICALL Java_org_kiwix_kiwixlib_JNIICU_setDataDirectory(
     JNIEnv* env, jclass kclass, jstring dirStr)
 {
-  Lock l;
   try {
     zim::setICUDataDirectory(TO_C(dirStr));
   } catch (...) {
