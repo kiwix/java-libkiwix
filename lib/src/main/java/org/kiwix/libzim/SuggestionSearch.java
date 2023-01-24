@@ -26,6 +26,10 @@ public class SuggestionSearch
   public native SuggestionIterator getResults(int start, int maxResults);
   public native long getEstimatedMatches();
 
+
+  @Override
+  protected void finalize() { dispose(); }
+
 ///--------- The wrapper thing
   // To delete our native wrapper
   public native void dispose();

@@ -31,9 +31,8 @@ public class Entry
   public native Item getRedirect();
   public native Entry getRedirectEntry();
 
-  protected void finalize() {
-    dispose();
-  }
+  @Override
+  protected void finalize() { dispose(); }
 
 ///--------- The wrapper thing
   // To delete our native wrapper

@@ -104,6 +104,9 @@ public class Archive
   private native void setNativeArchiveByFD(FileDescriptor fd);
   private native void setNativeArchiveEmbedded(FileDescriptor fd, long offset, long size);
 
+  @Override
+  protected void finalize() { dispose(); }
+
 
 ///--------- The wrapper thing
   // To delete our native wrapper

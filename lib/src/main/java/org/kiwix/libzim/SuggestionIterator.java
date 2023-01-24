@@ -27,6 +27,10 @@ public class SuggestionIterator implements Iterator<SuggestionItem>
   public native boolean hasNext();
   public native SuggestionItem next();
 
+  @Override
+  protected void finalize() { dispose(); }
+
+
 ///--------- The wrapper thing
   // To delete our native wrapper
   public native void dispose();

@@ -45,6 +45,10 @@ public class Server
     setNativeServer(library);
   }
 
+  @Override
+  protected void finalize() { dispose(); }
+
+
   private native void setNativeServer(Library library);
   private native void dispose();
   private long nativeHandle;

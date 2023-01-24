@@ -26,9 +26,8 @@ public class SuggestionItem
   public native String getSnippet();
   public native boolean hasSnippet();
 
-  protected void finalize() {
-    dispose();
-  }
+  @Override
+  protected void finalize() { dispose(); }
 
 ///--------- The wrapper thing
   // To delete our native wrapper

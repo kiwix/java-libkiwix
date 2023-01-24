@@ -30,9 +30,8 @@ public class Item
   public native Blob getData();
   public native long getSize();
 
-  protected void finalize() {
-    dispose();
-  }
+  @Override
+  protected void finalize() { dispose(); }
 
 ///--------- The wrapper thing
   // To delete our native wrapper

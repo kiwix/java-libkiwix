@@ -29,6 +29,10 @@ public class EntryIterator implements Iterator<Entry>
   public native boolean hasNext();
   public native Entry next();
 
+  @Override
+  protected void finalize() { dispose(); }
+
+
 ///--------- The wrapper thing
   // To delete our native wrapper
   public native void dispose();

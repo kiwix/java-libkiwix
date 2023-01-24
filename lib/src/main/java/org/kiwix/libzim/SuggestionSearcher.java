@@ -40,6 +40,10 @@ public class SuggestionSearcher
 
   private native void setNativeSearcher(Archive archive);
 
+
+  @Override
+  protected void finalize() { dispose(); }
+
 ///--------- The wrapper thing
   // To delete our native wrapper
   public native void dispose();

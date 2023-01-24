@@ -51,6 +51,10 @@ public class Searcher
   private native void setNativeSearcher(Archive archive);
   private native void setNativeSearcherMulti(Archive[] archives);
 
+  @Override
+  protected void finalize() { dispose(); }
+
+
 ///--------- The wrapper thing
   // To delete our native wrapper
   public native void dispose();

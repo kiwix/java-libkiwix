@@ -26,9 +26,10 @@ public class Blob
   public native String getData();
   public native long size();
 
-  protected void finalize() {
-    dispose();
-  }
+
+  @Override
+  protected void finalize() { dispose(); }
+
 
 ///--------- The wrapper thing
   // To delete our native wrapper

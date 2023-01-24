@@ -28,6 +28,10 @@ public class Query
   public native Query setQuery(String query);
   public native Query setGeorange(float latitude, float longitute, float distance);
 
+  @Override
+  protected void finalize() { dispose(); }
+
+
 ///--------- The wrapper thing
   // To delete our native wrapper
   public native void dispose();
