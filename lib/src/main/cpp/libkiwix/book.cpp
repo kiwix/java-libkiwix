@@ -50,6 +50,8 @@ GETTER(jstring, getId)
 
 GETTER(jstring, getPath)
 
+GETTER(jstring, getHumanReadableIdFromPath)
+
 GETTER(jboolean, isPathValid)
 
 GETTER(jstring, getTitle)

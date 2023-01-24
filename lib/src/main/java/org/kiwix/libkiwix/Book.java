@@ -12,11 +12,13 @@ public class Book
   public native void update(Book book);
   public native void update(Archive archive);
 
+
   @Override
   protected void finalize() { dispose();  }
 
   public native String getId();
   public native String getPath();
+  public native String getHumanReadableIdFromPath();
   public native boolean isPathValid();
   public native String getTitle();
   public native String getDescription();
