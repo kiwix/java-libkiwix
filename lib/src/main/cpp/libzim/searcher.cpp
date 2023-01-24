@@ -47,7 +47,23 @@ METHOD(void, setNativeSearcher, jobject archive)
   }
 }
 
-
+METHOD(void, setNativeSearcherMulti, jobjectArray archives)
+{
+  std::vector<zim::Archive> cArchives;
+  jsize nbArchives = env->GetArrayLength(archives);
+  for(int i=0; i<nbArchives; i++) {
+    jobject archive = env->GetObjectArrayElement(archives, i);
+    auto cArchive = getPtr<zim::Archive>(env, archive);
+    cArchives.push_back(*cArchive);
+  }
+  try {
+    auto searcher = std::make_shared<zim::Searcher>(cArchives);
+    SET_PTR(searcher);
+  } catch (std::exception& e) {
+    LOG("Cannot create searcher");
+      LOG("%s", e.what());
+  }
+}
 
 DISPOSE
 
