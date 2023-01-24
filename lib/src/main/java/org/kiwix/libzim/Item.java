@@ -25,7 +25,7 @@ public class Item
 {
   public native String getTitle();
   public native String getPath();
-  public native String getMimeType();
+  public native String getMimetype();
 
   public native Blob getData();
   public native long getSize();
