@@ -47,21 +47,43 @@ METHOD(void, update__Lorg_kiwix_libkiwix_JNIKiwixReader_2, jobject archive)
 }
 
 GETTER(jstring, getId)
+
 GETTER(jstring, getPath)
+
 GETTER(jboolean, isPathValid)
+
 GETTER(jstring, getTitle)
+
 GETTER(jstring, getDescription)
+
 GETTER(jstring, getLanguage)
+
 GETTER(jstring, getCreator)
+
 GETTER(jstring, getPublisher)
+
 GETTER(jstring, getDate)
+
 GETTER(jstring, getUrl)
+
 GETTER(jstring, getName)
+
 GETTER(jstring, getFlavour)
+
 GETTER(jstring, getCategory)
+
 GETTER(jstring, getTags)
+
+METHOD(jstring, getTagStr, jstring tagName) try {
+  return TO_JNI(THIS->getTagStr(TO_C(tagName)));
+} catch(...) {
+  return c2jni<std::string>("", env);
+}
+
 GETTER(jlong, getArticleCount)
+
 GETTER(jlong, getMediaCount)
+
 GETTER(jlong, getSize)
 
 METHOD0(jobjectArray, getIllustrations) {
@@ -77,9 +99,4 @@ METHOD0(jobjectArray, getIllustrations) {
 
 METHOD(jobject, getIllustration, jint size) {
   return BUILD_WRAPPER("org/kiwix/libkiwix/Illustration", THIS->getIllustration(TO_C(size)));
-}
-METHOD(jstring, getTagStr, jstring tagName) try {
-  return TO_JNI(THIS->getTagStr(TO_C(tagName)));
-} catch(...) {
-  return c2jni<std::string>("", env);
 }

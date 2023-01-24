@@ -70,13 +70,13 @@ METHOD(jint, getBookCount, jboolean localBooks, jboolean remoteBooks) {
 }
 
 GETTER(jobjectArray, getBooksIds)
-GETTER(jobjectArray, getBooksLanguages)
-GETTER(jobjectArray, getBooksCategories)
-GETTER(jobjectArray, getBooksCreators)
-GETTER(jobjectArray, getBooksPublishers)
 
 METHOD(jobjectArray, filter, jobject filterObj) {
   auto filter = getPtr<kiwix::Filter>(env, filterObj);
   return c2jni(THIS->filter(*filter), env);
 }
 
+GETTER(jobjectArray, getBooksLanguages)
+GETTER(jobjectArray, getBooksCategories)
+GETTER(jobjectArray, getBooksCreators)
+GETTER(jobjectArray, getBooksPublishers)
