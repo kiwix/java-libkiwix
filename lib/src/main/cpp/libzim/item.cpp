@@ -44,3 +44,13 @@ METHOD0(jobject, getData) {
 }
 
 GETTER(jlong, getSize)
+
+
+METHOD0(jobject, getDirectAccessInformation) {
+  jobject directObjInfo = newObject("org/kiwix/libzim/DirectAccessInfo", env);
+  setDaiObjValue("", 0, directObjInfo, env);
+
+  auto cDirectObjInfo = THIS->getDirectAccessInformation();
+  setDaiObjValue(cDirectObjInfo.first, cDirectObjInfo.second, directObjInfo, env);
+  return directObjInfo;
+}

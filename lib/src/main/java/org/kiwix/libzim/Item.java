@@ -20,6 +20,7 @@
 package org.kiwix.libzim;
 
 import org.kiwix.libzim.Blob;
+import org.kiwix.libzim.DirectAccessInfo;
 
 public class Item
 {
@@ -29,6 +30,8 @@ public class Item
 
   public native Blob getData();
   public native long getSize();
+
+  public native DirectAccessInfo getDirectAccessInformation();
 
   @Override
   protected void finalize() { dispose(); }
