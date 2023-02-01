@@ -50,6 +50,7 @@ add_library(
         libkiwix/kiwixicu.cpp
         libkiwix/kiwixserver.cpp
         libkiwix/library.cpp
+        libkiwix/bookmark.cpp
         libkiwix/manager.cpp
         libkiwix/illustration.cpp
 )

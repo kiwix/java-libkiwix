@@ -23,6 +23,7 @@ import org.kiwix.libzim.Archive;
 import org.kiwix.libzim.Searcher;
 import org.kiwix.libkiwix.Book;
 import org.kiwix.libkiwix.JNIKiwixException;
+import org.kiwix.libkiwix.Bookmark;
 
 public class Library
 {
@@ -41,6 +42,7 @@ public class Library
   public native boolean removeBookById(String id);
 
   public native boolean writeToFile(String path);
+  public native boolean writeBookmarksToFile(String path);
 
   public native int getBookCount(boolean localBooks, boolean remoteBooks);
 
@@ -51,6 +53,10 @@ public class Library
   public native String[] getBooksCategories();
   public native String[] getBooksCreators();
   public native String[] getBooksPublishers();
+
+  public native void addBookmark(Bookmark bookmark);
+  public native boolean removeBookmark(String zimId, String url);
+  public native Bookmark[] getBookmarks(boolean onlyValidBookmarks);
 
   @Override
   protected void finalize() { dispose(); }

@@ -64,6 +64,9 @@ METHOD(jboolean, removeBookById, jstring id) {
 METHOD(jboolean, writeToFile, jstring path) {
   return TO_JNI(THIS->writeToFile(TO_C(path)));
 }
+METHOD(jboolean, writeBookmarksToFile, jstring path) {
+  return TO_JNI(THIS->writeBookmarksToFile(TO_C(path)));
+}
 
 METHOD(jint, getBookCount, jboolean localBooks, jboolean remoteBooks) {
   return TO_JNI(THIS->getBookCount(TO_C(localBooks), TO_C(remoteBooks)));
@@ -80,3 +83,23 @@ GETTER(jobjectArray, getBooksLanguages)
 GETTER(jobjectArray, getBooksCategories)
 GETTER(jobjectArray, getBooksCreators)
 GETTER(jobjectArray, getBooksPublishers)
+
+METHOD(void, addBookmark, jobject bookmark) {
+  auto cBookmark = getPtr<kiwix::Bookmark>(env, bookmark);
+  THIS->addBookmark(*cBookmark);
+}
+
+METHOD(jboolean, removeBookmark, jstring zimId, jstring url) {
+  return TO_JNI(THIS->removeBookmark(TO_C(zimId), TO_C(url)));
+}
+
+METHOD(jobjectArray, getBookmarks, jboolean onlyValidBookmarks) {
+  auto bookmarks = THIS->getBookmarks(TO_C(onlyValidBookmarks));
+  jobjectArray retArray = createArray(env, bookmarks.size(), "org/kiwix/libkiwix/Bookmark");
+  size_t index = 0;
+  for (auto bookmark: bookmarks) {
+    auto wrapper = BUILD_WRAPPER("org/kiwix/libkiwx/Bookmark", bookmark);
+    env->SetObjectArrayElement(retArray, index++, wrapper);
+  }
+  return retArray;
+}
