@@ -28,6 +28,7 @@ public class JNIKiwix
 {
   public JNIKiwix(final Context context){
     ReLinker.loadLibrary(context, "kiwix");
+    ReLinker.loadLibrary(context, "zim");
   }
 
   public void setDataDirectory(String icuDataDir) {
