@@ -59,7 +59,7 @@ android {
     }
     externalNativeBuild {
         cmake {
-            path file('src/cpp/CMakeLists.txt')
+            path file('src/main/cpp/CMakeLists.txt')
             version '3.18.1'
         }
     }
@@ -285,5 +285,35 @@ task checkCurrentJavaVersion() {
 
 task generateHeaderFilesFromJavaWrapper(type: Exec) {
     workingDir "${projectDir}/src/main/java/org/kiwix/"
-    commandLine 'bash', '-c', "javac -h ${buildDir}/include/javah_generated/ -d ${buildDir}/kiwixlib/ kiwixlib/Book.java kiwixlib/DirectAccessInfo.java kiwixlib/Filter.java kiwixlib/JNIICU.java kiwixlib/JNIKiwixBool.java kiwixlib/JNIKiwixException.java kiwixlib/JNIKiwixInt.java kiwixlib/JNIKiwixReader.java kiwixlib/JNIKiwixSearcher.java kiwixlib/JNIKiwixServer.java kiwixlib/JNIKiwixString.java kiwixlib/Library.java kiwixlib/Manager.java"
+    commandLine 'bash', '-c', "javac -h ${buildDir}/include/javah_generated/ -d ${buildDir}/libzim/ ${getLibzimFiles()} ${getLibkiwixFiles()}"
+}
+
+String getLibkiwixFiles() {
+    return "${projectDir}/src/main/java/org/kiwix/libkiwix/Book.java " +
+        "${projectDir}/src/main/java/org/kiwix/libkiwix/Bookmark.java " +
+        "${projectDir}/src/main/java/org/kiwix/libkiwix/Filter.java " +
+        "${projectDir}/src/main/java/org/kiwix/libkiwix/JNIICU.java " +
+        "${projectDir}/src/main/java/org/kiwix/libkiwix/Illustration.java " +
+        "${projectDir}/src/main/java/org/kiwix/libkiwix/JNIKiwixException.java " +
+        "${projectDir}/src/main/java/org/kiwix/libkiwix/Library.java " +
+        "${projectDir}/src/main/java/org/kiwix/libkiwix/Manager.java " +
+        "${projectDir}/src/main/java/org/kiwix/libkiwix/Server.java"
+}
+
+String getLibzimFiles() {
+    return "${projectDir}/src/main/java/org/kiwix/libzim/Archive.java " +
+        "${projectDir}/src/main/java/org/kiwix/libzim/Blob.java " +
+        "${projectDir}/src/main/java/org/kiwix/libzim/DirectAccessInfo.java " +
+        "${projectDir}/src/main/java/org/kiwix/libzim/EntryIterator.java " +
+        "${projectDir}/src/main/java/org/kiwix/libzim/Entry.java " +
+        "${projectDir}/src/main/java/org/kiwix/libzim/Item.java " +
+        "${projectDir}/src/main/java/org/kiwix/libzim/Query.java " +
+        "${projectDir}/src/main/java/org/kiwix/libzim/Searcher.java " +
+        "${projectDir}/src/main/java/org/kiwix/libzim/SearchIterator.java " +
+        "${projectDir}/src/main/java/org/kiwix/libzim/Search.java " +
+        "${projectDir}/src/main/java/org/kiwix/libzim/SuggestionItem.java " +
+        "${projectDir}/src/main/java/org/kiwix/libzim/SuggestionIterator.java " +
+        "${projectDir}/src/main/java/org/kiwix/libzim/SuggestionSearcher.java " +
+        "${projectDir}/src/main/java/org/kiwix/libzim/SuggestionSearch.java " +
+        "${projectDir}/src/main/java/org/kiwix/libzim/ZimFileFormatException.java"
 }
