@@ -273,7 +273,7 @@ task copyBuildKiwixSoFile(type: Copy) {
 
 task createCodeCoverageReport(type: Exec) {
     workingDir "${projectDir}/src/androidTests/java/org/kiwix/kiwixlib/"
-    commandLine 'sh', '-c', "bash 'compile_and_run_test.sh' ${buildDir}/libs/*app*.jar $buildDir"
+    commandLine 'bash', '-c', "bash 'compile_and_run_test.sh' ${buildDir}/libs/*app*.jar $buildDir"
 }
 
 task checkCurrentJavaVersion() {
