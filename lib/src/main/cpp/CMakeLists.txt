@@ -10,6 +10,7 @@ add_library(
         zim_wrapper
 
         SHARED
+        wrapper.cpp
         libzim/archive.cpp
         libzim/entry.cpp
         libzim/entry_iterator.cpp
@@ -45,6 +46,7 @@ add_library(
         kiwix_wrapper
 
         SHARED
+        wrapper.cpp
         libkiwix/book.cpp
         libkiwix/filter.cpp
         libkiwix/kiwixicu.cpp

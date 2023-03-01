@@ -29,12 +29,11 @@
 #include "macros.h"
 
 /* Kiwix Reader JNI functions */
-METHOD0(void, setNativeHandler)
+METHOD0(jobject, buildNativeLibrary)
 {
-  SET_PTR(std::make_shared<NATIVE_TYPE>());
+  return NEW_RESOURCE(std::make_shared<NATIVE_TYPE>());
 }
 
-DISPOSE
 
 /* Kiwix library functions */
 METHOD(jboolean, addBook, jobject book)
@@ -50,11 +49,11 @@ METHOD(jboolean, addBook, jobject book)
 }
 
 METHOD(jobject, getBookById, jstring id) {
-  return BUILD_WRAPPER("org/kiwix/libkiwix/Book", THIS->getBookById(TO_C(id)));
+  return BUILD_WRAPPER(THIS->getBookById(TO_C(id)));
 }
 
 METHOD(jobject, getArchiveById, jstring id) {
-  return BUILD_WRAPPER("org/kiwix/libzim/Archive", THIS->getArchiveById(TO_C(id)));
+  return BUILD_WRAPPER(THIS->getArchiveById(TO_C(id)));
 }
 
 METHOD(jboolean, removeBookById, jstring id) {
@@ -98,7 +97,7 @@ METHOD(jobjectArray, getBookmarks, jboolean onlyValidBookmarks) {
   jobjectArray retArray = createArray(env, bookmarks.size(), "org/kiwix/libkiwix/Bookmark");
   size_t index = 0;
   for (auto bookmark: bookmarks) {
-    auto wrapper = BUILD_WRAPPER("org/kiwix/libkiwx/Bookmark", bookmark);
+    auto wrapper = BUILD_WRAPPER(bookmark);
     env->SetObjectArrayElement(retArray, index++, wrapper);
   }
   return retArray;

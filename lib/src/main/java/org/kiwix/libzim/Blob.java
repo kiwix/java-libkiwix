@@ -20,21 +20,13 @@
 package org.kiwix.libzim;
 
 import org.kiwix.libzim.Blob;
+import org.kiwix.Wrapper;
 
-public class Blob
+public class Blob extends Wrapper
 {
+  private Blob(Wrapper.Resource res) {
+    super(res);
+  }
   public native String getData();
   public native long size();
-
-
-  @Override
-  protected void finalize() { dispose(); }
-
-
-///--------- The wrapper thing
-  // To delete our native wrapper
-  public native void dispose();
-
-  // A pointer (as a long) to a native Handle
-  private long nativeHandle;
 }

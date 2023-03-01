@@ -26,11 +26,11 @@ ext {
 
 apply from: 'publish.gradle'
 android {
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
 
-        minSdk 21
+        minSdk 33
         targetSdk 32
         versionCode 1
         versionName "1.0"
@@ -285,7 +285,7 @@ task checkCurrentJavaVersion() {
 
 task generateHeaderFilesFromJavaWrapper(type: Exec) {
     workingDir "${projectDir}/src/main/java/org/kiwix/"
-    commandLine 'bash', '-c', "javac -h ${buildDir}/include/javah_generated/ -d ${buildDir}/libzim/ ${getLibzimFiles()} ${getLibkiwixFiles()}"
+    commandLine 'bash', '-c', "javac -h ${buildDir}/include/javah_generated/ -d ${buildDir}/libzim/ *.java ${getLibzimFiles()} ${getLibkiwixFiles()}"
 }
 
 String getLibkiwixFiles() {

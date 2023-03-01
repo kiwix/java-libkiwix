@@ -23,31 +23,18 @@ import org.kiwix.libzim.ZimFileFormatException;
 import org.kiwix.libzim.Archive;
 import org.kiwix.libzim.SuggestionSearch;
 import java.io.FileDescriptor;
+import org.kiwix.Wrapper;
 
-public class SuggestionSearcher
+public class SuggestionSearcher extends Wrapper
 {
 
   public SuggestionSearcher(Archive archive) throws Exception
   {
-    setNativeSearcher(archive);
-    if (nativeHandle == 0) {
-      throw new Exception("Cannot create searcher");
-    }
+    super(buildNativeSearcher(archive));
   }
 
   public native SuggestionSearch suggest(String query);
   public native void setVerbose(boolean verbose);
 
-  private native void setNativeSearcher(Archive archive);
-
-
-  @Override
-  protected void finalize() { dispose(); }
-
-///--------- The wrapper thing
-  // To delete our native wrapper
-  public native void dispose();
-
-  // A pointer (as a long) to a native Handle
-  private long nativeHandle;
+  private native static Wrapper.Resource buildNativeSearcher(Archive archive);
 }

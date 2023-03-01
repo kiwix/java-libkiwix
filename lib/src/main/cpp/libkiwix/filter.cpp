@@ -28,14 +28,10 @@
 #define TYPENAME libkiwix_Filter
 #include "macros.h"
 
-
-
 /* Kiwix Reader JNI functions */
-METHOD0(void, allocate) {
-  SET_PTR(std::make_shared<NATIVE_TYPE>());
+METHOD0(jobject, getNativeFilter) {
+  return NEW_RESOURCE(std::make_shared<NATIVE_TYPE>());
 }
-
-DISPOSE
 
 #define FORWARD(name, args_type) \
 METHOD(jobject, name, args_type value) { \

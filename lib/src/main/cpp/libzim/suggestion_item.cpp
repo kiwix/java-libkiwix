@@ -33,8 +33,6 @@
 #define TYPENAME libzim_SuggestionItem
 #include <macros.h>
 
-DISPOSE
-
 GETTER(jstring, getTitle)
 GETTER(jstring, getPath)
 GETTER(jstring, getSnippet)

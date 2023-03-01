@@ -20,8 +20,9 @@
 package org.kiwix.libkiwix;
 
 import org.kiwix.libkiwix.Library;
+import org.kiwix.Wrapper;
 
-public class Manager
+public class Manager extends Wrapper
 {
   /**
    * Read a `library.xml` file and add books in the library.
@@ -76,15 +77,11 @@ public class Manager
                                        boolean checkMetaData);
 
   public Manager(Library library) {
-    allocate(library);
+    super(buildNativeManager(library));
     _library = library;
   }
 
   private Library _library;
 
-  @Override
-  protected void finalize() { dispose(); }
-  private native void allocate(Library library);
-  private native void dispose();
-  private long nativeHandle;
+  private native static Wrapper.Resource buildNativeManager(Library library);
 }

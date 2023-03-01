@@ -37,7 +37,324 @@
  #define LOG(...)
 #endif
 
+#include <zim/archive.h>
+#include <book.h>
+
 using std::shared_ptr;
+
+namespace zim {
+  class Blob;
+  class Searcher;
+  class Query;
+  class Search;
+  class SearchIterator;
+  class SuggestionSearcher;
+  class SuggestionSearch;
+  class SuggestionIterator;
+  class SuggestionItem;
+
+  class Entry;
+  class Item;
+}
+
+namespace kiwix {
+  class Library;
+  class Bookmark;
+  class Filter;
+  class Manager;
+  class Server;
+}
+
+enum class type_id :int  {
+  Archive,
+  Iterator_path,
+  Iterator_title,
+  Iterator_efficient,
+  Blob,
+  Searcher,
+  Query,
+  Search,
+  SearchIterator,
+  SuggestionSearcher,
+  SuggestionSearch,
+  SuggestionIterator,
+  SuggestionItem,
+  Entry,
+  Item,
+
+  Library,
+  Filter,
+  Manager,
+  Server,
+  Book,
+  Bookmark,
+  ConstBook,
+  Illustration,
+  ConstIllustration
+};
+
+template<typename T>
+struct WrappedType { };
+
+template<> struct WrappedType<zim::Archive>{
+  static constexpr const type_id ID = type_id::Archive;
+  static constexpr const char* CLASS_NAME =  "org/kiwix/libzim/Archive";
+};
+
+template<> struct WrappedType<zim::Archive::iterator<zim::EntryOrder::pathOrder>>{
+  static constexpr const type_id ID = type_id::Iterator_path;
+  //static constexpr const char* CLASS_NAME =  "org/kiwix/libzim/Archive";
+};
+
+template<> struct WrappedType<zim::Archive::iterator<zim::EntryOrder::titleOrder>>{
+  static constexpr const type_id ID = type_id::Iterator_title;
+  //static constexpr const char* CLASS_NAME =  "org/kiwix/libzim/Archive";
+};
+
+template<> struct WrappedType<zim::Archive::iterator<zim::EntryOrder::efficientOrder>>{
+  static constexpr const type_id ID = type_id::Iterator_efficient;
+  //static constexpr const char* CLASS_NAME =  "org/kiwix/libzim/Archive";
+};
+
+template<> struct WrappedType<zim::Blob>{
+  static constexpr const type_id ID = type_id::Blob;
+  static constexpr const char* const CLASS_NAME = "org/kiwix/libzim/Blob";
+};
+
+template<> struct WrappedType<zim::Searcher>{
+  static constexpr const type_id ID = type_id::Searcher;
+  static constexpr const char* const CLASS_NAME = "org/kiwix/libzim/Searcher";
+};
+
+
+template<> struct WrappedType<zim::Search>{
+  static constexpr const type_id ID = type_id::Search;
+  static constexpr const char* const CLASS_NAME = "org/kiwix/libzim/Search";
+};
+
+template<> struct WrappedType<zim::Query>{
+  static constexpr const type_id ID = type_id::Query;
+  static constexpr const char* const CLASS_NAME = "org/kiwix/libzim/Query";
+};
+
+template<> struct WrappedType<zim::SearchIterator>{
+  static constexpr const type_id ID = type_id::SearchIterator;
+  //static constexpr const char* const CLASS_NAME = "org/kiwix/libzim/Search";
+};
+
+template<> struct WrappedType<zim::SuggestionSearcher>{
+  static constexpr const type_id ID = type_id::SuggestionSearcher;
+  static constexpr const char* const CLASS_NAME = "org/kiwix/libzim/SuggestionSearcher";
+};
+
+template<> struct WrappedType<zim::SuggestionSearch>{
+  static constexpr const type_id ID = type_id::SuggestionSearch;
+  static constexpr const char* const CLASS_NAME = "org/kiwix/libzim/SuggestionSearch";
+};
+
+template<> struct WrappedType<zim::SuggestionIterator>{
+  static constexpr const type_id ID = type_id::SuggestionIterator;
+  //static constexpr const char* const CLASS_NAME = "org/kiwix/libzim/SuggestionIterator";
+};
+
+template<> struct WrappedType<zim::SuggestionItem>{
+  static constexpr const type_id ID = type_id::SuggestionItem;
+  static constexpr const char* const CLASS_NAME = "org/kiwix/libzim/SuggestionItem";
+};
+
+template<> struct WrappedType<zim::Entry>{
+  static constexpr const type_id ID = type_id::Entry;
+  static constexpr const char* const CLASS_NAME = "org/kiwix/libzim/Entry";
+};
+
+template<> struct WrappedType<zim::Item>{
+  static constexpr const type_id ID = type_id::Item;
+  static constexpr const char* const CLASS_NAME = "org/kiwix/libzim/Item";
+};
+
+
+template<> struct WrappedType<kiwix::Library>{
+  static constexpr const type_id ID = type_id::Library;
+  static constexpr const char* const CLASS_NAME = "org/kiwix/libkiwix/Library";
+};
+
+template<> struct WrappedType<kiwix::Bookmark>{
+  static constexpr const type_id ID = type_id::Bookmark;
+  static constexpr const char* const CLASS_NAME = "org/kiwix/libkiwix/Bookmark";
+};
+
+
+template<> struct WrappedType<kiwix::Filter>{
+  static constexpr const type_id ID = type_id::Filter;
+  static constexpr const char* const CLASS_NAME = "org/kiwix/libkiwix/Filter";
+};
+
+template<> struct WrappedType<kiwix::Manager>{
+  static constexpr const type_id ID = type_id::Manager;
+  static constexpr const char* const CLASS_NAME = "org/kiwix/libkiwix/Manager";
+};
+
+template<> struct WrappedType<kiwix::Server>{
+  static constexpr const type_id ID = type_id::Server;
+  static constexpr const char* const CLASS_NAME = "org/kiwix/libkiwix/Server";
+};
+
+template<> struct WrappedType<kiwix::Book>{
+  static constexpr const type_id ID = type_id::Book;
+  static constexpr const char* const CLASS_NAME = "org/kiwix/libkiwix/Book";
+};
+
+template<> struct WrappedType<const kiwix::Book>{
+  static constexpr const type_id ID = type_id::ConstBook;
+  static constexpr const char* const CLASS_NAME = "org/kiwix/libkiwix/Book";
+};
+
+template<> struct WrappedType<kiwix::Book::Illustration>{
+  static constexpr const type_id ID = type_id::Illustration;
+  static constexpr const char* const CLASS_NAME = "org/kiwix/libkiwix/Illustration";
+};
+
+
+template<> struct WrappedType<const kiwix::Book::Illustration>{
+  static constexpr const type_id ID = type_id::ConstIllustration;
+  static constexpr const char* const CLASS_NAME = "org/kiwix/libkiwix/Illustration";
+};
+
+
+inline jfieldID getHandleField(JNIEnv* env, jobject obj, const char* handleName)
+{
+  jclass c = env->GetObjectClass(obj);
+  // J is the type signature for long:
+  return env->GetFieldID(c, handleName, "J");
+}
+
+
+template<typename T>
+inline jobject newResource(JNIEnv* env, T&& reference) {
+  auto ptr = std::make_shared<typename std::remove_reference<T>::type>(std::move(reference));
+  return newResource(env, std::move(ptr));
+}
+
+template<typename T>
+inline jobject newResource(JNIEnv* env, shared_ptr<T>&& ptr) {
+  jclass wrapperClass = env->FindClass("org/kiwix/Wrapper/Resource");
+  jmethodID initMethod = env->GetMethodID(wrapperClass, "<init>", "(IL)V");
+  // allocate a shared_ptr on the head
+  shared_ptr<T>* handle = new shared_ptr<T>(ptr);
+  jobject wrapper = env->NewObject(wrapperClass, initMethod, static_cast<int>(WrappedType<T>::ID), reinterpret_cast<jlong>(handle));
+  return wrapper;
+}
+#define NEW_RESOURCE(SHARED_PTR) newResource(env, std::move(SHARED_PTR));
+
+
+inline void deleteResource(JNIEnv* env, jobject resource) {
+  jclass resourceClass = env->GetObjectClass(resource);
+
+  jfieldID handleFieldId = env->GetFieldID(resourceClass, "nativeHandle", "J");
+  auto handle_ptr = env->GetLongField(resource, handleFieldId);
+
+  // We now need to know the type of the handle.
+  jfieldID typeFieldId = env->GetFieldID(resourceClass, "classid", "I");
+  auto type_id = static_cast<enum type_id>(env->GetIntField(resource, typeFieldId));
+
+  switch (type_id) {
+    case type_id::Archive:
+      delete reinterpret_cast<shared_ptr<zim::Archive>*>(handle_ptr);
+      break;
+    case type_id::Iterator_path:
+      delete reinterpret_cast<shared_ptr<zim::Archive::iterator<zim::EntryOrder::pathOrder>>*>(handle_ptr);
+      break;
+    case type_id::Iterator_title:
+      delete reinterpret_cast<shared_ptr<zim::Archive::iterator<zim::EntryOrder::titleOrder>>*>(handle_ptr);
+      break;
+    case type_id::Iterator_efficient:
+      delete reinterpret_cast<shared_ptr<zim::Archive::iterator<zim::EntryOrder::efficientOrder>>*>(handle_ptr);
+      break;
+    case type_id::Blob:
+      delete reinterpret_cast<shared_ptr<zim::Blob>*>(handle_ptr);
+      break;
+    case type_id::Searcher:
+      delete reinterpret_cast<shared_ptr<zim::Searcher>*>(handle_ptr);
+      break;
+    case type_id::Query:
+      delete reinterpret_cast<shared_ptr<zim::Query>*>(handle_ptr);
+      break;
+    case type_id::Search:
+      delete reinterpret_cast<shared_ptr<zim::Search>*>(handle_ptr);
+      break;
+    case type_id::SearchIterator:
+      delete reinterpret_cast<shared_ptr<zim::SearchIterator>*>(handle_ptr);
+      break;
+    case type_id::SuggestionSearcher:
+      delete reinterpret_cast<shared_ptr<zim::SuggestionSearcher>*>(handle_ptr);
+      break;
+    case type_id::SuggestionSearch:
+      delete reinterpret_cast<shared_ptr<zim::SuggestionSearch>*>(handle_ptr);
+      break;
+    case type_id::SuggestionIterator:
+      delete reinterpret_cast<shared_ptr<zim::SuggestionIterator>*>(handle_ptr);
+      break;
+    case type_id::SuggestionItem:
+      delete reinterpret_cast<shared_ptr<zim::SuggestionItem>*>(handle_ptr);
+      break;
+    case type_id::Entry:
+      delete reinterpret_cast<shared_ptr<zim::Entry>*>(handle_ptr);
+      break;
+    case type_id::Item:
+      delete reinterpret_cast<shared_ptr<zim::Item>*>(handle_ptr);
+      break;
+
+    case type_id::Library:
+      delete reinterpret_cast<shared_ptr<kiwix::Library>*>(handle_ptr);
+      break;
+    case type_id::Bookmark:
+      delete reinterpret_cast<shared_ptr<kiwix::Bookmark>*>(handle_ptr);
+      break;
+    case type_id::Filter:
+      delete reinterpret_cast<shared_ptr<kiwix::Filter>*>(handle_ptr);
+      break;
+    case type_id::Manager:
+      delete reinterpret_cast<shared_ptr<kiwix::Manager>*>(handle_ptr);
+      break;
+    case type_id::Server:
+      delete reinterpret_cast<shared_ptr<kiwix::Server>*>(handle_ptr);
+      break;
+    case type_id::Book:
+      delete reinterpret_cast<shared_ptr<kiwix::Book>*>(handle_ptr);
+      break;
+    case type_id::ConstBook:
+      delete reinterpret_cast<shared_ptr<const kiwix::Book>*>(handle_ptr);
+      break;
+    case type_id::Illustration:
+      delete reinterpret_cast<shared_ptr<kiwix::Book::Illustration>*>(handle_ptr);
+      break;
+    case type_id::ConstIllustration:
+      delete reinterpret_cast<shared_ptr<const kiwix::Book::Illustration>*>(handle_ptr);
+      break;
+  };
+}
+
+template<typename T>
+shared_ptr<T> getPtr(JNIEnv* env, jobject thisObj, const char* resourceField = "nativeResource")
+{
+  jclass thisClass = env->GetObjectClass(thisObj);
+  jfieldID resourceFieldId = env->GetFieldID(thisClass, resourceField, "org/kiwix/Wrapper/Resource");
+  jobject resource = env->GetObjectField(thisObj, resourceFieldId);
+
+  // This may be Wrapper.Resource or IterWrapper.Resource
+  jclass resourceClass = env->GetObjectClass(resource);
+  jfieldID handleFieldId = env->GetFieldID(resourceClass, "nativeHandle", "J");
+  auto handle_ptr = env->GetLongField(resource, handleFieldId);
+
+  // Let's check that asked type is same that the one registered in the resource.
+  jfieldID typeFieldId = env->GetFieldID(resourceClass, "classid", "I");
+  auto type_id = static_cast<enum type_id>(env->GetIntField(resource, typeFieldId));
+  assert(type_id == WrappedType<T>::ID);
+
+  auto handle = reinterpret_cast<shared_ptr<T>*>(handle_ptr);
+  return *handle;
+}
+
 
 // Here is the wrapping structure.
 // All java class wrapping a `Native` instance must contain a pointer (cast as a long (J)) called "nativeHandle".
@@ -58,9 +375,8 @@ inline jobject newObject(const char* className, JNIEnv* env) {
 }
 #define NEW_OBJECT(CLASSNAME) newObject(CLASSNAME, env)
 
-
 // Set the pointer to the wrapped object.
-template<typename T>
+/*template<typename T>
 inline void setPtr(JNIEnv* env, jobject thisObj, shared_ptr<T>&& ptr, const char* handleName = "nativeHandle")
 {
   jclass thisClass = env->GetObjectClass(thisObj);
@@ -71,19 +387,20 @@ inline void setPtr(JNIEnv* env, jobject thisObj, shared_ptr<T>&& ptr, const char
   shared_ptr<T>* handle = new shared_ptr<T>(ptr);
   env->SetLongField(thisObj, fieldId, reinterpret_cast<jlong>(handle));
 }
-#define SET_PTR(SHARED_PTR) setPtr(env, thisObj, std::move(SHARED_PTR))
+#define SET_PTR(SHARED_PTR) setPtr(env, thisObj, std::move(SHARED_PTR))*/
 
 // This create a object and set it in the wrapper
-template<typename T, typename ...Args>
+/*template<typename T, typename ...Args>
 inline void setHandle(JNIEnv* env, jobject thisObj, Args && ...args)
 {
   auto ptr = std::make_shared<T>(std::forward<Args>(args)...);
   setPtr(env, thisObj, std::move(ptr));
 }
-#define SET_HANDLE(NATIVE_TYPE, OBJ, VALUE) setHandle<NATIVE_TYPE>(env, OBJ, VALUE)
+#define SET_HANDLE(NATIVE_TYPE, OBJ, VALUE) setHandle<NATIVE_TYPE>(env, OBJ, VALUE)*/
 
 
 // Return a shared_ptr for the handle
+/*
 template<typename T>
 shared_ptr<T> getPtr(JNIEnv* env, jobject thisObj, const char* handleName = "nativeHandle")
 {
@@ -92,7 +409,7 @@ shared_ptr<T> getPtr(JNIEnv* env, jobject thisObj, const char* handleName = "nat
   auto handle = reinterpret_cast<shared_ptr<T>*>(env->GetLongField(thisObj, fidNumber));
   return *handle;
 }
-#define GET_PTR(NATIVE_TYPE) getPtr<NATIVE_TYPE>(env, thisObj)
+#define GET_PTR(NATIVE_TYPE) getPtr<NATIVE_TYPE>(env, thisObj)*/
 
 // Delete the heap allocated handle
 template<typename T>
@@ -107,12 +424,6 @@ void dispose(JNIEnv* env, jobject thisObj, const char* handleName = "nativeHandl
   env->SetLongField(thisObj, fieldId, 0);
 }
 
-inline jfieldID getHandleField(JNIEnv* env, jobject obj, const char* handleName)
-{
-  jclass c = env->GetObjectClass(obj);
-  // J is the type signature for long:
-  return env->GetFieldID(c, handleName, "J");
-}
 
 inline jobjectArray createArray(JNIEnv* env, size_t length, const std::string& type_sig)
 {
@@ -120,15 +431,28 @@ inline jobjectArray createArray(JNIEnv* env, size_t length, const std::string& t
   return env->NewObjectArray(length, c, NULL);
 }
 
-template<typename T>
-inline jobject buildWrapper(JNIEnv* env, const char* class_name, T&& obj, const char* handleName = "nativeHandle") {
-  auto wrapper = newObject(class_name, env);
-  auto ptr = std::make_shared<T>(std::move(obj));
-  setPtr(env, wrapper, std::move(ptr));
-  return wrapper;
-}
-#define BUILD_WRAPPER(CLASSNAME, OBJ) buildWrapper(env, CLASSNAME, std::move(OBJ))
 
+
+template<typename T>
+inline jobject buildWrapper(JNIEnv* env, std::shared_ptr<T>&& ptr) {
+  auto resource = newResource(env, std::move(ptr));
+  jclass wrapperClass = env->FindClass(WrappedType<T>::CLASS_NAME);
+  jmethodID initMethod = env->GetMethodID(wrapperClass, "<init>", "(org/kiwix/Wrapper/Resource)V");
+  return env->NewObject(wrapperClass, initMethod, resource);
+}
+template<typename T>
+inline jobject buildWrapper(JNIEnv* env, T&& obj) {
+  auto resource = newResource(env, std::move(obj));
+  jclass wrapperClass = env->FindClass(WrappedType<T>::CLASS_NAME);
+  jmethodID initMethod = env->GetMethodID(wrapperClass, "<init>", "(org/kiwix/Wrapper/Resource)V");
+  return env->NewObject(wrapperClass, initMethod, resource);
+}
+#define BUILD_WRAPPER(OBJ) buildWrapper(env, std::move(OBJ))
+
+#define CATCH(MESSAGE) catch (...) { \
+  jclass exceptionClass = env->FindClass("java/lang/RuntimeException"); \
+  env->ThrowNew(exceptionClass, MESSAGE); \
+}
 
 
 // ---------------------------------------------------------------------------

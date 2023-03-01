@@ -20,9 +20,13 @@
 package org.kiwix.libzim;
 
 import org.kiwix.libzim.Item;
+import org.kiwix.Wrapper;
 
-public class Entry
+public class Entry extends Wrapper
 {
+  private Entry(Wrapper.Resource res) {
+    super(res);
+  }
   public native boolean isRedirect();
   public native String getTitle();
   public native String getPath();
@@ -30,14 +34,4 @@ public class Entry
   public native Item getItem(boolean follow);
   public native Item getRedirect();
   public native Entry getRedirectEntry();
-
-  @Override
-  protected void finalize() { dispose(); }
-
-///--------- The wrapper thing
-  // To delete our native wrapper
-  private native void dispose();
-
-  // A pointer (as a long) to a native Handle
-  private long nativeHandle;
 }

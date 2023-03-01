@@ -29,12 +29,10 @@
 #define TYPENAME libkiwix_Book
 #include <macros.h>
 
-METHOD0(void, allocate)
+METHOD0(jobject, getNativeBook)
 {
-  SET_PTR(std::make_shared<NATIVE_TYPE>());
+  return NEW_RESOURCE(std::make_shared<NATIVE_TYPE>());
 }
-
-DISPOSE
 
 METHOD(void, update__Lorg_kiwix_libkiwix_Book_2, jobject otherBook)
 {
@@ -93,12 +91,12 @@ METHOD0(jobjectArray, getIllustrations) {
   jobjectArray retArray = createArray(env, illustrations.size(), "org/kiwix/libkiwix/Illustration");
   size_t index = 0;
   for (auto illu: illustrations) {
-    auto wrapper = BUILD_WRAPPER("org/kiwix/libkiwx/Illustration", illu);
+    auto wrapper = BUILD_WRAPPER(illu);
     env->SetObjectArrayElement(retArray, index++, wrapper);
   }
   return retArray;
 }
 
 METHOD(jobject, getIllustration, jint size) {
-  return BUILD_WRAPPER("org/kiwix/libkiwix/Illustration", THIS->getIllustration(TO_C(size)));
+  return BUILD_WRAPPER(THIS->getIllustration(TO_C(size)));
 }

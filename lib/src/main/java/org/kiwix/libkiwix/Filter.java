@@ -19,8 +19,13 @@
 
 package org.kiwix.libkiwix;
 
-public class Filter
+import org.kiwix.Wrapper;
+
+public class Filter extends Wrapper
 {
+  public Filter() {
+    super(getNativeFilter());
+  }
 
   public native Filter local(boolean accept);
   public native Filter remote(boolean accept);
@@ -33,12 +38,5 @@ public class Filter
   public native Filter maxSize(long size);
   public native Filter query(String query);
 
-
-  public Filter() { allocate(); }
-
-  @Override
-  protected void finalize() { dispose(); }
-  private native void allocate();
-  private native void dispose();
-  private long nativeHandle;
+  private native static Wrapper.Resource getNativeFilter();
 }

@@ -21,9 +21,13 @@ package org.kiwix.libzim;
 
 import org.kiwix.libzim.Blob;
 import org.kiwix.libzim.DirectAccessInfo;
+import org.kiwix.Wrapper;
 
-public class Item
+public class Item extends Wrapper
 {
+  private Item(Wrapper.Resource res) {
+    super(res);
+  }
   public native String getTitle();
   public native String getPath();
   public native String getMimetype();
@@ -32,14 +36,4 @@ public class Item
   public native long getSize();
 
   public native DirectAccessInfo getDirectAccessInformation();
-
-  @Override
-  protected void finalize() { dispose(); }
-
-///--------- The wrapper thing
-  // To delete our native wrapper
-  private native void dispose();
-
-  // A pointer (as a long) to a native Handle
-  private long nativeHandle;
 }

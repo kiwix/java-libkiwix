@@ -43,44 +43,24 @@ inline int get_order(JNIEnv* env, jobject thisObj) {
   return TO_C(env->GetIntField(thisObj, fieldId));
 }
 
-METHOD0(void, dispose)
-{
-  // Delete end iterator
-  switch (get_order(env, thisObj)) {
-    case 0:
-       dispose<PATH_NATIVE_TYPE>(env, thisObj, "nativeHandleEnd");
-       dispose<PATH_NATIVE_TYPE>(env, thisObj);
-       break;
-    case 1:
-      dispose<TITLE_NATIVE_TYPE>(env, thisObj, "nativeHandleEnd");
-      dispose<TITLE_NATIVE_TYPE>(env, thisObj);
-      break;
-    case 2:
-      dispose<EFFICIENT_NATIVE_TYPE>(env, thisObj, "nativeHandleEnd");
-      dispose<EFFICIENT_NATIVE_TYPE>(env, thisObj);
-      break;
-  }
-}
-
-
 METHOD0(jboolean, hasNext) {
   switch (get_order(env, thisObj)) {
     case 0: {
-      PATH_NATIVE_TYPE next(*GET_PTR(PATH_NATIVE_TYPE));
+      PATH_NATIVE_TYPE next(*getPtr<PATH_NATIVE_TYPE>(env, thisObj, "nativeResourceBegin"));
       next++;
-      auto end = getPtr<PATH_NATIVE_TYPE>(env, thisObj, "nativeHandleEnd");
+      auto end = getPtr<PATH_NATIVE_TYPE>(env, thisObj, "nativeResourceEnd");
       return next == *end;
     }
     case 1: {
-      TITLE_NATIVE_TYPE next(*GET_PTR(TITLE_NATIVE_TYPE));
+      TITLE_NATIVE_TYPE next(*getPtr<TITLE_NATIVE_TYPE>(env, thisObj, "nativeResourceBegin"));
       next++;
-      auto end = getPtr<TITLE_NATIVE_TYPE>(env, thisObj, "nativeHandleEnd");
+      auto end = getPtr<TITLE_NATIVE_TYPE>(env, thisObj, "nativeResourceEnd");
       return next == *end;
     }
     case 2: {
-      EFFICIENT_NATIVE_TYPE next(*GET_PTR(EFFICIENT_NATIVE_TYPE));
+      EFFICIENT_NATIVE_TYPE next(*getPtr<EFFICIENT_NATIVE_TYPE>(env, thisObj, "nativeResourceBegin"));
       next++;
-      auto end = getPtr<EFFICIENT_NATIVE_TYPE>(env, thisObj, "nativeHandleEnd");
+      auto end = getPtr<EFFICIENT_NATIVE_TYPE>(env, thisObj, "nativeResourceEnd");
       return next == *end;
     }
     default:
@@ -92,19 +72,19 @@ METHOD0(jboolean, hasNext) {
 METHOD0(jobject, next) {
   switch (get_order(env, thisObj)) {
     case 0: {
-      (*GET_PTR(PATH_NATIVE_TYPE))++;
-      zim::Entry entry = **GET_PTR(PATH_NATIVE_TYPE);
-      return BUILD_WRAPPER("org/kiwix/libzim/Entry", entry);
+      (*getPtr<PATH_NATIVE_TYPE>(env, thisObj, "nativeResourceBegin"))++;
+      zim::Entry entry = **getPtr<PATH_NATIVE_TYPE>(env, thisObj, "nativeResourceBegin");
+      return BUILD_WRAPPER(entry);
     }
     case 1: {
-      (*GET_PTR(TITLE_NATIVE_TYPE))++;
-      zim::Entry entry = **GET_PTR(TITLE_NATIVE_TYPE);
-      return BUILD_WRAPPER("org/kiwix/libzim/Entry", entry);
+      (*getPtr<TITLE_NATIVE_TYPE>(env, thisObj, "nativeResourceBegin"))++;
+      zim::Entry entry = **getPtr<TITLE_NATIVE_TYPE>(env, thisObj, "nativeResourceBegin");
+      return BUILD_WRAPPER(entry);
     }
     case 2: {
-      (*GET_PTR(EFFICIENT_NATIVE_TYPE))++;
-      zim::Entry entry = **GET_PTR(EFFICIENT_NATIVE_TYPE);
-      return BUILD_WRAPPER("org/kiwix/libzim/Entry", entry);
+      (*getPtr<EFFICIENT_NATIVE_TYPE>(env, thisObj, "nativeResourceBegin"))++;
+      zim::Entry entry = **getPtr<EFFICIENT_NATIVE_TYPE>(env, thisObj, "nativeResourceBegin");
+      return BUILD_WRAPPER(entry);
     }
     default:
       // unreachable!()

@@ -20,24 +20,13 @@
 package org.kiwix.libzim;
 
 import org.kiwix.libzim.SuggestionItem;
+import org.kiwix.IterWrapper;
 import java.util.Iterator;
 
-public class SuggestionIterator implements Iterator<SuggestionItem>
+public class SuggestionIterator extends IterWrapper implements Iterator<SuggestionItem>
 {
   public native boolean hasNext();
   public native SuggestionItem next();
 
-  @Override
-  protected void finalize() { dispose(); }
-
-
-///--------- The wrapper thing
-  // To delete our native wrapper
-  public native void dispose();
-
-  // A pointer (as a long) to a native Handle
-  private long nativeHandle;
-
-  // A pointer (as a long) to the native end
-  private long nativeHandleEnd;
+  private SuggestionIterator(IterWrapper.Resource begin, IterWrapper.Resource end) { super(begin, end); }
 }

@@ -20,29 +20,17 @@
 package org.kiwix.libzim;
 
 import java.util.Iterator;
+import org.kiwix.IterWrapper;
 
-public class EntryIterator implements Iterator<Entry>
+public class EntryIterator extends IterWrapper implements Iterator<Entry>
 {
-  private EntryIterator(int order) {
+  private EntryIterator(int order, Resource nativeResourceBegin, Resource nativeResourceEnd) {
+    super(nativeResourceBegin, nativeResourceEnd);
     this.order = order;
   }
   public native boolean hasNext();
   public native Entry next();
 
-  @Override
-  protected void finalize() { dispose(); }
-
-
-///--------- The wrapper thing
-  // To delete our native wrapper
-  public native void dispose();
-
   // A marker of the order used for this iterator
   private int order;
-
-  // A pointer (as a long) to a native Handle
-  private long nativeHandle;
-
-  // A pointer (as a long) to the native end
-  private long nativeHandleEnd;
 }

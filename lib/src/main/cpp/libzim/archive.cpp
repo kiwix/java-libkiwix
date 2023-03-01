@@ -36,18 +36,13 @@
 #include <macros.h>
 
 /* Kiwix Reader JNI functions */
-METHOD(void, setNativeArchive, jstring filename)
+METHOD(jobject, buildNativeArchive, jstring filename)
 {
   std::string cPath = TO_C(filename);
 
   LOG("Attempting to create reader with: %s", cPath.c_str());
-  try {
-    auto archive = std::make_shared<zim::Archive>(cPath);
-    SET_PTR(archive);
-  } catch (std::exception& e) {
-    LOG("Error opening ZIM file");
-      LOG("%s", e.what());
-  }
+  auto archive = std::make_shared<NATIVE_TYPE>(cPath);
+  return NEW_RESOURCE(archive);
 }
 
 namespace
@@ -70,7 +65,7 @@ int jni2fd(const jobject& fdObj, JNIEnv* env)
 
 } // unnamed namespace
 
-JNIEXPORT void JNICALL Java_org_kiwix_libzim_Archive_setNativeArchiveByFD(
+JNIEXPORT jobject JNICALL Java_org_kiwix_libzim_Archive_buildNativeArchiveByFD(
     JNIEnv* env, jobject thisObj, jobject fdObj)
 {
 #ifndef _WIN32
@@ -79,18 +74,16 @@ JNIEXPORT void JNICALL Java_org_kiwix_libzim_Archive_setNativeArchiveByFD(
   LOG("Attempting to create reader with fd: %d", fd);
   try {
     auto archive = std::make_shared<zim::Archive>(fd);
-    SET_PTR(archive);
-  } catch (std::exception& e) {
-    LOG("Error opening ZIM file");
-       LOG("%s", e.what());
-  }
+    return NEW_RESOURCE(archive);
+  } CATCH("Error opening ZIM file")
 #else
   jclass exception = env->FindClass("java/lang/UnsupportedOperationException");
   env->ThrowNew(exception, "org.kiwix.libzim.Archive.setNativeArchiveByFD() is not supported under Windows");
 #endif
+  return nullptr;
 }
 
-JNIEXPORT void JNICALL Java_org_kiwix_libzim_Archive_setNativeArchiveEmbedded(
+JNIEXPORT jobject JNICALL Java_org_kiwix_libzim_Archive_buildNativeArchiveEmbedded(
     JNIEnv* env, jobject thisObj, jobject fdObj, jlong offset, jlong size)
 {
 #ifndef _WIN32
@@ -99,18 +92,14 @@ JNIEXPORT void JNICALL Java_org_kiwix_libzim_Archive_setNativeArchiveEmbedded(
   LOG("Attempting to create reader with fd: %d", fd);
   try {
     auto archive = std::make_shared<zim::Archive>(fd, offset, size);
-    SET_PTR(archive);
-  } catch (std::exception& e) {
-    LOG("Error opening ZIM file");
-       LOG("%s", e.what());
-  }
+    return NEW_RESOURCE(archive);
+  } CATCH("Error opening ZIM file")
 #else
   jclass exception = env->FindClass("java/lang/UnsupportedOperationException");
   env->ThrowNew(exception, "org.kiwix.libzim.Archive.setNativeArchiveEmbedded() is not supported under Windows");
 #endif
+  return nullptr;
 }
-
-DISPOSE
 
 GETTER(jstring, getFilename)
 GETTER(jlong, getFilesize)
@@ -128,13 +117,13 @@ METHOD(jstring, getMetadata, jstring name) {
 }
 
 METHOD(jobject, getMetadataItem, jstring name) {
-  return BUILD_WRAPPER("org/kiwix/libzim/Item", THIS->getMetadataItem(TO_C(name)));
+  return BUILD_WRAPPER(THIS->getMetadataItem(TO_C(name)));
 }
 
 GETTER(jobjectArray, getMetadataKeys)
 
 METHOD(jobject, getIllustrationItem, jint size) {
-  return BUILD_WRAPPER("org/kiwix/libzim/Item", THIS->getIllustrationItem(TO_C(size)));
+  return BUILD_WRAPPER(THIS->getIllustrationItem(TO_C(size)));
 }
 
 METHOD(jboolean, hasIllustration, jint size) {
@@ -144,11 +133,11 @@ METHOD(jboolean, hasIllustration, jint size) {
 GETTER(jlongArray, getIllustrationSizes)
 
 METHOD(jobject, getEntryByPath__Ljava_lang_String_2, jstring path) {
-  return BUILD_WRAPPER("org/kiwix/libzim/Entry", THIS->getEntryByPath(TO_C(path)));
+  return BUILD_WRAPPER(THIS->getEntryByPath(TO_C(path)));
 }
 
 METHOD(jobject, getEntryByPath__I, jint index) {
-  return BUILD_WRAPPER("org/kiwix/libzim/Entry", THIS->getEntryByPath(TO_C(index)));
+  return BUILD_WRAPPER(THIS->getEntryByPath(TO_C(index)));
 }
 
 METHOD(jboolean, hasEntryByPath, jstring path) {
@@ -156,11 +145,11 @@ METHOD(jboolean, hasEntryByPath, jstring path) {
 }
 
 METHOD(jobject, getEntryByTitle__Ljava_lang_String_2, jstring title) {
-  return BUILD_WRAPPER("org/kiwix/libzim/Entry", THIS->getEntryByTitle(TO_C(title)));
+  return BUILD_WRAPPER(THIS->getEntryByTitle(TO_C(title)));
 }
 
 METHOD(jobject, getEntryByTitle__I, jint index) {
-  return BUILD_WRAPPER("org/kiwix/libzim/Entry", THIS->getEntryByTitle(TO_C(index)));
+  return BUILD_WRAPPER(THIS->getEntryByTitle(TO_C(index)));
 }
 
 METHOD(jboolean, hasEntryByTitle, jstring title) {
@@ -168,17 +157,17 @@ METHOD(jboolean, hasEntryByTitle, jstring title) {
 }
 
 METHOD(jobject, getEntryByClusterOrder, jint index) {
-  return BUILD_WRAPPER("org/kiwix/libzim/Entry", THIS->getEntryByClusterOrder(TO_C(index)));
+  return BUILD_WRAPPER(THIS->getEntryByClusterOrder(TO_C(index)));
 }
 
 METHOD0(jobject, getMainEntry) {
-  return BUILD_WRAPPER("org/kiwix/libzim/Entry", THIS->getMainEntry());
+  return BUILD_WRAPPER(THIS->getMainEntry());
 }
 
 GETTER(jboolean, hasMainEntry)
 
 METHOD0(jobject, getRandomEntry) {
-  return BUILD_WRAPPER("org/kiwix/libzim/Entry", THIS->getRandomEntry());
+  return BUILD_WRAPPER(THIS->getRandomEntry());
 }
 
 GETTER(jboolean, hasFulltextIndex)
@@ -192,62 +181,57 @@ GETTER(jboolean, hasNewNamespaceScheme)
 #define ITER_BY_PATH 0
 #define ITER_BY_TITLE 1
 #define ITER_EFFICIENT 2
+
+
+// No use of the macro BUILD_WRAPPER as `EntryIterator` takes a integer(I) to
+// track the order. So the signature of the constructor is not the same.
+// The same way, as we are building a iterator, it has two nativeHandle (for begin and end).
 METHOD0(jobject, iterByPath) {
   auto range = THIS->iterByPath();
-  jclass objClass = env->FindClass("org/kiwix/libzim/EntryIterator");
-  jmethodID initMethod = env->GetMethodID(objClass, "<init>", "(I)V");
-  jobject obj = env->NewObject(objClass, initMethod, ITER_BY_PATH);
-  SET_HANDLE(zim::Archive::iterator<zim::EntryOrder::pathOrder>, obj, range.begin());
+  auto beginIter = NEW_RESOURCE(range.begin());
+  auto endIter = NEW_RESOURCE(range.end());
 
-  auto end_ptr = std::make_shared<zim::Archive::iterator<zim::EntryOrder::pathOrder>>(range.end());
-  setPtr(env, obj, std::move(end_ptr), "nativeHandleEnd");
-  return obj;
+  jclass wrapperClass = env->FindClass("org/kiwix/libzim/EntryIterator");
+  jmethodID initMethod = env->GetMethodID(wrapperClass, "<init>", "(org/kiwix/Wrapper/Resource;org/kiwix/Wrapper/Resource)V");
+  return env->NewObject(wrapperClass, initMethod, beginIter, endIter);
 }
 
 METHOD0(jobject, iterByTitle) {
   auto range = THIS->iterByTitle();
-  jclass objClass = env->FindClass("org/kiwix/libzim/EntryIterator");
-  jmethodID initMethod = env->GetMethodID(objClass, "<init>", "(I)V");
-  jobject obj = env->NewObject(objClass, initMethod, ITER_BY_TITLE);
-  SET_HANDLE(zim::Archive::iterator<zim::EntryOrder::titleOrder>, obj, range.begin());
+  auto beginIter = NEW_RESOURCE(range.begin());
+  auto endIter = NEW_RESOURCE(range.end());
 
-  auto end_ptr = std::make_shared<zim::Archive::iterator<zim::EntryOrder::titleOrder>>(range.end());
-  setPtr(env, obj, std::move(end_ptr), "nativeHandleEnd");
-  return obj;
+  jclass wrapperClass = env->FindClass("org/kiwix/libzim/EntryIterator");
+  jmethodID initMethod = env->GetMethodID(wrapperClass, "<init>", "(org/kiwix/Wrapper/Resource;org/kiwix/Wrapper/Resource)V");
+  return env->NewObject(wrapperClass, initMethod, beginIter, endIter);
 }
 
 METHOD0(jobject, iterEfficient) {
   auto range = THIS->iterEfficient();
-  jclass objClass = env->FindClass("org/kiwix/libzim/EntryIterator");
-  jmethodID initMethod = env->GetMethodID(objClass, "<init>", "(I)V");
-  jobject obj = env->NewObject(objClass, initMethod, ITER_EFFICIENT);
-  SET_HANDLE(zim::Archive::iterator<zim::EntryOrder::efficientOrder>, obj, range.begin());
+  auto beginIter = NEW_RESOURCE(range.begin());
+  auto endIter = NEW_RESOURCE(range.end());
 
-  auto end_ptr = std::make_shared<zim::Archive::iterator<zim::EntryOrder::efficientOrder>>(range.end());
-  setPtr(env, obj, std::move(end_ptr), "nativeHandleEnd");
-  return obj;
+  jclass wrapperClass = env->FindClass("org/kiwix/libzim/EntryIterator");
+  jmethodID initMethod = env->GetMethodID(wrapperClass, "<init>", "(org/kiwix/Wrapper/Resource;org/kiwix/Wrapper/Resource)V");
+  return env->NewObject(wrapperClass, initMethod, beginIter, endIter);
 }
 
 METHOD(jobject, findByPath, jstring path) {
   auto range = THIS->findByPath(TO_C(path));
-  jclass objClass = env->FindClass("org/kiwix/libzim/EntryIterator");
-  jmethodID initMethod = env->GetMethodID(objClass, "<init>", "(I)V");
-  jobject obj = env->NewObject(objClass, initMethod, ITER_BY_PATH);
-  SET_HANDLE(zim::Archive::iterator<zim::EntryOrder::pathOrder>, obj, range.begin());
+  auto beginIter = NEW_RESOURCE(range.begin());
+  auto endIter = NEW_RESOURCE(range.end());
 
-  auto end_ptr = std::make_shared<zim::Archive::iterator<zim::EntryOrder::pathOrder>>(range.end());
-  setPtr(env, obj, std::move(end_ptr), "nativeHandleEnd");
-  return obj;
+  jclass wrapperClass = env->FindClass("org/kiwix/libzim/EntryIterator");
+  jmethodID initMethod = env->GetMethodID(wrapperClass, "<init>", "(org/kiwix/Wrapper/Resource;org/kiwix/Wrapper/Resource)V");
+  return env->NewObject(wrapperClass, initMethod, beginIter, endIter);
 }
 
 METHOD(jobject, findByTitle, jstring title) {
   auto range = THIS->findByTitle(TO_C(title));
-  jclass objClass = env->FindClass("org/kiwix/libzim/EntryIterator");
-  jmethodID initMethod = env->GetMethodID(objClass, "<init>", "(I)V");
-  jobject obj = env->NewObject(objClass, initMethod, ITER_BY_TITLE);
-  SET_HANDLE(zim::Archive::iterator<zim::EntryOrder::titleOrder>, obj, range.begin());
+  auto beginIter = NEW_RESOURCE(range.begin());
+  auto endIter = NEW_RESOURCE(range.end());
 
-  auto end_ptr = std::make_shared<zim::Archive::iterator<zim::EntryOrder::titleOrder>>(range.end());
-  setPtr(env, obj, std::move(end_ptr), "nativeHandleEnd");
-  return obj;
+  jclass wrapperClass = env->FindClass("org/kiwix/libzim/EntryIterator");
+  jmethodID initMethod = env->GetMethodID(wrapperClass, "<init>", "(org/kiwix/Wrapper/Resource;org/kiwix/Wrapper/Resource)V");
+  return env->NewObject(wrapperClass, initMethod, beginIter, endIter);
 }

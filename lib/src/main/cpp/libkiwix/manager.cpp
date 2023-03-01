@@ -28,13 +28,11 @@
 #define TYPENAME libkiwix_Manager
 #include <macros.h>
 
-METHOD(void, allocate, jobject libraryObj)
+METHOD(jobject, buildNativeManager, jobject libraryObj)
 {
   auto lib = getPtr<kiwix::Library>(env, libraryObj);
-  SET_PTR(std::make_shared<NATIVE_TYPE>(lib.get()));
+  return NEW_RESOURCE(std::make_shared<NATIVE_TYPE>(lib.get()));
 }
-
-DISPOSE
 
 /* Kiwix manager functions */
 METHOD(jboolean, readFile, jstring path)

@@ -33,17 +33,14 @@
 #define TYPENAME libzim_Search
 #include <macros.h>
 
-DISPOSE
-
 METHOD(jobject, getResults, jint start, jint maxResults) {
   auto results = THIS->getResults(TO_C(start), TO_C(maxResults));
-  auto obj = NEW_OBJECT("ork/kiwix/libzim/SearchIterator");
-  SET_HANDLE(zim::SearchIterator, obj, results.begin());
+  auto beginResource = NEW_RESOURCE(results.begin());
+  auto endResource =  NEW_RESOURCE(results.end());
 
-  // We have to set the nativeHandleEnd but no macro ease our work here.
-  auto end_ptr = std::make_shared<zim::SearchIterator>(results.end());
-  setPtr(env, obj, std::move(end_ptr), "nativeHandleEnd");
-  return obj;
+  jclass wrapperClass = env->FindClass("org/kiwix/libzim/SearchIterator");
+  jmethodID initMethod = env->GetMethodID(wrapperClass, "<init>", "(org/kiwix/Wrapper/Resource;org/kiwix/Wrapper/Resource)V");
+  return env->NewObject(wrapperClass, initMethod, beginResource, endResource);
 }
 
 GETTER(jlong, getEstimatedMatches)

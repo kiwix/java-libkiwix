@@ -1,7 +1,8 @@
 
 package org.kiwix.libkiwix;
+import org.kiwix.Wrapper;
 
-public class Illustration
+public class Illustration extends Wrapper
 {
   public native int width();
   public native int height();
@@ -9,9 +10,7 @@ public class Illustration
   public native String url();
 
   public native String getData();
-  @Override
-  protected void finalize() { dispose();  }
 
-  private native void dispose();
-  private long nativeHandle;
+
+  private Illustration(Wrapper.Resource res) { super(res); }
 }

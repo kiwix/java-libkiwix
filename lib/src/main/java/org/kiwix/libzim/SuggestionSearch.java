@@ -20,20 +20,12 @@
 package org.kiwix.libzim;
 
 import org.kiwix.libzim.SuggestionIterator;
+import org.kiwix.Wrapper;
 
-public class SuggestionSearch
+public class SuggestionSearch extends Wrapper
 {
   public native SuggestionIterator getResults(int start, int maxResults);
   public native long getEstimatedMatches();
 
-
-  @Override
-  protected void finalize() { dispose(); }
-
-///--------- The wrapper thing
-  // To delete our native wrapper
-  public native void dispose();
-
-  // A pointer (as a long) to a native Handle
-  private long nativeHandle;
+  private SuggestionSearch(Wrapper.Resource res) { super(res); }
 }
