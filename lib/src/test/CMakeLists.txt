@@ -25,7 +25,6 @@ ${PROJECT_SOURCE_DIR}/../main/cpp/libzim/suggestion_iterator.cpp
 ${PROJECT_SOURCE_DIR}/../main/cpp/libzim/suggestion_search.cpp
 ${PROJECT_SOURCE_DIR}/../main/cpp/libzim/suggestion_searcher.cpp
 ${PROJECT_SOURCE_DIR}/../main/cpp/utils.h
-${PROJECT_SOURCE_DIR}/../main/cpp/wrapper.cpp
 )
 
 find_package(JNI)
