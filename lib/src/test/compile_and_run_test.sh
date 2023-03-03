@@ -14,9 +14,9 @@ cmake .
 make
 
 # Copy generated .so file to build directory to run test cases
-cd ../../../../../../../
+cd ../../../
 ./gradlew copyBuildKiwixSoFile
-cd app/src/androidTests/java/org/kiwix/kiwixlib/
+cd lib/src/test
 
 KIWIX_LIB_JAR=$1
 if [ -z $KIWIX_LIB_JAR ]

@@ -267,7 +267,7 @@ task renameLibkiwixSoFile(type: Copy) {
 
 task copyBuildKiwixSoFile(type: Copy) {
     // copying linux_x86_64 so file
-    from projectDir.path + "/src/androidTests/java/org/kiwix/kiwixlib/libbuildkiwix.so"
+    from projectDir.path + "/src/test/libbuildkiwix.so"
     into buildDir.path
 }
 

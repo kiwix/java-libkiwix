@@ -35,8 +35,8 @@ if (JNI_FOUND)
 endif()
 
 include_directories(
-        /usr/lib/jvm/java-11-openjdk-amd64/include
-        /usr/lib/jvm/java-11-openjdk-amd64/include/linux
+/opt/hostedtoolcache/jdk/11.0.17/x64/include
+/opt/hostedtoolcache/jdk/11.0.17/x64/include/linux
 ${PROJECT_SOURCE_DIR}/../main/cpp
 ${PROJECT_SOURCE_DIR}/../../build/include/libkiwix
 ${PROJECT_SOURCE_DIR}/../../build/include/libzim
