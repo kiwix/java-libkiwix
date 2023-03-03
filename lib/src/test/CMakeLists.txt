@@ -2,17 +2,30 @@ cmake_minimum_required (VERSION 3.16)
 project (buildkiwix)
 
 add_library(buildkiwix
-SHARED 
-${CMAKE_SOURCE_DIR}/../../../../../main/cpp/base64.cpp
-${CMAKE_SOURCE_DIR}/../../../../../main/cpp/book.cpp
-${CMAKE_SOURCE_DIR}/../../../../../main/cpp/filter.cpp
-${CMAKE_SOURCE_DIR}/../../../../../main/cpp/kiwixicu.cpp
-${CMAKE_SOURCE_DIR}/../../../../../main/cpp/kiwixreader.cpp
-${CMAKE_SOURCE_DIR}/../../../../../main/cpp/kiwixsearcher.cpp
-${CMAKE_SOURCE_DIR}/../../../../../main/cpp/kiwixserver.cpp
-${CMAKE_SOURCE_DIR}/../../../../../main/cpp/library.cpp
-${CMAKE_SOURCE_DIR}/../../../../../main/cpp/manager.cpp
-${CMAKE_SOURCE_DIR}/../../../../../main/cpp/utils.h
+SHARED
+${PROJECT_SOURCE_DIR}/../main/cpp/libkiwix/book.cpp
+${PROJECT_SOURCE_DIR}/../main/cpp/libkiwix/bookmark.cpp
+${PROJECT_SOURCE_DIR}/../main/cpp/libkiwix/filter.cpp
+${PROJECT_SOURCE_DIR}/../main/cpp/libkiwix/illustration.cpp
+${PROJECT_SOURCE_DIR}/../main/cpp/libkiwix/kiwixicu.cpp
+${PROJECT_SOURCE_DIR}/../main/cpp/libkiwix/kiwixserver.cpp
+${PROJECT_SOURCE_DIR}/../main/cpp/libkiwix/library.cpp
+${PROJECT_SOURCE_DIR}/../main/cpp/libkiwix/manager.cpp
+${PROJECT_SOURCE_DIR}/../main/cpp/libzim/archive.cpp
+${PROJECT_SOURCE_DIR}/../main/cpp/libzim/blob.cpp
+${PROJECT_SOURCE_DIR}/../main/cpp/libzim/entry.cpp
+${PROJECT_SOURCE_DIR}/../main/cpp/libzim/entry_iterator.cpp
+${PROJECT_SOURCE_DIR}/../main/cpp/libzim/item.cpp
+${PROJECT_SOURCE_DIR}/../main/cpp/libzim/query.cpp
+${PROJECT_SOURCE_DIR}/../main/cpp/libzim/search.cpp
+${PROJECT_SOURCE_DIR}/../main/cpp/libzim/search_iterator.cpp
+${PROJECT_SOURCE_DIR}/../main/cpp/libzim/searcher.cpp
+${PROJECT_SOURCE_DIR}/../main/cpp/libzim/suggestion_item.cpp
+${PROJECT_SOURCE_DIR}/../main/cpp/libzim/suggestion_iterator.cpp
+${PROJECT_SOURCE_DIR}/../main/cpp/libzim/suggestion_search.cpp
+${PROJECT_SOURCE_DIR}/../main/cpp/libzim/suggestion_searcher.cpp
+${PROJECT_SOURCE_DIR}/../main/cpp/utils.h
+${PROJECT_SOURCE_DIR}/../main/cpp/wrapper.cpp
 )
 
 find_package(JNI)
@@ -25,11 +38,10 @@ endif()
 include_directories(
 /opt/hostedtoolcache/jdk/11.0.17/x64/include
 /opt/hostedtoolcache/jdk/11.0.17/x64/include/linux
-${CMAKE_SOURCE_DIR}/../../../../../main/cpp
-${CMAKE_SOURCE_DIR}/../../../../../main/cpp/include/libkiwix
-${CMAKE_SOURCE_DIR}/../../../../../main/cpp/include/libzim
-${CMAKE_SOURCE_DIR}/../../../../../main/cpp/include/javah_generated
-${CMAKE_SOURCE_DIR}/../../../../../main/cpp/include/utils
+${PROJECT_SOURCE_DIR}/../main/cpp
+${PROJECT_SOURCE_DIR}/../../build/include/libkiwix
+${PROJECT_SOURCE_DIR}/../../build/include/libzim
+${PROJECT_SOURCE_DIR}/../../build/include/javah_generated
 )
 
 target_link_libraries(buildkiwix

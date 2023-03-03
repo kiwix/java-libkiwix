@@ -26,12 +26,12 @@ ext {
 
 apply from: 'publish.gradle'
 android {
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
 
-        minSdk 21
-        targetSdk 32
+        minSdk 33
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -272,7 +272,7 @@ task copyBuildKiwixSoFile(type: Copy) {
 }
 
 task createCodeCoverageReport(type: Exec) {
-    workingDir "${projectDir}/src/androidTests/java/org/kiwix/kiwixlib/"
+    workingDir "${projectDir}/src/test/"
     commandLine 'sh', '-c', "bash 'compile_and_run_test.sh' ${buildDir}/libs/*app*.jar $buildDir"
 }
 
