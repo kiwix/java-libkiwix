@@ -18,21 +18,14 @@
  */
 
 package org.kiwix.libzim;
+import org.kiwix.Wrapper;
 
-public class SuggestionItem
+public class SuggestionItem extends Wrapper
 {
   public native String getTitle();
   public native String getPath();
   public native String getSnippet();
   public native boolean hasSnippet();
 
-  @Override
-  protected void finalize() { dispose(); }
-
-///--------- The wrapper thing
-  // To delete our native wrapper
-  private native void dispose();
-
-  // A pointer (as a long) to a native Handle
-  private long nativeHandle;
+  private SuggestionItem(Wrapper.Resource res) { super(res); }
 }

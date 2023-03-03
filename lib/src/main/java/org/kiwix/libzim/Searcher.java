@@ -24,41 +24,25 @@ import org.kiwix.libzim.Archive;
 import org.kiwix.libzim.Search;
 import org.kiwix.libzim.Query;
 import java.io.FileDescriptor;
+import org.kiwix.Wrapper;
 
-public class Searcher
+public class Searcher extends Wrapper
 {
 
   public Searcher(Archive archive) throws Exception
   {
-    setNativeSearcher(archive);
-    if (nativeHandle == 0) {
-      throw new Exception("Cannot create searcher");
-    }
+    super(buildNativeSearcher(archive));
   }
 
   public Searcher(Archive[] archives) throws Exception
   {
-    setNativeSearcherMulti(archives);
-    if (nativeHandle == 0) {
-      throw new Exception("Cannot create searcher");
-    }
+    super(buildNativeSearcherMulti(archives));
   }
 
   public native Searcher addArchive(Archive archive);
   public native Search search(Query query);
   public native void setVerbose(boolean verbose);
 
-  private native void setNativeSearcher(Archive archive);
-  private native void setNativeSearcherMulti(Archive[] archives);
-
-  @Override
-  protected void finalize() { dispose(); }
-
-
-///--------- The wrapper thing
-  // To delete our native wrapper
-  public native void dispose();
-
-  // A pointer (as a long) to a native Handle
-  private long nativeHandle;
+  private native static Wrapper.Resource buildNativeSearcher(Archive archive);
+  private native static Wrapper.Resource buildNativeSearcherMulti(Archive[] archives);
 }

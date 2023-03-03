@@ -20,31 +20,36 @@
 
 #include <jni.h>
 #include <exception>
-#include "org_kiwix_libzim_Searcher.h"
+#include "org_kiwix_Wrapper_Resource.h"
+#include "org_kiwix_IterWrapper_Resource.h"
 
 #include <utils.h>
 
 #include <string>
 
-#include <zim/search.h>
+#include <zim/item.h>
 
-#define CLASSNAME "org/kiwix/libzim/Query"
-#define NATIVE_TYPE zim::Query
-#define TYPENAME libzim_Query
+#define CLASSNAME "org/kiwix/Wrapper"
+#define TYPENAME libzim_Item
 #include <macros.h>
 
-METHOD(jobject, buildNativeQuery, jstring query)
-{
-  return NEW_RESOURCE(std::make_shared<NATIVE_TYPE>(TO_C(query)));
+/*
+ * Class:     org_kiwix_Wrapper_Resource
+ * Method:    dispose
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_org_kiwix_Wrapper_00024Resource_dispose
+  (JNIEnv *env, jobject resource) {
+  deleteResource(env, resource);
 }
 
-METHOD(jobject, setQuery, jstring query) {
-  THIS->setQuery(TO_C(query));
-  return thisObj;
-}
 
-METHOD(jobject, setGeorange, jfloat latitude, jfloat longitude, jfloat distance) {
-  THIS->setGeorange(TO_C(latitude), TO_C(longitude), TO_C(distance));
-  return thisObj;
+/*
+ * Class:     org_kiwix_IterWrapper_Resource
+ * Method:    dispose
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_org_kiwix_IterWrapper_00024Resource_dispose
+  (JNIEnv *env , jobject resource) {
+  deleteResource(env, resource);
 }
-

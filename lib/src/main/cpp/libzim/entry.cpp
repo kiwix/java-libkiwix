@@ -34,20 +34,17 @@
 #define TYPENAME libzim_Entry
 #include <macros.h>
 
-
-DISPOSE
-
 GETTER(jboolean, isRedirect)
 GETTER(jstring, getTitle)
 GETTER(jstring, getPath)
 METHOD(jobject, getItem, jboolean follow) {
-  return BUILD_WRAPPER("org/kiwix/libzim/Item", THIS->getItem(TO_C(follow)));
+  return BUILD_WRAPPER(THIS->getItem(TO_C(follow)));
 }
 
 METHOD0(jobject, getRedirect) {
-  return BUILD_WRAPPER("org/kiwix/libzim/Item", THIS->getRedirect());
+  return BUILD_WRAPPER(THIS->getRedirect());
 }
 
 METHOD0(jobject, getRedirectEntry) {
-  return BUILD_WRAPPER("org/kiwix/libzim/Entry", THIS->getRedirectEntry());
+  return BUILD_WRAPPER(THIS->getRedirectEntry());
 }

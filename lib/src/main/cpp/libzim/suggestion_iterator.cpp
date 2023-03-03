@@ -33,24 +33,16 @@
 #define TYPENAME libzim_SuggestionIterator
 #include <macros.h>
 
-// We cannot use the default macro to implement `dispose` as we need to delete the end handle
-METHOD0(void, dispose)
-{
-  // Delete end iterator
-  dispose<NATIVE_TYPE>(env, thisObj, "nativeHandleEnd");
-  dispose<NATIVE_TYPE>(env, thisObj);
-}
-
 METHOD0(jboolean, hasNext) {
   NATIVE_TYPE next(*THIS);
   next++;
-  auto end = getPtr<NATIVE_TYPE>(env, thisObj, "nativeHandleEnd");
+  auto end = getPtr<NATIVE_TYPE>(env, thisObj, "nativeResourceEnd");
   return next == *end;
 }
 
 METHOD0(jobject, next) {
   (*THIS)++;
   zim::SuggestionItem item = **THIS;
-  return BUILD_WRAPPER("org/kiwix/libzim/SuggestionItem", item);
+  return BUILD_WRAPPER(item);
 }
 

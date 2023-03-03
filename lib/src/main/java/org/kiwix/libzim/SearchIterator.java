@@ -35,18 +35,4 @@ public class SearchIterator implements Iterator<Entry>
 
   public native boolean hasNext();
   public native Entry next();
-
-
-  @Override
-  protected void finalize() { dispose(); }
-
-///--------- The wrapper thing
-  // To delete our native wrapper
-  public native void dispose();
-
-  // A pointer (as a long) to a native Handle
-  private long nativeHandle;
-
-  // A pointer (as a long) to the native end
-  private long nativeHandleEnd;
 }

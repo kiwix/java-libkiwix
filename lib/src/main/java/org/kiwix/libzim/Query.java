@@ -19,24 +19,15 @@
 
 package org.kiwix.libzim;
 
-public class Query
+import org.kiwix.Wrapper;
+
+public class Query extends Wrapper
 {
   public Query(String query) {
-    setNativeQuery(query);
+    super(buildNativeQuery(query));
   }
 
   public native Query setQuery(String query);
   public native Query setGeorange(float latitude, float longitute, float distance);
-
-  @Override
-  protected void finalize() { dispose(); }
-
-
-///--------- The wrapper thing
-  // To delete our native wrapper
-  public native void dispose();
-
-  // A pointer (as a long) to a native Handle
-  private native long setNativeQuery(String query);
-  private long nativeHandle;
+  private native static Wrapper.Resource buildNativeQuery(String query);
 }

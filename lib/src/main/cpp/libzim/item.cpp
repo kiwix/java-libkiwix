@@ -33,21 +33,20 @@
 #define TYPENAME libzim_Item
 #include <macros.h>
 
-DISPOSE
-
 GETTER(jstring, getTitle)
 GETTER(jstring, getPath)
 GETTER(jstring, getMimetype)
 
 METHOD0(jobject, getData) {
-  return BUILD_WRAPPER("org/kiwix/libzim/Blob", THIS->getData());
+  return BUILD_WRAPPER(THIS->getData());
 }
 
 GETTER(jlong, getSize)
 
 
 METHOD0(jobject, getDirectAccessInformation) {
-  jobject directObjInfo = newObject("org/kiwix/libzim/DirectAccessInfo", env);
+  //return BUILD_WRAPPER(THIS->getDirectAccessInformation());
+  jobject directObjInfo = NEW_OBJECT("org/kiwix/libzim/DirectAccessInfo");
   setDaiObjValue("", 0, directObjInfo, env);
 
   auto cDirectObjInfo = THIS->getDirectAccessInformation();

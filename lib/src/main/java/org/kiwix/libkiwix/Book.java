@@ -3,18 +3,14 @@ package org.kiwix.libkiwix;
 
 import org.kiwix.libzim.Archive;
 import org.kiwix.libkiwix.Illustration;
+import org.kiwix.Wrapper;
 
-public class Book
+public class Book extends Wrapper
 {
-  public Book() { allocate(); }
-
+  public Book(Wrapper.Resource res) { super(res); }
 
   public native void update(Book book);
   public native void update(Archive archive);
-
-
-  @Override
-  protected void finalize() { dispose();  }
 
   public native String getId();
   public native String getPath();
@@ -45,8 +41,4 @@ public class Book
 
   public native Illustration[] getIllustrations();
   public native Illustration getIllustration(int size);
-
-  private native void allocate();
-  private native void dispose();
-  private long nativeHandle;
 }

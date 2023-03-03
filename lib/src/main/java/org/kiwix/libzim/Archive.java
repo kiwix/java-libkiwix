@@ -23,34 +23,26 @@ import org.kiwix.libzim.ZimFileFormatException;
 import org.kiwix.libzim.Entry;
 import org.kiwix.libzim.Item;
 import org.kiwix.libzim.EntryIterator;
+import org.kiwix.Wrapper;
 import java.io.FileDescriptor;
 
-public class Archive
+public class Archive extends Wrapper
 {
 
   public Archive(String filename) throws ZimFileFormatException
   {
-    setNativeArchive(filename);
-    if (nativeHandle == 0) {
-      throw new ZimFileFormatException("Cannot open zimfile "+filename);
-    }
+    super(buildNativeArchive(filename));
   }
 
   public Archive(FileDescriptor fd) throws ZimFileFormatException
   {
-    setNativeArchiveByFD(fd);
-    if (nativeHandle == 0) {
-      throw new ZimFileFormatException("Cannot open zimfile by fd "+fd.toString());
-    }
+    super(buildNativeArchiveByFD(fd));
   }
 
   public Archive(FileDescriptor fd, long offset, long size)
           throws ZimFileFormatException
   {
-    setNativeArchiveEmbedded(fd, offset, size);
-    if (nativeHandle == 0) {
-      throw new ZimFileFormatException(String.format("Cannot open embedded zimfile (fd=%s, offset=%d, size=%d)", fd, offset, size));
-    }
+    super(buildNativeArchiveEmbedded(fd, offset, size));
   }
 
   public native String getFilename();
@@ -100,18 +92,7 @@ public class Archive
   public native EntryIterator findByTitle(String path);
 
 
-  private native void setNativeArchive(String filename);
-  private native void setNativeArchiveByFD(FileDescriptor fd);
-  private native void setNativeArchiveEmbedded(FileDescriptor fd, long offset, long size);
-
-  @Override
-  protected void finalize() { dispose(); }
-
-
-///--------- The wrapper thing
-  // To delete our native wrapper
-  public native void dispose();
-
-  // A pointer (as a long) to a native Handle
-  private long nativeHandle;
+  private native static Wrapper.Resource buildNativeArchive(String filename);
+  private native static Wrapper.Resource buildNativeArchiveByFD(FileDescriptor fd);
+  private native static Wrapper.Resource buildNativeArchiveEmbedded(FileDescriptor fd, long offset, long size);
 }

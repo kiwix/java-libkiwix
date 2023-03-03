@@ -24,12 +24,13 @@ import org.kiwix.libzim.Searcher;
 import org.kiwix.libkiwix.Book;
 import org.kiwix.libkiwix.JNIKiwixException;
 import org.kiwix.libkiwix.Bookmark;
+import org.kiwix.Wrapper;
 
-public class Library
+public class Library extends Wrapper
 {
   public Library()
   {
-    setNativeHandler();
+    super(buildNativeLibrary());
   }
   public native boolean addBook(Book book) throws JNIKiwixException;
 
@@ -58,9 +59,5 @@ public class Library
   public native boolean removeBookmark(String zimId, String url);
   public native Bookmark[] getBookmarks(boolean onlyValidBookmarks);
 
-  @Override
-  protected void finalize() { dispose(); }
-  private native void setNativeHandler();
-  private native void dispose();
-  private long nativeHandle;
+  private native static Wrapper.Resource buildNativeLibrary();
 }

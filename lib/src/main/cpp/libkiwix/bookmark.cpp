@@ -26,14 +26,12 @@
 
 #define NATIVE_TYPE kiwix::Bookmark
 #define TYPENAME libkiwix_Bookmark
-#include <macros.h>
+#include "macros.h"
 
-METHOD0(void, setNativeBookmark)
+METHOD0(jobject, buildNativeBookmark)
 {
-  SET_PTR(std::make_shared<NATIVE_TYPE>());
+  return NEW_RESOURCE(std::make_shared<NATIVE_TYPE>());
 }
-
-DISPOSE
 
 GETTER(jstring, getBookId)
 

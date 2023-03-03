@@ -32,20 +32,13 @@
 
 
 /* Kiwix Reader JNI functions */
-METHOD(void, setNativeServer, jobject jLibrary)
+METHOD(jobject, buildNativeServer, jobject jLibrary)
 {
   LOG("Attempting to create server");
-  try {
-    auto library = getPtr<kiwix::Library>(env, jLibrary);
-    SET_PTR(std::make_shared<NATIVE_TYPE>(library.get()));
-  } catch (std::exception& e) {
-    LOG("Error creating the server");
-    LOG("%s", e.what());
-  }
+  auto library = getPtr<kiwix::Library>(env, jLibrary);
+  return NEW_RESOURCE(std::make_shared<NATIVE_TYPE>(library.get()));
 }
 
-
-DISPOSE
 
 /* Kiwix library functions */
 METHOD(void, setRoot, jstring root)

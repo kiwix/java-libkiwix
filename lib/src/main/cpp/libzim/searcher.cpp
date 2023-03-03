@@ -33,19 +33,14 @@
 #define TYPENAME libzim_Searcher
 #include <macros.h>
 
-METHOD(void, setNativeSearcher, jobject archive)
+METHOD(jobject, buildNativeSearcher, jobject archive)
 {
   auto cArchive = getPtr<zim::Archive>(env, archive);
-  try {
-    auto searcher = std::make_shared<zim::Searcher>(*cArchive);
-    SET_PTR(searcher);
-  } catch (std::exception& e) {
-    LOG("Cannot create searcher");
-      LOG("%s", e.what());
-  }
+  auto searcher = std::make_shared<zim::Searcher>(*cArchive);
+  return NEW_RESOURCE(searcher);
 }
 
-METHOD(void, setNativeSearcherMulti, jobjectArray archives)
+METHOD(jobject, buildNativeSearcherMulti, jobjectArray archives)
 {
   std::vector<zim::Archive> cArchives;
   jsize nbArchives = env->GetArrayLength(archives);
@@ -54,16 +49,9 @@ METHOD(void, setNativeSearcherMulti, jobjectArray archives)
     auto cArchive = getPtr<zim::Archive>(env, archive);
     cArchives.push_back(*cArchive);
   }
-  try {
-    auto searcher = std::make_shared<zim::Searcher>(cArchives);
-    SET_PTR(searcher);
-  } catch (std::exception& e) {
-    LOG("Cannot create searcher");
-      LOG("%s", e.what());
-  }
+  auto searcher = std::make_shared<zim::Searcher>(cArchives);
+  return NEW_RESOURCE(searcher);
 }
-
-DISPOSE
 
 METHOD(jobject, addArchive, jobject archive) {
   auto cArchive = getPtr<zim::Archive>(env, archive);
@@ -73,7 +61,7 @@ METHOD(jobject, addArchive, jobject archive) {
 
 METHOD(jobject, search, jobject query) {
   auto cQuery = getPtr<zim::Query>(env, query);
-  return BUILD_WRAPPER("org/kiwix/libzim/Search", THIS->search(*cQuery));
+  return BUILD_WRAPPER(THIS->search(*cQuery));
 }
 
 METHOD(void, setVerbose, jboolean verbose) {

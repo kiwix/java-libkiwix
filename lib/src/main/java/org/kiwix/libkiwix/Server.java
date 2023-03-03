@@ -21,8 +21,9 @@ package org.kiwix.libkiwix;
 
 import org.kiwix.libkiwix.JNIKiwixException;
 import org.kiwix.libkiwix.Library;
+import org.kiwix.Wrapper;
 
-public class Server
+public class Server extends Wrapper
 {
   public native void setRoot(String root);
 
@@ -42,14 +43,8 @@ public class Server
 
   public Server(Library library)
   {
-    setNativeServer(library);
+    super(buildNativeServer(library));
   }
 
-  @Override
-  protected void finalize() { dispose(); }
-
-
-  private native void setNativeServer(Library library);
-  private native void dispose();
-  private long nativeHandle;
+  private native static Wrapper.Resource buildNativeServer(Library library);
 }

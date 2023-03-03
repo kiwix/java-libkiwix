@@ -33,22 +33,16 @@
 #include <macros.h>
 
 
-METHOD(void, setNativeSearcher, jobject archive)
+METHOD(jobject, buildNativeSearcher, jobject archive)
 {
   auto cArchive = getPtr<zim::Archive>(env, archive);
-  try {
-    auto searcher = std::make_shared<zim::SuggestionSearcher>(*cArchive);
-    SET_PTR(searcher);
-  } catch (std::exception& e) {
-    LOG("Cannot create searcher");
-      LOG("%s", e.what());
-  }
+  auto searcher = std::make_shared<zim::SuggestionSearcher>(*cArchive);
+  return NEW_RESOURCE(searcher);
 }
 
-DISPOSE
-
 METHOD(jobject, suggest, jstring query) {
-  return BUILD_WRAPPER("org/kiwix/libzim/SuggestionSearch", THIS->suggest(TO_C(query)));
+  //return BUILD_WRAPPER("org/kiwix/libzim/SuggestionSearch", THIS->suggest(TO_C(query)));
+  return BUILD_WRAPPER(std::make_shared<zim::SuggestionSearch>(THIS->suggest(TO_C(query))));
 }
 
 METHOD(void, setVerbose, jboolean verbose) {

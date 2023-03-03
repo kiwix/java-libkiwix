@@ -19,10 +19,12 @@
 
 package org.kiwix.libkiwix;
 
-public class Bookmark
+import org.kiwix.Wrapper;
+
+public class Bookmark extends Wrapper
 {
   public Bookmark() {
-    setNativeBookmark();
+    super(buildNativeBookmark());
   }
 
   public native void setBookId(String bookId);
@@ -39,15 +41,6 @@ public class Bookmark
   public native String getLanguage();
   public native String getDate();
 
-  @Override
-  protected void finalize() { dispose(); }
 
-
-///--------- The wrapper thing
-  // To delete our native wrapper
-  public native void dispose();
-
-  // A pointer (as a long) to a native Handle
-  private native void setNativeBookmark();
-  private long nativeHandle;
+  private native static Wrapper.Resource buildNativeBookmark();
 }
