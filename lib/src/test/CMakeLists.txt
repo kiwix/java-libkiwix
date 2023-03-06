@@ -44,7 +44,7 @@ ${PROJECT_SOURCE_DIR}/../../build/include/javah_generated
 )
 
 target_link_libraries(buildkiwix
-LINK_PUBLIC 
-${CMAKE_SOURCE_DIR}/../../../../../../build/libkiwix.so
-${CMAKE_SOURCE_DIR}/../../../../../../build/libzim.so
+LINK_PUBLIC
+${PROJECT_SOURCE_DIR}/../../build/libkiwix.so
+${PROJECT_SOURCE_DIR}/../../build/libzim.so
 )
