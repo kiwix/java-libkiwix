@@ -26,12 +26,12 @@ ext {
 
 apply from: 'publish.gradle'
 android {
-    compileSdk 33
+    compileSdk 32
 
     defaultConfig {
 
-        minSdk 33
-        targetSdk 33
+        minSdk 21
+        targetSdk 32
         versionCode 1
         versionName "1.0"
 
