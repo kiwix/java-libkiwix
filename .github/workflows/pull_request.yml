@@ -26,8 +26,7 @@ jobs:
 
       - name: Compile Project
         run: |
-          ./gradlew generateHeaderFilesFromJavaWrapper
-          ./gradlew build
+          ./gradlew generateHeaderFilesFromJavaWrapper build
 
       - name: create unit coverage
         run: |
