@@ -57,7 +57,7 @@ public class test {
         byte[] faviconData = getFileContent("small_zimfile_data/favicon.png");
         assertEquals(faviconData.length, archive.getEntryByPath("I/favicon.png").getItem(true).getSize());
         c = archive.getEntryByPath("I/favicon.png").getItem(true).getData().getData();
-        //assertEquals(new String(faviconData), c);
+        assertEquals(new String(faviconData), c);
 
         DirectAccessInfo dai = archive.getEntryByPath("I/favicon.png").getItem(true).getDirectAccessInformation();
         assertNotEquals("", dai.filename);
@@ -75,12 +75,12 @@ public class test {
         assertEquals("A/main.html", archive.getMainEntry().getPath());
         String s = getTextFileContent("small_zimfile_data/main.html");
         String c = archive.getEntryByPath("A/main.html").getItem(true).getData().getData();
-        //assertEquals(s, c);
+        assertEquals(s, c);
 
         byte[] faviconData = getFileContent("small_zimfile_data/favicon.png");
         assertEquals(faviconData.length, archive.getEntryByPath("I/favicon.png").getItem(true).getSize());
         c = archive.getEntryByPath("I/favicon.png").getItem(true).getData().getData();
-        //assertEquals(new String(faviconData), c);
+        assertEquals(new String(faviconData), c);
 
         DirectAccessInfo dai = archive.getEntryByPath("I/favicon.png").getItem(true).getDirectAccessInformation();
         assertNotEquals("", dai.filename);
@@ -99,12 +99,12 @@ public class test {
         assertEquals("A/main.html", archive.getMainEntry().getPath());
         String s = getTextFileContent("small_zimfile_data/main.html");
         String c = archive.getEntryByPath("A/main.html").getItem(true).getData().getData();
-       // assertEquals(s, c);
+        assertEquals(s, c);
 
         byte[] faviconData = getFileContent("small_zimfile_data/favicon.png");
         assertEquals(faviconData.length, archive.getEntryByPath("I/favicon.png").getItem(true).getSize());
         c = archive.getEntryByPath("I/favicon.png").getItem(true).getData().getData();
-        //assertEquals(new String(faviconData), c);
+        assertEquals(new String(faviconData), c);
 
         DirectAccessInfo dai = archive.getEntryByPath("I/favicon.png").getItem(true).getDirectAccessInformation();
         assertNotEquals("", dai.filename);
@@ -123,11 +123,11 @@ public class test {
         assertEquals(lib.getBookCount(true, true), 1);
         String[] bookIds = lib.getBooksIds();
         assertEquals(bookIds.length, 1);
-        /* Book book = lib.getBookById(bookIds[0]);
+        Book book = lib.getBookById(bookIds[0]);
         assertEquals(book.getTitle(), "Test ZIM file");
         assertEquals(book.getTags(), "unit;test");
         assertEquals(book.getIllustration(48).url(), "http://localhost/meta?name=favicon&content=small");
-        assertEquals(book.getUrl(), "http://localhost/small.zim");*/
+        assertEquals(book.getUrl(), "http://localhost/small.zim");
     }
 
     static
