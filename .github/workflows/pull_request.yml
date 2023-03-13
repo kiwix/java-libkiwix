@@ -41,4 +41,4 @@ jobs:
         with:
             name: Tests Coverage Report
             path: |
-              android-libkiwixbuild/build/coverage-report/
+              lib/build/coverage-report/
