@@ -69,6 +69,8 @@ public class test {
         assertNotEquals("", dai.filename);
         c = new String(getFileContentPartial(dai.filename, (int) dai.offset, faviconData.length));
         assertEquals(new String(faviconData), c);
+
+        archive.dispose();
     }
 
     @Test
@@ -98,6 +100,8 @@ public class test {
         assertNotEquals("", dai.filename);
         c = new String(getFileContentPartial(dai.filename, (int) dai.offset, faviconData.length));
         assertEquals(new String(faviconData), c);
+
+        archive.dispose();
     }
 
     @Test
@@ -128,6 +132,8 @@ public class test {
         assertNotEquals("", dai.filename);
         c = new String(getFileContentPartial(dai.filename, (int) dai.offset, faviconData.length));
         assertEquals(new String(faviconData), c);
+
+        archive.dispose();
     }
 
     @Test
@@ -149,7 +155,7 @@ public class test {
     }
 
     @Test
-    public void testServer() throws IOException, ZimFileFormatException, JNIKiwixException {
+    public void testServer() throws ZimFileFormatException, JNIKiwixException {
         Archive archive = new Archive("small.zim");
         Library lib = new Library();
         Book book = new Book();
@@ -162,7 +168,7 @@ public class test {
     }
 
     @Test
-    public void testBookMark() throws IOException, ZimFileFormatException, JNIKiwixException {
+    public void testBookMark() throws ZimFileFormatException, JNIKiwixException {
         Archive archive = new Archive("small.zim");
         Library lib = new Library();
         Book book = new Book();
@@ -181,6 +187,18 @@ public class test {
         //bookmark = bookmarkArray[0];
         // remove bookmark from library
         //assertEquals(true, lib.removeBookmark(bookmark.getBookId(), bookmark.getUrl()));
+    }
+
+    @Test
+    public void testSearcher() throws Exception, ZimFileFormatException, JNIKiwixException {
+        Archive archive = new Archive("small.zim");
+        Searcher searcher = new Searcher(archive);
+        Query query = new Query("test");
+        Search search = searcher.search(query);
+        int matches = (int) search.getEstimatedMatches();
+        assertEquals(1, matches);
+        SearchIterator iterator = search.getResults(0, matches);
+        searcher.dispose();
     }
 
     static
