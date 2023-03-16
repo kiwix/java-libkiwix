@@ -29,14 +29,8 @@ ${PROJECT_SOURCE_DIR}/../main/cpp/utils.h
 
 find_package(JNI)
 
-if (JNI_FOUND)
-    message (STATUS "JNI_INCLUDE_DIRS=${JNI_INCLUDE_DIRS}")
-    message (STATUS "JNI_LIBRARIES=${JNI_LIBRARIES}")
-endif()
-
 include_directories(
-/opt/hostedtoolcache/jdk/11.0.18/x64/include
-/opt/hostedtoolcache/jdk/11.0.18/x64/include/linux
+${JNI_INCLUDE_DIRS}
 ${PROJECT_SOURCE_DIR}/../main/cpp
 ${PROJECT_SOURCE_DIR}/../../build/include/libkiwix
 ${PROJECT_SOURCE_DIR}/../../build/include/libzim
