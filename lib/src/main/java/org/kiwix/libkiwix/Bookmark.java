@@ -25,6 +25,10 @@ public class Bookmark
     setNativeBookmark();
   }
 
+  private Bookmark(long handle) {
+     nativeHandle = handle;
+  }
+
   public native void setBookId(String bookId);
   public native void setBookTitle(String bookTitle);
   public native void setUrl(String url);
