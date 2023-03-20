@@ -98,7 +98,7 @@ METHOD(jobjectArray, getBookmarks, jboolean onlyValidBookmarks) {
   jobjectArray retArray = createArray(env, bookmarks.size(), "org/kiwix/libkiwix/Bookmark");
   size_t index = 0;
   for (auto bookmark: bookmarks) {
-    auto wrapper = BUILD_WRAPPER("org/kiwix/libkiwx/Bookmark", bookmark);
+    auto wrapper = BUILD_WRAPPER("org/kiwix/libkiwix/Bookmark", bookmark);
     env->SetObjectArrayElement(retArray, index++, wrapper);
   }
   return retArray;
