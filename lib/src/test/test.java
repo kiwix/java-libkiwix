@@ -186,8 +186,12 @@ public class test {
         Bookmark[] bookmarkArray = lib.getBookmarks(true);
         assertEquals(1, bookmarkArray.length);
         bookmark = bookmarkArray[0];
+        // test bookmark title
+        assertEquals(bookmark.getTitle(), book.getTitle());
         // remove bookmark from library
-        assertEquals(true, lib.removeBookmark(bookmark.getBookId(), bookmark.getUrl()));
+        lib.removeBookmark(bookmark.getBookId(), bookmark.getUrl());
+        bookmarkArray = lib.getBookmarks(true);
+        assertEquals(0, bookmarkArray.length);
     }
 
     @Test
