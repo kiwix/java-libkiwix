@@ -185,16 +185,16 @@ public class test {
         lib.addBookmark(bookmark);
         Bookmark[] bookmarkArray = lib.getBookmarks(true);
         assertEquals(1, bookmarkArray.length);
-        //bookmark = bookmarkArray[0];
+        bookmark = bookmarkArray[0];
         // remove bookmark from library
-        //assertEquals(true, lib.removeBookmark(bookmark.getBookId(), bookmark.getUrl()));
+        assertEquals(true, lib.removeBookmark(bookmark.getBookId(), bookmark.getUrl()));
     }
 
     @Test
     public void testSearcher() throws Exception, ZimFileFormatException, JNIKiwixException {
         Archive archive = new Archive("small.zim");
         Searcher searcher = new Searcher(archive);
-       /* Query query = new Query("test");
+        /*Query query = new Query("test");
         Search search = searcher.search(query);
         int matches = (int) search.getEstimatedMatches();
         assertEquals(1, matches);
