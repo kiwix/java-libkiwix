@@ -63,7 +63,6 @@ public class test {
         assertEquals(true, archive.hasIllustration(48));
         Item item = archive.getIllustrationItem(48);
         assertEquals(faviconData.length, item.getSize());
-        //assertEquals(new String(faviconData), item.getData().getData());
 
         DirectAccessInfo dai = archive.getEntryByPath("I/favicon.png").getItem(true).getDirectAccessInformation();
         assertNotEquals("", dai.filename);
@@ -94,7 +93,6 @@ public class test {
         assertEquals(true, archive.hasIllustration(48));
         Item item = archive.getIllustrationItem(48);
         assertEquals(faviconData.length, item.getSize());
-        //assertEquals(new String(faviconData), c);
 
         DirectAccessInfo dai = archive.getEntryByPath("I/favicon.png").getItem(true).getDirectAccessInformation();
         assertNotEquals("", dai.filename);
@@ -126,7 +124,6 @@ public class test {
         assertEquals(true, archive.hasIllustration(48));
         Item item = archive.getIllustrationItem(48);
         assertEquals(faviconData.length, item.getSize());
-        //assertEquals(new String(faviconData), c);
 
         DirectAccessInfo dai = archive.getEntryByPath("I/favicon.png").getItem(true).getDirectAccessInformation();
         assertNotEquals("", dai.filename);
@@ -147,11 +144,6 @@ public class test {
         String[] bookIds = lib.getBooksIds();
         assertEquals(bookIds.length, 1);
         lib.filter(new Filter().local(true));
-        /*Book book = lib.getBookById(bookIds[0]);
-        assertEquals(book.getTitle(), "Test ZIM file");
-        assertEquals(book.getTags(), "unit;test");
-        assertEquals(book.getIllustration(48).url(), "http://localhost/meta?name=favicon&content=small");
-        assertEquals(book.getUrl(), "http://localhost/small.zim");*/
     }
 
     @Test
@@ -198,12 +190,6 @@ public class test {
     public void testSearcher() throws Exception, ZimFileFormatException, JNIKiwixException {
         Archive archive = new Archive("small.zim");
         Searcher searcher = new Searcher(archive);
-        /*Query query = new Query("test");
-        Search search = searcher.search(query);
-        int matches = (int) search.getEstimatedMatches();
-        assertEquals(1, matches);
-        SearchIterator iterator = search.getResults(0, matches);
-        searcher.dispose();*/
     }
 
     static
