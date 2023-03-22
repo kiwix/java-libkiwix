@@ -26,8 +26,7 @@ jobs:
 
       - name: Compile Project
         run: |
-          ./gradlew generateHeaderFilesFromJavaWrapper
-          ./gradlew build
+          ./gradlew generateHeaderFilesFromJavaWrapper build
 
       - name: create unit coverage
         run: |
@@ -42,4 +41,4 @@ jobs:
         with:
             name: Tests Coverage Report
             path: |
-              android-libkiwixbuild/build/coverage-report/
+              lib/build/coverage-report/

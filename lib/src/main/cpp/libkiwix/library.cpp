@@ -97,8 +97,14 @@ METHOD(jobjectArray, getBookmarks, jboolean onlyValidBookmarks) {
   auto bookmarks = THIS->getBookmarks(TO_C(onlyValidBookmarks));
   jobjectArray retArray = createArray(env, bookmarks.size(), "org/kiwix/libkiwix/Bookmark");
   size_t index = 0;
+  jclass wrapperClass = env->FindClass("org/kiwix/libkiwix/Bookmark");
+  jmethodID initMethod = env->GetMethodID(wrapperClass, "<init>", "(J)V");
+
   for (auto bookmark: bookmarks) {
-    auto wrapper = BUILD_WRAPPER("org/kiwix/libkiwx/Bookmark", bookmark);
+    // This double new is necessary as we need to allocate the bookmark itself (as a shared_ptr) on the heap but
+    // we also want the shared_ptr to be stored in the head as we want to have a ptr (cast as long) to it.
+    shared_ptr<kiwix::Bookmark>* handle = new shared_ptr<kiwix::Bookmark>(new kiwix::Bookmark(std::move(bookmark)));
+    jobject wrapper = env->NewObject(wrapperClass, initMethod, reinterpret_cast<jlong>(handle));
     env->SetObjectArrayElement(retArray, index++, wrapper);
   }
   return retArray;

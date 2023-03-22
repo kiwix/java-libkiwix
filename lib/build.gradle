@@ -79,7 +79,9 @@ ext.libkiwix_base_url = 'https://download.kiwix.org/nightly'
 ext.libzim_base_url = 'https://download.openzim.org/nightly'
 // change this date to get latest libzim .so and header files
 ext.nightly_date_for_libkiwix = project.properties["nightly_date_for_libkiwix"] ?: ""
+ext.nightly_date_for_libkiwix_linux = project.properties["nightly_date_for_libkiwix_linux"] ?: ""
 ext.nightly_date_for_libzim = project.properties["nightly_date_for_libzim"] ?: ""
+ext.nightly_date_for_libzim_linux = project.properties["nightly_date_for_libzim_linux"] ?: ""
 
 ext.libkiwix_version = project.properties["libkiwix_version"] ?: ""
 ext.libzim_version = project.properties["libzim_version"] ?: ""
@@ -98,6 +100,10 @@ task downloadLibzimSoAndHeaderFiles(type: Download) {
 
 task checkCurrentLibzimDate() {
     project.ext.set("nightly_date_for_libzim", getDateFromPath(buildDir.path, "libzim_android-arm64-"))
+}
+
+task checkCurrentLinuxLibzimDate() {
+    project.ext.set("nightly_date_for_libzim_linux", getDateFromPath(buildDir.path, "libzim_linux-x86_64-"))
 }
 
 task unzipLibzim(type: Copy) {
@@ -150,8 +156,8 @@ task copyLibzimAndroidx86_64(type: Copy) {
 
 task copyLibzimLinux_x86_64(type: Copy) {
     // copying linux_x86_64 so file
-    project.ext.set("libzim_version", getFileFromFolder(buildDir.path + "/libzim_linux-x86_64-" + nightly_date_for_libzim + "/lib/x86_64-linux-gnu/"))
-    from buildDir.path + "/libzim_linux-x86_64-" + nightly_date_for_libzim + "/lib/x86_64-linux-gnu/" + libzim_version
+    project.ext.set("libzim_version", getFileFromFolder(buildDir.path + "/libzim_linux-x86_64-" + nightly_date_for_libzim_linux + "/lib/x86_64-linux-gnu/"))
+    from buildDir.path + "/libzim_linux-x86_64-" + nightly_date_for_libzim_linux + "/lib/x86_64-linux-gnu/" + libzim_version
     into buildDir.path
 }
 
@@ -178,6 +184,10 @@ task downloadLibkiwixSoAndHeaderFiles(type: Download) {
 
 task checkCurrentLibkiwixDate() {
     project.ext.set("nightly_date_for_libkiwix", getDateFromPath(buildDir.path, "libkiwix_android-arm64-"))
+}
+
+task checkCurrentLinuxLibkiwixDate() {
+    project.ext.set("nightly_date_for_libkiwix_linux", getDateFromPath(buildDir.path, "libkiwix_linux-x86_64-"))
 }
 
 static String getDateFromPath(String path, String matchesString) {
@@ -241,8 +251,8 @@ task copyLibkiwixAndroidx86_64(type: Copy) {
 
 task copyLibkiwixLinux_x86_64(type: Copy) {
     // copying linux_x86_64 so file
-    project.ext.set("libkiwix_version", getFileFromFolder(buildDir.path + "/libkiwix_linux-x86_64-" + nightly_date_for_libkiwix + "/lib/x86_64-linux-gnu/"))
-    from buildDir.path + "/libkiwix_linux-x86_64-" + nightly_date_for_libkiwix + "/lib/x86_64-linux-gnu/" + libkiwix_version
+    project.ext.set("libkiwix_version", getFileFromFolder(buildDir.path + "/libkiwix_linux-x86_64-" + nightly_date_for_libkiwix_linux + "/lib/x86_64-linux-gnu/"))
+    from buildDir.path + "/libkiwix_linux-x86_64-" + nightly_date_for_libkiwix_linux + "/lib/x86_64-linux-gnu/" + libkiwix_version
     into buildDir.path
 }
 
@@ -267,13 +277,13 @@ task renameLibkiwixSoFile(type: Copy) {
 
 task copyBuildKiwixSoFile(type: Copy) {
     // copying linux_x86_64 so file
-    from projectDir.path + "/src/androidTests/java/org/kiwix/kiwixlib/libbuildkiwix.so"
+    from projectDir.path + "/src/test/libbuildkiwix.so"
     into buildDir.path
 }
 
 task createCodeCoverageReport(type: Exec) {
-    workingDir "${projectDir}/src/androidTests/java/org/kiwix/kiwixlib/"
-    commandLine 'sh', '-c', "bash 'compile_and_run_test.sh' ${buildDir}/libs/*app*.jar $buildDir"
+    workingDir "${projectDir}/src/test/"
+    commandLine 'sh', '-c', "bash 'compile_and_run_test.sh' ${buildDir}/libs/*lib*.jar $buildDir"
 }
 
 task checkCurrentJavaVersion() {
@@ -285,7 +295,7 @@ task checkCurrentJavaVersion() {
 
 task generateHeaderFilesFromJavaWrapper(type: Exec) {
     workingDir "${projectDir}/src/main/java/org/kiwix/"
-    commandLine 'bash', '-c', "javac -h ${buildDir}/include/javah_generated/ -d ${buildDir}/libzim/ ${getLibzimFiles()} ${getLibkiwixFiles()}"
+    commandLine 'bash', '-c', "javac -h ${buildDir}/include/javah_generated/ -d ${projectDir}/src/test/ ${getLibzimFiles()} ${getLibkiwixFiles()}"
 }
 
 String getLibkiwixFiles() {

@@ -25,6 +25,8 @@
 #include <jni.h>
 
 #include <mutex>
+#include <memory>
+#include <cassert>
 #include <string>
 #include <vector>
 #include <set>

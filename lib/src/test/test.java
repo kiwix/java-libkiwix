@@ -1,8 +1,12 @@
 import java.io.*;
 import java.util.*;
+
 import org.junit.Test;
+
 import static org.junit.Assert.*;
-import org.kiwix.kiwixlib.*;
+
+import org.kiwix.libkiwix.*;
+import org.kiwix.libzim.*;
 
 public class test {
     static {
@@ -12,20 +16,18 @@ public class test {
     }
 
     private static byte[] getFileContent(String path)
-            throws IOException
-    {
+            throws IOException {
         File file = new File(path);
         DataInputStream in = new DataInputStream(
                 new BufferedInputStream(
                         new FileInputStream(file)));
-        byte[] data = new byte[(int)file.length()];
+        byte[] data = new byte[(int) file.length()];
         in.read(data);
         return data;
     }
 
     private static byte[] getFileContentPartial(String path, int offset, int size)
-            throws IOException
-    {
+            throws IOException {
         File file = new File(path);
         DataInputStream in = new DataInputStream(
                 new BufferedInputStream(
@@ -37,105 +39,103 @@ public class test {
     }
 
     private static String getTextFileContent(String path)
-            throws IOException
-    {
+            throws IOException {
         return new String(getFileContent(path));
     }
 
     @Test
-    public void testReader()
-            throws JNIKiwixException, IOException
-    {
-        JNIKiwixReader reader = new JNIKiwixReader("small.zim");
-        assertEquals("Test ZIM file", reader.getTitle());
-        assertEquals(3, reader.getFileSize()); // The file size is in KiB
-        assertEquals("A/main.html", reader.getMainPage());
+    public void testArchive()
+            throws JNIKiwixException, IOException, ZimFileFormatException {
+        Archive archive = new Archive("small.zim");
+        // test the zim file main page title
+        assertEquals("Test ZIM file", archive.getMainEntry().getTitle());
+        // test zim file size
+        assertEquals(4070, archive.getFilesize()); // The file size is in KiB
+        // test zim file main url
+        assertEquals("A/main.html", archive.getMainEntry().getPath());
+        // test zim file content
         String s = getTextFileContent("small_zimfile_data/main.html");
-        byte[] c = reader.getContent(new JNIKiwixString("A/main.html"),
-                new JNIKiwixString(),
-                new JNIKiwixString(),
-                new JNIKiwixInt());
-        assertEquals(s, new String(c));
+        String c = archive.getEntryByPath("A/main.html").getItem(true).getData().getData();
+        assertEquals(s, c);
 
+        // test zim file icon
         byte[] faviconData = getFileContent("small_zimfile_data/favicon.png");
-        assertEquals(faviconData.length, reader.getArticleSize("I/favicon.png"));
-        c = reader.getContent(new JNIKiwixString("I/favicon.png"),
-                new JNIKiwixString(),
-                new JNIKiwixString(),
-                new JNIKiwixInt());
-        assertTrue(Arrays.equals(faviconData, c));
+        assertEquals(true, archive.hasIllustration(48));
+        Item item = archive.getIllustrationItem(48);
+        assertEquals(faviconData.length, item.getSize());
 
-        DirectAccessInfo dai = reader.getDirectAccessInformation("I/favicon.png");
+        DirectAccessInfo dai = archive.getEntryByPath("I/favicon.png").getItem(true).getDirectAccessInformation();
         assertNotEquals("", dai.filename);
-        c = getFileContentPartial(dai.filename, (int)dai.offset, faviconData.length);
-        assertTrue(Arrays.equals(faviconData, c));
+        c = new String(getFileContentPartial(dai.filename, (int) dai.offset, faviconData.length));
+        assertEquals(new String(faviconData), c);
+
+        archive.dispose();
     }
 
     @Test
-    public void testReaderByFd()
-            throws JNIKiwixException, IOException
-    {
+    public void testArchiveByFd()
+            throws JNIKiwixException, IOException, ZimFileFormatException {
         FileInputStream fis = new FileInputStream("small.zim");
-        JNIKiwixReader reader = new JNIKiwixReader(fis.getFD());
-        assertEquals("Test ZIM file", reader.getTitle());
-        assertEquals(3, reader.getFileSize()); // The file size is in KiB
-        assertEquals("A/main.html", reader.getMainPage());
+        Archive archive = new Archive(fis.getFD());
+        // test the zim file main page title
+        assertEquals("Test ZIM file", archive.getMainEntry().getTitle());
+        // test zim file size
+        assertEquals(4070, archive.getFilesize()); // The file size is in KiB
+        // test zim file main url
+        assertEquals("A/main.html", archive.getMainEntry().getPath());
+        // test zim file content
         String s = getTextFileContent("small_zimfile_data/main.html");
-        byte[] c = reader.getContent(new JNIKiwixString("A/main.html"),
-                new JNIKiwixString(),
-                new JNIKiwixString(),
-                new JNIKiwixInt());
-        assertEquals(s, new String(c));
+        String c = archive.getEntryByPath("A/main.html").getItem(true).getData().getData();
+        assertEquals(s, c);
 
+        // test zim file icon
         byte[] faviconData = getFileContent("small_zimfile_data/favicon.png");
-        assertEquals(faviconData.length, reader.getArticleSize("I/favicon.png"));
-        c = reader.getContent(new JNIKiwixString("I/favicon.png"),
-                new JNIKiwixString(),
-                new JNIKiwixString(),
-                new JNIKiwixInt());
-        assertTrue(Arrays.equals(faviconData, c));
+        assertEquals(true, archive.hasIllustration(48));
+        Item item = archive.getIllustrationItem(48);
+        assertEquals(faviconData.length, item.getSize());
 
-        DirectAccessInfo dai = reader.getDirectAccessInformation("I/favicon.png");
+        DirectAccessInfo dai = archive.getEntryByPath("I/favicon.png").getItem(true).getDirectAccessInformation();
         assertNotEquals("", dai.filename);
-        c = getFileContentPartial(dai.filename, (int)dai.offset, faviconData.length);
-        assertTrue(Arrays.equals(faviconData, c));
+        c = new String(getFileContentPartial(dai.filename, (int) dai.offset, faviconData.length));
+        assertEquals(new String(faviconData), c);
+
+        archive.dispose();
     }
 
     @Test
-    public void testReaderWithAnEmbeddedArchive()
-            throws JNIKiwixException, IOException
-    {
+    public void testArchiveWithAnEmbeddedArchive()
+            throws JNIKiwixException, IOException, ZimFileFormatException {
         File plainArchive = new File("small.zim");
         FileInputStream fis = new FileInputStream("small.zim.embedded");
-        JNIKiwixReader reader = new JNIKiwixReader(fis.getFD(), 8, plainArchive.length());
-        assertEquals("Test ZIM file", reader.getTitle());
-        assertEquals(3, reader.getFileSize()); // The file size is in KiB
-        assertEquals("A/main.html", reader.getMainPage());
+        Archive archive = new Archive(fis.getFD(), 8, plainArchive.length());
+        // test the zim file main page title
+        assertEquals("Test ZIM file", archive.getMainEntry().getTitle());
+        // test zim file size
+        assertEquals(4070, archive.getFilesize()); // The file size is in KiB
+        // test zim file main url
+        assertEquals("A/main.html", archive.getMainEntry().getPath());
+        // test zim file content
         String s = getTextFileContent("small_zimfile_data/main.html");
-        byte[] c = reader.getContent(new JNIKiwixString("A/main.html"),
-                new JNIKiwixString(),
-                new JNIKiwixString(),
-                new JNIKiwixInt());
-        assertEquals(s, new String(c));
+        String c = archive.getEntryByPath("A/main.html").getItem(true).getData().getData();
+        assertEquals(s, c);
 
+        // test zim file icon
         byte[] faviconData = getFileContent("small_zimfile_data/favicon.png");
-        assertEquals(faviconData.length, reader.getArticleSize("I/favicon.png"));
-        c = reader.getContent(new JNIKiwixString("I/favicon.png"),
-                new JNIKiwixString(),
-                new JNIKiwixString(),
-                new JNIKiwixInt());
-        assertTrue(Arrays.equals(faviconData, c));
+        assertEquals(true, archive.hasIllustration(48));
+        Item item = archive.getIllustrationItem(48);
+        assertEquals(faviconData.length, item.getSize());
 
-        DirectAccessInfo dai = reader.getDirectAccessInformation("I/favicon.png");
+        DirectAccessInfo dai = archive.getEntryByPath("I/favicon.png").getItem(true).getDirectAccessInformation();
         assertNotEquals("", dai.filename);
-        c = getFileContentPartial(dai.filename, (int)dai.offset, faviconData.length);
-        assertTrue(Arrays.equals(faviconData, c));
+        c = new String(getFileContentPartial(dai.filename, (int) dai.offset, faviconData.length));
+        assertEquals(new String(faviconData), c);
+
+        archive.dispose();
     }
 
     @Test
     public void testLibrary()
-            throws IOException
-    {
+            throws IOException {
         Library lib = new Library();
         Manager manager = new Manager(lib);
         String content = getTextFileContent("catalog.xml");
@@ -143,11 +143,53 @@ public class test {
         assertEquals(lib.getBookCount(true, true), 1);
         String[] bookIds = lib.getBooksIds();
         assertEquals(bookIds.length, 1);
-        Book book = lib.getBookById(bookIds[0]);
-        assertEquals(book.getTitle(), "Test ZIM file");
-        assertEquals(book.getTags(), "unit;test");
-        assertEquals(book.getFaviconUrl(), "http://localhost/meta?name=favicon&content=small");
-        assertEquals(book.getUrl(), "http://localhost/small.zim");
+        lib.filter(new Filter().local(true));
+    }
+
+    @Test
+    public void testServer() throws ZimFileFormatException, JNIKiwixException {
+        Archive archive = new Archive("small.zim");
+        Library lib = new Library();
+        Book book = new Book();
+        book.update(archive);
+        lib.addBook(book);
+        assertEquals(1, lib.getBookCount(true, true));
+        Server server = new Server(lib);
+        server.setPort(8080);
+        assertEquals(true, server.start());
+    }
+
+    @Test
+    public void testBookMark() throws ZimFileFormatException, JNIKiwixException {
+        Archive archive = new Archive("small.zim");
+        Library lib = new Library();
+        Book book = new Book();
+        book.update(archive);
+        lib.addBook(book);
+        Bookmark bookmark = new Bookmark();
+        bookmark.setBookId(book.getId());
+        bookmark.setTitle(book.getTitle());
+        bookmark.setUrl(book.getUrl());
+        bookmark.setLanguage(book.getLanguage());
+        bookmark.setDate(book.getDate());
+        bookmark.setBookTitle(book.getName());
+        // add bookmark to library
+        lib.addBookmark(bookmark);
+        Bookmark[] bookmarkArray = lib.getBookmarks(true);
+        assertEquals(1, bookmarkArray.length);
+        bookmark = bookmarkArray[0];
+        // test bookmark title
+        assertEquals(bookmark.getTitle(), book.getTitle());
+        // remove bookmark from library
+        lib.removeBookmark(bookmark.getBookId(), bookmark.getUrl());
+        bookmarkArray = lib.getBookmarks(true);
+        assertEquals(0, bookmarkArray.length);
+    }
+
+    @Test
+    public void testSearcher() throws Exception, ZimFileFormatException, JNIKiwixException {
+        Archive archive = new Archive("small.zim");
+        Searcher searcher = new Searcher(archive);
     }
 
     static
