@@ -71,6 +71,15 @@ public class test {
         assertEquals(new String(faviconData), c);
 
         archive.dispose();
+
+        // test reader with invalid zim file
+        String zimFile = "test.zim";
+        try {
+            Archive archive1 = new Archive(zimFile);
+            fail("ERROR: Archive created with invalid Zim file!");
+        } catch (ZimFileFormatException zimFileFormatException) {
+            assertEquals("Cannot open zimfile " + zimFile, zimFileFormatException.getMessage());
+        }
     }
 
     @Test
@@ -145,6 +154,11 @@ public class test {
         String[] bookIds = lib.getBooksIds();
         assertEquals(bookIds.length, 1);
         lib.filter(new Filter().local(true));
+
+        // remove book from library by id
+        lib.removeBookById(bookIds[0]);
+        bookIds = lib.getBooksIds();
+        assertEquals(bookIds.length, 0);
     }
 
     @Test
