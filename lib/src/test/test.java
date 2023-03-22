@@ -44,13 +44,13 @@ public class test {
     }
 
     @Test
-    public void testReader()
+    public void testArchive()
             throws JNIKiwixException, IOException, ZimFileFormatException {
         Archive archive = new Archive("small.zim");
         // test the zim file main page title
         assertEquals("Test ZIM file", archive.getMainEntry().getTitle());
         // test zim file size
-        assertEquals(3, archive.getFilesize() / 1024); // The file size is in KiB
+        assertEquals(4070, archive.getFilesize()); // The file size is in KiB
         // test zim file main url
         assertEquals("A/main.html", archive.getMainEntry().getPath());
         // test zim file content
@@ -73,14 +73,14 @@ public class test {
     }
 
     @Test
-    public void testReaderByFd()
+    public void testArchiveByFd()
             throws JNIKiwixException, IOException, ZimFileFormatException {
         FileInputStream fis = new FileInputStream("small.zim");
         Archive archive = new Archive(fis.getFD());
         // test the zim file main page title
         assertEquals("Test ZIM file", archive.getMainEntry().getTitle());
         // test zim file size
-        assertEquals(3, archive.getFilesize() / 1024); // The file size is in KiB
+        assertEquals(4070, archive.getFilesize()); // The file size is in KiB
         // test zim file main url
         assertEquals("A/main.html", archive.getMainEntry().getPath());
         // test zim file content
@@ -103,7 +103,7 @@ public class test {
     }
 
     @Test
-    public void testReaderWithAnEmbeddedArchive()
+    public void testArchiveWithAnEmbeddedArchive()
             throws JNIKiwixException, IOException, ZimFileFormatException {
         File plainArchive = new File("small.zim");
         FileInputStream fis = new FileInputStream("small.zim.embedded");
@@ -111,7 +111,7 @@ public class test {
         // test the zim file main page title
         assertEquals("Test ZIM file", archive.getMainEntry().getTitle());
         // test zim file size
-        assertEquals(3, archive.getFilesize() / 1024); // The file size is in KiB
+        assertEquals(4070, archive.getFilesize()); // The file size is in KiB
         // test zim file main url
         assertEquals("A/main.html", archive.getMainEntry().getPath());
         // test zim file content
