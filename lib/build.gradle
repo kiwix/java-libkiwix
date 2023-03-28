@@ -327,3 +327,10 @@ String getLibzimFiles() {
         "${projectDir}/src/main/java/org/kiwix/libzim/SuggestionSearch.java " +
         "${projectDir}/src/main/java/org/kiwix/libzim/ZimFileFormatException.java"
 }
+
+task buildLinuxSoFile(type: Exec) {
+    workingDir "${projectDir}/src/main/cpp/"
+    commandLine 'bash', '-c', "cmake . -B ${buildDir} && make -C ${buildDir}"
+}
+
+build.dependsOn buildLinuxSoFile

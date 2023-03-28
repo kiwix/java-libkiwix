@@ -12,7 +12,8 @@ public class test {
     static {
         System.loadLibrary("kiwix");
         System.loadLibrary("zim");
-        System.loadLibrary("buildkiwix");
+        System.loadLibrary("kiwix_wrapper");
+        System.loadLibrary("zim_wrapper");
     }
 
     private static byte[] getFileContent(String path)
