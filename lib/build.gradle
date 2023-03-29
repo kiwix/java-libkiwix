@@ -279,9 +279,21 @@ task renameLibkiwixSoFile(type: Copy) {
     }
 }
 
+task compileTestFile(type: Exec) {
+    workingDir "${projectDir}/src/test/"
+    commandLine 'javac', '-g', '-d', '.', '-s', '.', '-cp', 'junit-4.13.jar:' + buildDir.path +'/libs/*', 'test.java'
+}
+
+task runTests(type: Exec) {
+    workingDir "${projectDir}/src/test/"
+    dependsOn compileTestFile
+    commandLine 'java', '-Djava.library.path=' + buildDir.path, '-javaagent:jacoco-0.8.7/lib/jacocoagent.jar', '-cp', 'junit-4.13.jar:hamcrest-core-1.3.jar:' + buildDir.path +'/libs/*lib*.jar' + ':.', 'org.junit.runner.JUnitCore', 'test'
+}
+
 task createCodeCoverageReport(type: Exec) {
     workingDir "${projectDir}/src/test/"
-    commandLine 'sh', '-c', "bash 'run_test.sh' ${buildDir}/libs/*lib*.jar $buildDir"
+    dependsOn runTests
+    commandLine 'java', '-jar', 'jacoco-0.8.7/lib/jacococli.jar', 'report', 'jacoco.exec', '--classfiles', 'org/kiwix/libkiwix/', '--classfiles', 'org/kiwix/libzim/', '--html', '../../build/coverage-report', '--xml', 'coverage.xml'
 }
 
 task checkCurrentJavaVersion() {
