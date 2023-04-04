@@ -200,8 +200,12 @@ public class test {
         Bookmark[] bookmarkArray = lib.getBookmarks(true);
         assertEquals(1, bookmarkArray.length);
         bookmark = bookmarkArray[0];
-        // test bookmark title
+        // test saved bookmark
+        assertEquals(bookmark.getBookId(), book.getId());
         assertEquals(bookmark.getTitle(), book.getTitle());
+        assertEquals(bookmark.getUrl(), book.getUrl());
+        assertEquals(bookmark.getLanguage(), book.getLanguage());
+        assertEquals(bookmark.getDate(), book.getDate());
         // remove bookmark from library
         lib.removeBookmark(bookmark.getBookId(), bookmark.getUrl());
         bookmarkArray = lib.getBookmarks(true);
@@ -218,6 +222,7 @@ public class test {
         int estimatedMatches = (int) search.getEstimatedMatches();
         assertEquals(1, estimatedMatches);
         SearchIterator iterator = search.getResults(0, estimatedMatches);
+        assertEquals("Test ZIM file", iterator.getTitle());
         searcher.dispose();
 
         SuggestionSearcher suggestionSearcher = new SuggestionSearcher(archive);
