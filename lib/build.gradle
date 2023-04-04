@@ -274,7 +274,7 @@ task testSourceJar(type: Jar) {
 
 task compileTestFile(type: JavaCompile) {
     dependsOn testSourceJar
-    source = fileTree('src/test/')
+    source = file('src/test/test.java')
     destinationDirectory = file('src/test/')
     classpath = files("src/test/junit-4.13.jar" , "src/test/hamcrest-core-1.4.jar", "build/libs/test-sources.jar")
 }
