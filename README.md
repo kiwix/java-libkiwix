@@ -25,7 +25,7 @@ cd java-libkiwix
 
 
 ```bash
-./gradlew generateHeader
+./gradlew buildHeaders
 ./gradlew build
 ```
 

@@ -310,7 +310,7 @@ task checkCurrentJavaVersion() {
 }
 
 
-task generateHeader(type: Exec) {
+task buildHeaders(type: Exec) {
     workingDir "${projectDir}/src/main/java/org/kiwix/"
     commandLine 'bash', '-c', "javac -h ${buildDir}/include/javah_generated/ -d ${projectDir}/src/test/java/ ${getLibzimFiles()} ${getLibkiwixFiles()}"
 }
@@ -345,9 +345,9 @@ String getLibzimFiles() {
         "${projectDir}/src/main/java/org/kiwix/libzim/ZimFileFormatException.java"
 }
 
-task buildLinuxSoFile(type: Exec) {
+task buildLinuxBinding(type: Exec) {
     workingDir "${projectDir}/src/main/cpp/"
     commandLine 'bash', '-c', "cmake . -B ${buildDir} && make -C ${buildDir}"
 }
 
-build.dependsOn buildLinuxSoFile
+build.dependsOn buildLinuxBinding

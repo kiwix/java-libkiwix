@@ -30,7 +30,7 @@ jobs:
 
       - name: Compile Project
         run: |
-          ./gradlew generateHeader build
+          ./gradlew buildHeaders build
 
       - name: Release build
         run: |
