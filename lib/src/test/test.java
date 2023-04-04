@@ -134,6 +134,7 @@ public class test {
         assertEquals(true, archive.hasIllustration(48));
         Item item = archive.getIllustrationItem(48);
         assertEquals(faviconData.length, item.getSize());
+        assertEquals(new String(faviconData), item.getData().getData());
 
         DirectAccessInfo dai = archive.getEntryByPath("I/favicon.png").getItem(true).getDirectAccessInformation();
         assertNotEquals("", dai.filename);
@@ -154,6 +155,12 @@ public class test {
         String[] bookIds = lib.getBooksIds();
         assertEquals(bookIds.length, 1);
         lib.filter(new Filter().local(true));
+
+        Book book = lib.getBookById(bookIds[0]);
+        assertEquals(book.getTitle(), "Test ZIM file");
+        assertEquals(book.getTags(), "unit;test");
+        assertEquals(book.getIllustration(48).url(), "http://localhost/meta?name=favicon&content=small");
+        assertEquals(book.getUrl(), "http://localhost/small.zim");
 
         // remove book from library by id
         lib.removeBookById(bookIds[0]);
@@ -204,7 +211,23 @@ public class test {
     @Test
     public void testSearcher() throws Exception, ZimFileFormatException, JNIKiwixException {
         Archive archive = new Archive("small.zim");
+
         Searcher searcher = new Searcher(archive);
+        Query query = new Query("test");
+        Search search = searcher.search(query);
+        int estimatedMatches = (int) search.getEstimatedMatches();
+        assertEquals(1, estimatedMatches);
+        SearchIterator iterator = search.getResults(0, estimatedMatches);
+        searcher.dispose();
+
+        SuggestionSearcher suggestionSearcher = new SuggestionSearcher(archive);
+        SuggestionSearch suggestionSearch = suggestionSearcher.suggest("test");
+        int matches = (int) suggestionSearch.getEstimatedMatches();
+        assertEquals(1, matches);
+        SuggestionIterator results = suggestionSearch.getResults(1, matches);
+        SuggestionItem suggestionItem = results.next();
+        assertEquals("Test ZIM file", suggestionItem.getTitle());
+        suggestionSearcher.dispose();
     }
 
     static
