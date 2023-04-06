@@ -9,10 +9,6 @@ die()
   exit 1
 }
 
-# This is for building wrapper so file
-cmake .
-make
-
 # Copy generated .so file to build directory to run test cases
 cd ../../../
 ./gradlew copyBuildKiwixSoFile

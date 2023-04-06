@@ -126,41 +126,43 @@ task unzipLibzim(type: Copy) {
     into buildDir
 }
 
-task copyLibzimHeaderFiles(type: Copy) {
-    // copying header file
-    from buildDir.path + "/libzim_android-arm-" + nightly_date_for_libzim + '/include/'
-    into buildDir.path + "/include/libzim/"
-}
+task copyLibzimHeaderAndSoFiles(type: Copy) {
+    copy {
+        // copying header file
+        from buildDir.path + "/libzim_android-arm-" + nightly_date_for_libzim + '/include/'
+        into buildDir.path + "/include/libzim/"
+    }
 
-task copyLibzimAndroidArm(type: Copy) {
-    // copying android_arm so file
-    from buildDir.path + "/libzim_android-arm-" + nightly_date_for_libzim + '/lib/arm-linux-androideabi/'
-    into buildDir.path + "/jniLibs/armeabi-v7a/libzim/"
-}
+    copy {
+        // copying android_arm so file
+        from buildDir.path + "/libzim_android-arm-" + nightly_date_for_libzim + '/lib/arm-linux-androideabi/'
+        into buildDir.path + "/jniLibs/armeabi-v7a/libzim/"
+    }
 
-task copyLibzimAndroidArm64(type: Copy) {
-    // copying android_arm64 so file
-    from buildDir.path + "/libzim_android-arm64-" + nightly_date_for_libzim + '/lib/aarch64-linux-android/'
-    into buildDir.path + "/jniLibs/arm64-v8a/libzim/"
-}
+    copy {
+        // copying android_arm64 so file
+        from buildDir.path + "/libzim_android-arm64-" + nightly_date_for_libzim + '/lib/aarch64-linux-android/'
+        into buildDir.path + "/jniLibs/arm64-v8a/libzim/"
+    }
 
-task copyLibzimAndroidx86(type: Copy) {
-    // copying android_x86 so file
-    from buildDir.path + "/libzim_android-x86-" + nightly_date_for_libzim + '/lib/i686-linux-android/'
-    into buildDir.path + "/jniLibs/x86/libzim/"
-}
+    copy {
+        // copying android_x86 so file
+        from buildDir.path + "/libzim_android-x86-" + nightly_date_for_libzim + '/lib/i686-linux-android/'
+        into buildDir.path + "/jniLibs/x86/libzim/"
+    }
 
-task copyLibzimAndroidx86_64(type: Copy) {
-    // copying android_x86_64 so file
-    from buildDir.path + "/libzim_android-x86_64-" + nightly_date_for_libzim + '/lib/x86_64-linux-android/'
-    into buildDir.path + "/jniLibs/x86_64/libzim/"
-}
+    copy {
+        // copying android_x86_64 so file
+        from buildDir.path + "/libzim_android-x86_64-" + nightly_date_for_libzim + '/lib/x86_64-linux-android/'
+        into buildDir.path + "/jniLibs/x86_64/libzim/"
+    }
 
-task copyLibzimLinux_x86_64(type: Copy) {
-    // copying linux_x86_64 so file
-    project.ext.set("libzim_version", getFileFromFolder(buildDir.path + "/libzim_linux-x86_64-" + nightly_date_for_libzim_linux + "/lib/x86_64-linux-gnu/"))
-    from buildDir.path + "/libzim_linux-x86_64-" + nightly_date_for_libzim_linux + "/lib/x86_64-linux-gnu/" + libzim_version
-    into buildDir.path
+    copy {
+        // copying linux_x86_64 so file
+        project.ext.set("libzim_version", getFileFromFolder(buildDir.path + "/libzim_linux-x86_64-" + nightly_date_for_libzim_linux + "/lib/x86_64-linux-gnu/"))
+        from buildDir.path + "/libzim_linux-x86_64-" + nightly_date_for_libzim_linux + "/lib/x86_64-linux-gnu/" + libzim_version
+        into buildDir.path
+    }
 }
 
 task renameLibzimSoFile(type: Copy) {
@@ -221,41 +223,43 @@ task unzipLibkiwix(type: Copy) {
     into buildDir
 }
 
-task copyLibkiwixHeaderFiles(type: Copy) {
-    // copying header file
-    from buildDir.path + "/libkiwix_android-arm-" + nightly_date_for_libkiwix + '/include/kiwix/'
-    into buildDir.path + "/include/libkiwix/"
-}
+task copyLibkiwixHeaderAndSoFiles(type: Copy) {
+    copy {
+        // copying header file
+        from buildDir.path + "/libkiwix_android-arm-" + nightly_date_for_libkiwix + '/include/kiwix/'
+        into buildDir.path + "/include/libkiwix/"
+    }
 
-task copyLibkiwixAndroidArm(type: Copy) {
-    // copying android_arm so file
-    from buildDir.path + "/libkiwix_android-arm-" + nightly_date_for_libkiwix + '/lib/arm-linux-androideabi/'
-    into buildDir.path + "/jniLibs/armeabi-v7a/libkiwix/"
-}
+    copy {
+        // copying android_arm so file
+        from buildDir.path + "/libkiwix_android-arm-" + nightly_date_for_libkiwix + '/lib/arm-linux-androideabi/'
+        into buildDir.path + "/jniLibs/armeabi-v7a/libkiwix/"
+    }
 
-task copyLibkiwixAndroidArm64(type: Copy) {
-    // copying android_arm64 so file
-    from buildDir.path + "/libkiwix_android-arm64-" + nightly_date_for_libkiwix + '/lib/aarch64-linux-android/'
-    into buildDir.path + "/jniLibs/arm64-v8a/libkiwix/"
-}
+    copy {
+        // copying android_arm64 so file
+        from buildDir.path + "/libkiwix_android-arm64-" + nightly_date_for_libkiwix + '/lib/aarch64-linux-android/'
+        into buildDir.path + "/jniLibs/arm64-v8a/libkiwix/"
+    }
 
-task copyLibkiwixAndroidx86(type: Copy) {
-    // copying android_x86 so file
-    from buildDir.path + "/libkiwix_android-x86-" + nightly_date_for_libkiwix + '/lib/i686-linux-android/'
-    into buildDir.path + "/jniLibs/x86/libkiwix/"
-}
+    copy {
+        // copying android_x86 so file
+        from buildDir.path + "/libkiwix_android-x86-" + nightly_date_for_libkiwix + '/lib/i686-linux-android/'
+        into buildDir.path + "/jniLibs/x86/libkiwix/"
+    }
 
-task copyLibkiwixAndroidx86_64(type: Copy) {
-    // copying android_x86_64 so file
-    from buildDir.path + "/libkiwix_android-x86_64-" + nightly_date_for_libkiwix + '/lib/x86_64-linux-android/'
-    into buildDir.path + "/jniLibs/x86_64/libkiwix/"
-}
+    copy {
+        // copying android_x86_64 so file
+        from buildDir.path + "/libkiwix_android-x86_64-" + nightly_date_for_libkiwix + '/lib/x86_64-linux-android/'
+        into buildDir.path + "/jniLibs/x86_64/libkiwix/"
+    }
 
-task copyLibkiwixLinux_x86_64(type: Copy) {
-    // copying linux_x86_64 so file
-    project.ext.set("libkiwix_version", getFileFromFolder(buildDir.path + "/libkiwix_linux-x86_64-" + nightly_date_for_libkiwix_linux + "/lib/x86_64-linux-gnu/"))
-    from buildDir.path + "/libkiwix_linux-x86_64-" + nightly_date_for_libkiwix_linux + "/lib/x86_64-linux-gnu/" + libkiwix_version
-    into buildDir.path
+    copy {
+        // copying linux_x86_64 so file
+        project.ext.set("libkiwix_version", getFileFromFolder(buildDir.path + "/libkiwix_linux-x86_64-" + nightly_date_for_libkiwix_linux + "/lib/x86_64-linux-gnu/"))
+        from buildDir.path + "/libkiwix_linux-x86_64-" + nightly_date_for_libkiwix_linux + "/lib/x86_64-linux-gnu/" + libkiwix_version
+        into buildDir.path
+    }
 }
 
 static String getFileFromFolder(String path) {
@@ -275,12 +279,6 @@ task renameLibkiwixSoFile(type: Copy) {
         destinationDir file(buildDir.path)
         rename libkiwix_version, "libkiwix.so"
     }
-}
-
-task copyBuildKiwixSoFile(type: Copy) {
-    // copying linux_x86_64 so file
-    from projectDir.path + "/src/test/libbuildkiwix.so"
-    into buildDir.path
 }
 
 task createCodeCoverageReport(type: Exec) {
