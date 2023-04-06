@@ -77,7 +77,9 @@ dependencies {
 
 ext.libkiwix_base_url = 'https://download.kiwix.org/nightly'
 ext.libzim_base_url = 'https://download.openzim.org/nightly'
-// change this date to get latest libzim .so and header files
+// temporary url for libzim linux variant zim file, Once https://github.com/openzim/libzim/issues/772 fixed, then we can remove this
+ext.linux_libzim_base_url = 'https://download.openzim.org/nightly/2023-03-20'
+
 ext.nightly_date_for_libkiwix = project.properties["nightly_date_for_libkiwix"] ?: ""
 ext.nightly_date_for_libkiwix_linux = project.properties["nightly_date_for_libkiwix_linux"] ?: ""
 ext.nightly_date_for_libzim = project.properties["nightly_date_for_libzim"] ?: ""
@@ -92,7 +94,7 @@ task downloadLibzimSoAndHeaderFiles(type: Download) {
             libzim_base_url + '/libzim_android-arm64.tar.gz',
             libzim_base_url + '/libzim_android-x86.tar.gz',
             libzim_base_url + '/libzim_android-x86_64.tar.gz',
-            libzim_base_url + '/libzim_linux-x86_64.tar.gz'
+            linux_libzim_base_url + '/libzim_linux-x86_64-2023-03-20.tar.gz'
     ])
     dest buildDir
     overwrite true
@@ -120,7 +122,7 @@ task unzipLibzim(type: Copy) {
     from tarTree(buildDir.path + "/libzim_android-x86_64.tar.gz")
     into buildDir
     // unzip linux x86_64
-    from tarTree(buildDir.path + "/libzim_linux-x86_64.tar.gz")
+    from tarTree(buildDir.path + "/libzim_linux-x86_64-2023-03-20.tar.gz")
     into buildDir
 }
 
@@ -300,30 +302,30 @@ task generateHeaderFilesFromJavaWrapper(type: Exec) {
 
 String getLibkiwixFiles() {
     return "${projectDir}/src/main/java/org/kiwix/libkiwix/Book.java " +
-        "${projectDir}/src/main/java/org/kiwix/libkiwix/Bookmark.java " +
-        "${projectDir}/src/main/java/org/kiwix/libkiwix/Filter.java " +
-        "${projectDir}/src/main/java/org/kiwix/libkiwix/JNIICU.java " +
-        "${projectDir}/src/main/java/org/kiwix/libkiwix/Illustration.java " +
-        "${projectDir}/src/main/java/org/kiwix/libkiwix/JNIKiwixException.java " +
-        "${projectDir}/src/main/java/org/kiwix/libkiwix/Library.java " +
-        "${projectDir}/src/main/java/org/kiwix/libkiwix/Manager.java " +
-        "${projectDir}/src/main/java/org/kiwix/libkiwix/Server.java"
+            "${projectDir}/src/main/java/org/kiwix/libkiwix/Bookmark.java " +
+            "${projectDir}/src/main/java/org/kiwix/libkiwix/Filter.java " +
+            "${projectDir}/src/main/java/org/kiwix/libkiwix/JNIICU.java " +
+            "${projectDir}/src/main/java/org/kiwix/libkiwix/Illustration.java " +
+            "${projectDir}/src/main/java/org/kiwix/libkiwix/JNIKiwixException.java " +
+            "${projectDir}/src/main/java/org/kiwix/libkiwix/Library.java " +
+            "${projectDir}/src/main/java/org/kiwix/libkiwix/Manager.java " +
+            "${projectDir}/src/main/java/org/kiwix/libkiwix/Server.java"
 }
 
 String getLibzimFiles() {
     return "${projectDir}/src/main/java/org/kiwix/libzim/Archive.java " +
-        "${projectDir}/src/main/java/org/kiwix/libzim/Blob.java " +
-        "${projectDir}/src/main/java/org/kiwix/libzim/DirectAccessInfo.java " +
-        "${projectDir}/src/main/java/org/kiwix/libzim/EntryIterator.java " +
-        "${projectDir}/src/main/java/org/kiwix/libzim/Entry.java " +
-        "${projectDir}/src/main/java/org/kiwix/libzim/Item.java " +
-        "${projectDir}/src/main/java/org/kiwix/libzim/Query.java " +
-        "${projectDir}/src/main/java/org/kiwix/libzim/Searcher.java " +
-        "${projectDir}/src/main/java/org/kiwix/libzim/SearchIterator.java " +
-        "${projectDir}/src/main/java/org/kiwix/libzim/Search.java " +
-        "${projectDir}/src/main/java/org/kiwix/libzim/SuggestionItem.java " +
-        "${projectDir}/src/main/java/org/kiwix/libzim/SuggestionIterator.java " +
-        "${projectDir}/src/main/java/org/kiwix/libzim/SuggestionSearcher.java " +
-        "${projectDir}/src/main/java/org/kiwix/libzim/SuggestionSearch.java " +
-        "${projectDir}/src/main/java/org/kiwix/libzim/ZimFileFormatException.java"
+            "${projectDir}/src/main/java/org/kiwix/libzim/Blob.java " +
+            "${projectDir}/src/main/java/org/kiwix/libzim/DirectAccessInfo.java " +
+            "${projectDir}/src/main/java/org/kiwix/libzim/EntryIterator.java " +
+            "${projectDir}/src/main/java/org/kiwix/libzim/Entry.java " +
+            "${projectDir}/src/main/java/org/kiwix/libzim/Item.java " +
+            "${projectDir}/src/main/java/org/kiwix/libzim/Query.java " +
+            "${projectDir}/src/main/java/org/kiwix/libzim/Searcher.java " +
+            "${projectDir}/src/main/java/org/kiwix/libzim/SearchIterator.java " +
+            "${projectDir}/src/main/java/org/kiwix/libzim/Search.java " +
+            "${projectDir}/src/main/java/org/kiwix/libzim/SuggestionItem.java " +
+            "${projectDir}/src/main/java/org/kiwix/libzim/SuggestionIterator.java " +
+            "${projectDir}/src/main/java/org/kiwix/libzim/SuggestionSearcher.java " +
+            "${projectDir}/src/main/java/org/kiwix/libzim/SuggestionSearch.java " +
+            "${projectDir}/src/main/java/org/kiwix/libzim/ZimFileFormatException.java"
 }
