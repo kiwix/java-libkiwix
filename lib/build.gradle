@@ -76,8 +76,6 @@ dependencies {
 
 ext.libkiwix_base_url = 'https://download.kiwix.org/nightly'
 ext.libzim_base_url = 'https://download.openzim.org/nightly'
-// temporary url for libzim linux variant zim file, Once https://github.com/openzim/libzim/issues/772 fixed, then we can remove this
-ext.linux_libzim_base_url = 'https://download.openzim.org/nightly/2023-03-20'
 
 ext.libkiwix_version = project.properties["libkiwix_version"] ?: ""
 ext.libzim_version = project.properties["libzim_version"] ?: ""
@@ -88,7 +86,7 @@ task downloadLibzimSoAndHeaderFiles(type: Download) {
             libzim_base_url + '/libzim_android-arm64.tar.gz',
             libzim_base_url + '/libzim_android-x86.tar.gz',
             libzim_base_url + '/libzim_android-x86_64.tar.gz',
-            linux_libzim_base_url + '/libzim_linux-x86_64-2023-03-20.tar.gz'
+            libzim_base_url + '/libzim_linux-x86_64.tar.gz'
     ])
     dest buildDir
     overwrite true
@@ -108,7 +106,7 @@ task unzipLibzim(type: Copy) {
     from tarTree(buildDir.path + "/libzim_android-x86_64.tar.gz")
     into buildDir
     // unzip linux x86_64
-    from tarTree(buildDir.path + "/libzim_linux-x86_64-2023-03-20.tar.gz")
+    from tarTree(buildDir.path + "/libzim_linux-x86_64.tar.gz")
     into buildDir
 }
 
