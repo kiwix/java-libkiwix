@@ -36,7 +36,7 @@ jobs:
         run: |
           ./gradlew assemble
 
-      - name: Genrate Source jar
+      - name: Generate Source jar
         run: |
           ./gradlew androidSourcesJar
 
