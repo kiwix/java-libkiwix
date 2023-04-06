@@ -276,7 +276,7 @@ task testSourceJar(type: Jar) {
 
 task compileTestFile(type: JavaCompile) {
     dependsOn testSourceJar
-    source = fileTree('src/test/')
+    source = file('src/test/test.java')
     destinationDirectory = file('src/test/')
     classpath = files("src/test/junit-4.13.jar" , "src/test/hamcrest-core-1.4.jar", "build/libs/test-sources.jar")
 }
@@ -312,7 +312,7 @@ task checkCurrentJavaVersion() {
 }
 
 
-task generateHeader(type: Exec) {
+task buildHeaders(type: Exec) {
     workingDir "${projectDir}/src/main/java/org/kiwix/"
     commandLine 'bash', '-c', "javac -h ${buildDir}/include/javah_generated/ -d ${projectDir}/src/test/java/ ${getLibzimFiles()} ${getLibkiwixFiles()}"
 }
