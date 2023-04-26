@@ -60,6 +60,18 @@ inline jobject newObject(const char* className, JNIEnv* env) {
 }
 #define NEW_OBJECT(CLASSNAME) newObject(CLASSNAME, env)
 
+// Create a java object using a constructor setting handle.
+template<typename T>
+inline jobject newObject2(const char* className, JNIEnv* env, shared_ptr<T>&& ptr) {
+  jclass objClass = env->FindClass(className);
+  jmethodID initMethod = env->GetMethodID(objClass, "<init>", "(J)V");
+  // allocate a shared_ptr on the head
+  shared_ptr<T>* handle = new shared_ptr<T>(ptr);
+  jobject wrapper = env->NewObject(objClass, initMethod, reinterpret_cast<jlong>(handle));
+  return wrapper;
+}
+#define NEW_OBJECT2(CLASSNAME, ptr) newObject2(CLASSNAME, env, ptr)
+
 
 // Set the pointer to the wrapped object.
 template<typename T>
@@ -130,6 +142,15 @@ inline jobject buildWrapper(JNIEnv* env, const char* class_name, T&& obj, const 
   return wrapper;
 }
 #define BUILD_WRAPPER(CLASSNAME, OBJ) buildWrapper(env, CLASSNAME, std::move(OBJ))
+
+template<typename T>
+inline jobject buildWrapper2(JNIEnv* env, const char* class_name, T&& obj, const char* handleName = "nativeHandle") {
+  auto ptr = std::make_shared<T>(std::move(obj));
+  auto wrapper = newObject2(class_name, env, std::move(ptr));
+  return wrapper;
+}
+#define BUILD_WRAPPER2(CLASSNAME, OBJ) buildWrapper2(env, CLASSNAME, std::move(OBJ))
+
 
 
 

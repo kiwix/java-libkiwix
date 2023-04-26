@@ -50,7 +50,7 @@ METHOD(jboolean, addBook, jobject book)
 }
 
 METHOD(jobject, getBookById, jstring id) {
-  return BUILD_WRAPPER("org/kiwix/libkiwix/Book", THIS->getBookById(TO_C(id)));
+  return BUILD_WRAPPER2("org/kiwix/libkiwix/Book", THIS->getBookById(TO_C(id)));
 }
 
 METHOD(jobject, getArchiveById, jstring id) {
