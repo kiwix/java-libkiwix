@@ -39,7 +39,7 @@ METHOD0(jint, width) {
 }
 
 METHOD0(jint, height) {
-  return TO_JNI(THIS->width);
+  return TO_JNI(THIS->height);
 }
 
 METHOD0(jstring, mimeType) {
