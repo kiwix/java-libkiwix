@@ -23,7 +23,7 @@ import org.kiwix.libzim.Blob;
 
 public class Blob
 {
-  public native String getData();
+  public native byte[] getData();
   public native long size();
 
 

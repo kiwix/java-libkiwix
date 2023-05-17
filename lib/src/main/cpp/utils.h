@@ -199,6 +199,15 @@ template<> struct JTypeArray<bool>{
     env->SetBooleanArrayRegion(array, 0, length, reinterpret_cast<const jboolean*>(data));
   }
 };
+template<> struct JTypeArray<char>{
+  typedef jbyteArray type_t;
+  static jbyteArray createArray(JNIEnv* env, size_t length) {
+    return env->NewByteArray(length);
+  }
+  static void setArray(JNIEnv* env, jbyteArray array, const char* data, size_t length) {
+    env->SetByteArrayRegion(array, 0, length, reinterpret_cast<const signed char*>(data));
+  }
+};
 template<> struct JTypeArray<int32_t>{
   typedef jintArray type_t;
   static jintArray createArray(JNIEnv* env, size_t length) {
@@ -276,6 +285,14 @@ inline typename JTypeArray<U>::type_t c2jni(const std::set<U>& val, JNIEnv* env)
 {
   std::vector<U> temp(val.begin(), val.end());
   return c2jni(temp, env);
+}
+
+template<typename U>
+inline typename JTypeArray<U>::type_t cArray2jni(const U* data, size_t length, JNIEnv* env)
+{
+  auto array = JTypeArray<U>::createArray(env, length);
+  JTypeArray<U>::setArray(env, array, data, length);
+  return array;
 }
 
 #define TO_JNI(VAL) c2jni(VAL, env)
