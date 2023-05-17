@@ -20,7 +20,7 @@
 
 #include <jni.h>
 #include <exception>
-#include "org_kiwix_libzim_Searcher.h"
+#include "org_kiwix_libzim_Query.h"
 
 #include <utils.h>
 
