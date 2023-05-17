@@ -122,6 +122,7 @@ public class test {
         Book book = lib.getBookById(bookIds[0]);
         assertEquals(book.getTitle(), "Test ZIM file");
         assertEquals(book.getTags(), "unit;test");
+        assertEquals(book.getIllustration(48).width(), 48);
         assertEquals(book.getIllustration(48).url(), "http://localhost/meta?name=favicon&content=small");
         assertEquals(book.getUrl(), "http://localhost/small.zim");
 

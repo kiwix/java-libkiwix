@@ -19,7 +19,7 @@
 
 
 #include <jni.h>
-#include "org_kiwix_libkiwix_Book.h"
+#include "org_kiwix_libkiwix_Illustration.h"
 
 #include "utils.h"
 #include "book.h"

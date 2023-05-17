@@ -141,6 +141,14 @@ inline jobject buildWrapper(JNIEnv* env, const char* class_name, T&& obj, const 
   setPtr(env, wrapper, std::move(ptr));
   return wrapper;
 }
+
+template<typename T>
+inline jobject buildWrapper(JNIEnv* env, const char* class_name, std::shared_ptr<T>&& ptr, const char* handleName = "nativeHandle") {
+  auto wrapper = newObject(class_name, env);
+  setPtr(env, wrapper, std::move(ptr));
+  return wrapper;
+}
+
 #define BUILD_WRAPPER(CLASSNAME, OBJ) buildWrapper(env, CLASSNAME, std::move(OBJ))
 
 template<typename T>
