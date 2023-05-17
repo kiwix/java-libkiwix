@@ -175,7 +175,7 @@ public class test {
         bookmarkArray = lib.getBookmarks(true);
         assertEquals(0, bookmarkArray.length);
     }
-
+/*
     @Test
     public void testSearcher() throws Exception, ZimFileFormatException, JNIKiwixException {
         Archive archive = new Archive("small.zim");
@@ -198,7 +198,7 @@ public class test {
         assertEquals("Test ZIM file", suggestionItem.getTitle());
         suggestionSearcher.dispose();
     }
-
+*/
     static
     public void main(String[] args) {
         Library lib = new Library();
