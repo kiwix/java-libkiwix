@@ -37,6 +37,6 @@ public class Query
   public native void dispose();
 
   // A pointer (as a long) to a native Handle
-  private native long setNativeQuery(String query);
+  private native void setNativeQuery(String query);
   private long nativeHandle;
 }

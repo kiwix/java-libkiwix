@@ -19,7 +19,7 @@
 
 
 #include <jni.h>
-#include "org_kiwix_libkiwix_Book.h"
+#include "org_kiwix_libkiwix_Illustration.h"
 
 #include "utils.h"
 #include "book.h"
@@ -39,7 +39,7 @@ METHOD0(jint, width) {
 }
 
 METHOD0(jint, height) {
-  return TO_JNI(THIS->width);
+  return TO_JNI(THIS->height);
 }
 
 METHOD0(jstring, mimeType) {

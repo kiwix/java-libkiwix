@@ -30,14 +30,13 @@ jobs:
 
       - name: Compile Project
         run: |
-          ./gradlew generateHeaderFilesFromJavaWrapper
-          ./gradlew build
+          ./gradlew buildHeaders build
 
       - name: Release build
         run: |
           ./gradlew assemble
 
-      - name: Genrate Source jar
+      - name: Generate Source jar
         run: |
           ./gradlew androidSourcesJar
 

@@ -35,7 +35,7 @@
 
 DISPOSE
 
-METHOD0(jstring, getData) {
-  return TO_JNI(std::string(*THIS));
+METHOD0(jbyteArray, getData) {
+  return cArray2jni(THIS->data(), THIS->size(), env);
 }
 GETTER(jlong, size)

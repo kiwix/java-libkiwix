@@ -7,6 +7,9 @@ import org.kiwix.libkiwix.Illustration;
 public class Book
 {
   public Book() { allocate(); }
+  public Book(long handle) {
+    nativeHandle = handle;
+  }
 
 
   public native void update(Book book);

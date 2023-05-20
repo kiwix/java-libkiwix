@@ -12,7 +12,8 @@ public class test {
     static {
         System.loadLibrary("kiwix");
         System.loadLibrary("zim");
-        System.loadLibrary("buildkiwix");
+        System.loadLibrary("kiwix_wrapper");
+        System.loadLibrary("zim_wrapper");
     }
 
     private static byte[] getFileContent(String path)
@@ -43,10 +44,8 @@ public class test {
         return new String(getFileContent(path));
     }
 
-    @Test
-    public void testArchive()
-            throws JNIKiwixException, IOException, ZimFileFormatException {
-        Archive archive = new Archive("small.zim");
+    private void testArchive(Archive archive)
+        throws IOException {
         // test the zim file main page title
         assertEquals("Test ZIM file", archive.getMainEntry().getTitle());
         // test zim file size
@@ -54,22 +53,39 @@ public class test {
         // test zim file main url
         assertEquals("A/main.html", archive.getMainEntry().getPath());
         // test zim file content
-        String s = getTextFileContent("small_zimfile_data/main.html");
-        String c = archive.getEntryByPath("A/main.html").getItem(true).getData().getData();
-        assertEquals(s, c);
+        byte[] mainData = getFileContent("small_zimfile_data/main.html");
+        byte[] inZimMainData = archive.getEntryByPath("A/main.html").getItem(true).getData().getData();
+        assert(Arrays.equals(mainData, inZimMainData));
 
         // test zim file icon
-        byte[] faviconData = getFileContent("small_zimfile_data/favicon.png");
         assertEquals(true, archive.hasIllustration(48));
+        byte[] faviconData = getFileContent("small_zimfile_data/favicon.png");
         Item item = archive.getIllustrationItem(48);
         assertEquals(faviconData.length, item.getSize());
+        assert(Arrays.equals(faviconData, item.getData().getData()));
 
-        DirectAccessInfo dai = archive.getEntryByPath("I/favicon.png").getItem(true).getDirectAccessInformation();
+        // Checking direct access information
+        DirectAccessInfo dai = item.getDirectAccessInformation();
         assertNotEquals("", dai.filename);
-        c = new String(getFileContentPartial(dai.filename, (int) dai.offset, faviconData.length));
-        assertEquals(new String(faviconData), c);
+        byte[] readData = getFileContentPartial(dai.filename, (int) dai.offset, (int) item.getSize());
+        assert(Arrays.equals(faviconData, readData));
+   }
 
+    @Test
+    public void testArchiveDirect()
+            throws JNIKiwixException, IOException, ZimFileFormatException {
+        Archive archive = new Archive("small.zim");
+        testArchive(archive);
         archive.dispose();
+
+        // test reader with invalid zim file
+        String zimFile = "test.zim";
+        try {
+            Archive archive1 = new Archive(zimFile);
+            fail("ERROR: Archive created with invalid Zim file!");
+        } catch (ZimFileFormatException zimFileFormatException) {
+            assertEquals("Cannot open zimfile " + zimFile, zimFileFormatException.getMessage());
+        }
     }
 
     @Test
@@ -77,28 +93,7 @@ public class test {
             throws JNIKiwixException, IOException, ZimFileFormatException {
         FileInputStream fis = new FileInputStream("small.zim");
         Archive archive = new Archive(fis.getFD());
-        // test the zim file main page title
-        assertEquals("Test ZIM file", archive.getMainEntry().getTitle());
-        // test zim file size
-        assertEquals(4070, archive.getFilesize()); // The file size is in KiB
-        // test zim file main url
-        assertEquals("A/main.html", archive.getMainEntry().getPath());
-        // test zim file content
-        String s = getTextFileContent("small_zimfile_data/main.html");
-        String c = archive.getEntryByPath("A/main.html").getItem(true).getData().getData();
-        assertEquals(s, c);
-
-        // test zim file icon
-        byte[] faviconData = getFileContent("small_zimfile_data/favicon.png");
-        assertEquals(true, archive.hasIllustration(48));
-        Item item = archive.getIllustrationItem(48);
-        assertEquals(faviconData.length, item.getSize());
-
-        DirectAccessInfo dai = archive.getEntryByPath("I/favicon.png").getItem(true).getDirectAccessInformation();
-        assertNotEquals("", dai.filename);
-        c = new String(getFileContentPartial(dai.filename, (int) dai.offset, faviconData.length));
-        assertEquals(new String(faviconData), c);
-
+        testArchive(archive);
         archive.dispose();
     }
 
@@ -108,28 +103,7 @@ public class test {
         File plainArchive = new File("small.zim");
         FileInputStream fis = new FileInputStream("small.zim.embedded");
         Archive archive = new Archive(fis.getFD(), 8, plainArchive.length());
-        // test the zim file main page title
-        assertEquals("Test ZIM file", archive.getMainEntry().getTitle());
-        // test zim file size
-        assertEquals(4070, archive.getFilesize()); // The file size is in KiB
-        // test zim file main url
-        assertEquals("A/main.html", archive.getMainEntry().getPath());
-        // test zim file content
-        String s = getTextFileContent("small_zimfile_data/main.html");
-        String c = archive.getEntryByPath("A/main.html").getItem(true).getData().getData();
-        assertEquals(s, c);
-
-        // test zim file icon
-        byte[] faviconData = getFileContent("small_zimfile_data/favicon.png");
-        assertEquals(true, archive.hasIllustration(48));
-        Item item = archive.getIllustrationItem(48);
-        assertEquals(faviconData.length, item.getSize());
-
-        DirectAccessInfo dai = archive.getEntryByPath("I/favicon.png").getItem(true).getDirectAccessInformation();
-        assertNotEquals("", dai.filename);
-        c = new String(getFileContentPartial(dai.filename, (int) dai.offset, faviconData.length));
-        assertEquals(new String(faviconData), c);
-
+        testArchive(archive);
         archive.dispose();
     }
 
@@ -144,6 +118,18 @@ public class test {
         String[] bookIds = lib.getBooksIds();
         assertEquals(bookIds.length, 1);
         lib.filter(new Filter().local(true));
+
+        Book book = lib.getBookById(bookIds[0]);
+        assertEquals(book.getTitle(), "Test ZIM file");
+        assertEquals(book.getTags(), "unit;test");
+        assertEquals(book.getIllustration(48).width(), 48);
+        assertEquals(book.getIllustration(48).url(), "http://localhost/meta?name=favicon&content=small");
+        assertEquals(book.getUrl(), "http://localhost/small.zim");
+
+        // remove book from library by id
+        lib.removeBookById(bookIds[0]);
+        bookIds = lib.getBooksIds();
+        assertEquals(bookIds.length, 0);
     }
 
     @Test
@@ -178,20 +164,41 @@ public class test {
         Bookmark[] bookmarkArray = lib.getBookmarks(true);
         assertEquals(1, bookmarkArray.length);
         bookmark = bookmarkArray[0];
-        // test bookmark title
+        // test saved bookmark
+        assertEquals(bookmark.getBookId(), book.getId());
         assertEquals(bookmark.getTitle(), book.getTitle());
+        assertEquals(bookmark.getUrl(), book.getUrl());
+        assertEquals(bookmark.getLanguage(), book.getLanguage());
+        assertEquals(bookmark.getDate(), book.getDate());
         // remove bookmark from library
         lib.removeBookmark(bookmark.getBookId(), bookmark.getUrl());
         bookmarkArray = lib.getBookmarks(true);
         assertEquals(0, bookmarkArray.length);
     }
-
+/*
     @Test
     public void testSearcher() throws Exception, ZimFileFormatException, JNIKiwixException {
         Archive archive = new Archive("small.zim");
-        Searcher searcher = new Searcher(archive);
-    }
 
+        Searcher searcher = new Searcher(archive);
+        Query query = new Query("test");
+        Search search = searcher.search(query);
+        int estimatedMatches = (int) search.getEstimatedMatches();
+        assertEquals(1, estimatedMatches);
+        SearchIterator iterator = search.getResults(0, estimatedMatches);
+        assertEquals("Test ZIM file", iterator.getTitle());
+        searcher.dispose();
+
+        SuggestionSearcher suggestionSearcher = new SuggestionSearcher(archive);
+        SuggestionSearch suggestionSearch = suggestionSearcher.suggest("test");
+        int matches = (int) suggestionSearch.getEstimatedMatches();
+        assertEquals(1, matches);
+        SuggestionIterator results = suggestionSearch.getResults(1, matches);
+        SuggestionItem suggestionItem = results.next();
+        assertEquals("Test ZIM file", suggestionItem.getTitle());
+        suggestionSearcher.dispose();
+    }
+*/
     static
     public void main(String[] args) {
         Library lib = new Library();

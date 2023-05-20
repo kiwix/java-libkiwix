@@ -15,7 +15,7 @@ printf "${Green}Downloading libzim ${NC}\n"
 printf  "\n${Green}Done! ${NC}\n"
 
 printf "${Green}Coping libzim header and so files ${NC}\n"
-./gradlew checkCurrentLibzimDate checkCurrentLinuxLibzimDate copyLibzimHeaderFiles copyLibzimAndroidArm copyLibzimAndroidArm64 copyLibzimAndroidx86 copyLibzimAndroidx86_64 copyLibzimLinux_x86_64 renameLibzimSoFile
+./gradlew renameLibzimFolders copyLibzimHeaderAndSoFiles renameLibzimSoFile
 printf  "\n${Green}Down! ${NC}\n"
 
 printf "${Green}Downloading libkiwix ${NC}\n"
@@ -23,5 +23,5 @@ printf "${Green}Downloading libkiwix ${NC}\n"
 printf  "\n${Green}Done! ${NC}\n"
 
 printf "${Green}Coping libkiwix header and so files ${NC}\n"
-./gradlew checkCurrentLibkiwixDate checkCurrentLinuxLibkiwixDate copyLibkiwixHeaderFiles copyLibkiwixAndroidArm copyLibkiwixAndroidArm64 copyLibkiwixAndroidx86 copyLibkiwixAndroidx86_64 copyLibkiwixLinux_x86_64 renameLibkiwixSoFile
+./gradlew renameLibkiwixFolders copyLibkiwixHeaderAndSoFiles renameLibkiwixSoFile
 printf  "\n${Green}Done! ${NC}\n"
