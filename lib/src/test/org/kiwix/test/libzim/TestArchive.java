@@ -20,7 +20,6 @@
 package org.kiwix.test.libzim;
 
 import org.kiwix.libzim.ZimFileFormatException;
-import org.kiwix.libzim.Entry;
 import org.kiwix.libzim.Item;
 import org.kiwix.libzim.EntryIterator;
 import org.kiwix.libzim.Archive;
@@ -62,20 +61,20 @@ public class TestArchive
   public boolean hasIllustration(int size) { return inner.hasIllustration(size); }
   public long[] getIllustrationSizes() { return inner.getIllustrationSizes(); }
 
-  public Entry getEntryByPath(String path) { return inner.getEntryByPath(path); }
-  public Entry getEntryByPath(int index) { return inner.getEntryByPath(index); }
+  public TestEntry getEntryByPath(String path) { return new TestEntry(inner.getEntryByPath(path)); }
+  public TestEntry getEntryByPath(int index) { return new TestEntry(inner.getEntryByPath(index)); }
   public boolean hasEntryByPath(String path) { return inner.hasEntryByPath(path); }
 
-  public Entry getEntryByTitle(String title) { return inner.getEntryByTitle(title); }
-  public Entry getEntryByTitle(int index) { return inner.getEntryByTitle(index); }
+  public TestEntry getEntryByTitle(String title) { return new TestEntry(inner.getEntryByTitle(title)); }
+  public TestEntry getEntryByTitle(int index) { return new TestEntry(inner.getEntryByTitle(index)); }
   public boolean hasEntryByTitle(String title) { return inner.hasEntryByTitle(title); }
 
-  public Entry getEntryByClusterOrder(int index) { return inner.getEntryByClusterOrder(index); }
+  public TestEntry getEntryByClusterOrder(int index) { return new TestEntry(inner.getEntryByClusterOrder(index)); }
 
-  public Entry getMainEntry() { return inner.getMainEntry(); }
+  public TestEntry getMainEntry() { return new TestEntry(inner.getMainEntry()); }
   public boolean hasMainEntry() { return inner.hasMainEntry(); }
 
-  public Entry getRandomEntry() { return inner.getRandomEntry(); }
+  public TestEntry getRandomEntry() { return new TestEntry(inner.getRandomEntry()); }
 
   public boolean hasFulltextIndex() { return inner.hasFulltextIndex(); }
   public boolean hasTitleIndex() { return inner.hasTitleIndex(); }
