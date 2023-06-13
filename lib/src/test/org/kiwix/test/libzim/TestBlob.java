@@ -19,19 +19,12 @@
 
 package org.kiwix.test.libzim;
 
-import org.kiwix.libzim.Item;
-import org.kiwix.libzim.DirectAccessInfo;
+import org.kiwix.libzim.Blob;
 
-public class TestItem
+public class TestBlob
 {
-  private Item inner;
-  public TestItem(Item _inner) { inner = _inner; }
-  public String getTitle() { return inner.getTitle(); }
-  public String getPath() { return inner.getPath(); }
-  public String getMimetype() { return inner.getMimetype(); }
-
-  public TestBlob getData() { return new TestBlob(inner.getData()); }
-  public long getSize() { return inner.getSize(); }
-
-  public DirectAccessInfo getDirectAccessInformation() { return inner.getDirectAccessInformation(); }
+  private Blob inner;
+  TestBlob(Blob _inner) { inner = _inner; }
+  public byte[] getData() { return inner.getData(); }
+  public long size() { return inner.size(); }
 }
