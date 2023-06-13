@@ -61,7 +61,7 @@ public class test {
         // test zim file icon
         assertEquals(true, archive.hasIllustration(48));
         byte[] faviconData = getFileContent("small_zimfile_data/favicon.png");
-        Item item = archive.getIllustrationItem(48);
+        TestItem item = archive.getIllustrationItem(48);
         assertEquals(faviconData.length, item.getSize());
         assert(Arrays.equals(faviconData, item.getData().getData()));
 

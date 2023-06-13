@@ -20,7 +20,6 @@
 package org.kiwix.test.libzim;
 
 import org.kiwix.libzim.ZimFileFormatException;
-import org.kiwix.libzim.Item;
 import org.kiwix.libzim.EntryIterator;
 import org.kiwix.libzim.Archive;
 import java.io.FileDescriptor;
@@ -54,10 +53,10 @@ public class TestArchive
   public int getMediaCount() { return inner.getMediaCount(); }
   public String getUuid() { return inner.getUuid(); }
   public String getMetadata(String name) { return inner.getMetadata(name); }
-  public Item getMetadataItem(String name) { return inner.getMetadataItem(name); }
+  public TestItem getMetadataItem(String name) { return new TestItem(inner.getMetadataItem(name)); }
   public String[] getMetadataKeys() { return inner.getMetadataKeys(); }
 
-  public Item getIllustrationItem(int size) { return inner.getIllustrationItem(size); }
+  public TestItem getIllustrationItem(int size) { return new TestItem(inner.getIllustrationItem(size)); }
   public boolean hasIllustration(int size) { return inner.hasIllustration(size); }
   public long[] getIllustrationSizes() { return inner.getIllustrationSizes(); }
 

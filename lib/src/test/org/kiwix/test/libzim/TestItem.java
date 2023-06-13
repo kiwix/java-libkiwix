@@ -19,17 +19,20 @@
 
 package org.kiwix.test.libzim;
 
-import org.kiwix.libzim.Entry;
+import org.kiwix.libzim.Item;
+import org.kiwix.libzim.Blob;
+import org.kiwix.libzim.DirectAccessInfo;
 
-public class TestEntry
+public class TestItem
 {
-  private Entry inner;
-  public TestEntry(Entry _inner) { inner = _inner; }
-  public boolean isRedirect() { return inner.isRedirect(); }
+  private Item inner;
+  public TestItem(Item _inner) { inner = _inner; }
   public String getTitle() { return inner.getTitle(); }
   public String getPath() { return inner.getPath(); }
+  public String getMimetype() { return inner.getMimetype(); }
 
-  public TestItem getItem(boolean follow) { return new TestItem(inner.getItem(follow)); }
-  public TestItem getRedirect() { return new TestItem(inner.getRedirect()); }
-  public TestEntry getRedirectEntry() { return new TestEntry(inner.getRedirectEntry()); }
+  public Blob getData() { return inner.getData(); }
+  public long getSize() { return inner.getSize(); }
+
+  public DirectAccessInfo getDirectAccessInformation() { return inner.getDirectAccessInformation(); }
 }
