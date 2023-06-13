@@ -274,7 +274,7 @@ task testSourceJar(type: Jar) {
 
 task compileTestFile(type: JavaCompile) {
     dependsOn testSourceJar
-    source = file('src/test/test.java')
+    source = file('src/test')
     destinationDirectory = file("$buildDir")
     classpath = files("src/test/junit-4.13.jar" , "src/test/hamcrest-core-1.4.jar", "build/libs/test-sources.jar")
 }
@@ -298,7 +298,7 @@ task createCodeCoverageReport(type: JavaExec) {
     main = 'org.jacoco.cli.internal.Main'
     args = [
             'report', '../../build/jacoco/jacoco.exec',
-            '--classfiles', 'java/org/kiwix/libkiwix/', '--classfiles', 'java/org/kiwix/libzim/',
+            '--classfiles', 'java/org/kiwix', '--classfiles', '../../build/org/kiwix',
             '--html', '../../build/coverage-report', '--xml', '../../build/coverage.xml'
     ]
 }

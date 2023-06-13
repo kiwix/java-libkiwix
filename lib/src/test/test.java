@@ -7,6 +7,7 @@ import static org.junit.Assert.*;
 
 import org.kiwix.libkiwix.*;
 import org.kiwix.libzim.*;
+import org.kiwix.test.libzim.*;
 
 public class test {
     static {
@@ -44,7 +45,7 @@ public class test {
         return new String(getFileContent(path));
     }
 
-    private void testArchive(Archive archive)
+    private void testArchive(TestArchive archive)
         throws IOException {
         // test the zim file main page title
         assertEquals("Test ZIM file", archive.getMainEntry().getTitle());
@@ -74,14 +75,14 @@ public class test {
     @Test
     public void testArchiveDirect()
             throws JNIKiwixException, IOException, ZimFileFormatException {
-        Archive archive = new Archive("small.zim");
+        TestArchive archive = new TestArchive("small.zim");
         testArchive(archive);
         archive.dispose();
 
         // test reader with invalid zim file
         String zimFile = "test.zim";
         try {
-            Archive archive1 = new Archive(zimFile);
+            TestArchive archive1 = new TestArchive(zimFile);
             fail("ERROR: Archive created with invalid Zim file!");
         } catch (ZimFileFormatException zimFileFormatException) {
             assertEquals("Cannot open zimfile " + zimFile, zimFileFormatException.getMessage());
@@ -92,7 +93,7 @@ public class test {
     public void testArchiveByFd()
             throws JNIKiwixException, IOException, ZimFileFormatException {
         FileInputStream fis = new FileInputStream("small.zim");
-        Archive archive = new Archive(fis.getFD());
+        TestArchive archive = new TestArchive(fis.getFD());
         testArchive(archive);
         archive.dispose();
     }
@@ -102,7 +103,7 @@ public class test {
             throws JNIKiwixException, IOException, ZimFileFormatException {
         File plainArchive = new File("small.zim");
         FileInputStream fis = new FileInputStream("small.zim.embedded");
-        Archive archive = new Archive(fis.getFD(), 8, plainArchive.length());
+        TestArchive archive = new TestArchive(fis.getFD(), 8, plainArchive.length());
         testArchive(archive);
         archive.dispose();
     }
