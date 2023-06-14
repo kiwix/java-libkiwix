@@ -28,7 +28,9 @@ import org.kiwix.libzim.*;
 public class TestArchive
 {
   private Archive inner;
+  public Archive inner() { return inner; }
 
+  public TestArchive(Archive _inner) { inner = _inner; }
   public TestArchive(String filename) throws ZimFileFormatException
   {
     inner = new Archive(filename);

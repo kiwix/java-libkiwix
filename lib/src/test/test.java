@@ -8,6 +8,7 @@ import static org.junit.Assert.*;
 import org.kiwix.libkiwix.*;
 import org.kiwix.libzim.*;
 import org.kiwix.test.libzim.*;
+import org.kiwix.test.libkiwix.*;
 
 public class test {
     static {
@@ -111,8 +112,8 @@ public class test {
     @Test
     public void testLibrary()
             throws IOException {
-        Library lib = new Library();
-        Manager manager = new Manager(lib);
+        TestLibrary lib = new TestLibrary();
+        TestManager manager = new TestManager(lib);
         String content = getTextFileContent("catalog.xml");
         manager.readOpds(content, "http://localhost");
         assertEquals(lib.getBookCount(true, true), 1);
@@ -120,7 +121,7 @@ public class test {
         assertEquals(bookIds.length, 1);
         lib.filter(new Filter().local(true));
 
-        Book book = lib.getBookById(bookIds[0]);
+        TestBook book = lib.getBookById(bookIds[0]);
         assertEquals(book.getTitle(), "Test ZIM file");
         assertEquals(book.getTags(), "unit;test");
         assertEquals(book.getIllustration(48).width(), 48);
@@ -135,22 +136,22 @@ public class test {
 
     @Test
     public void testServer() throws ZimFileFormatException, JNIKiwixException {
-        Archive archive = new Archive("small.zim");
-        Library lib = new Library();
-        Book book = new Book();
+        TestArchive archive = new TestArchive("small.zim");
+        TestLibrary lib = new TestLibrary();
+        TestBook book = new TestBook();
         book.update(archive);
         lib.addBook(book);
         assertEquals(1, lib.getBookCount(true, true));
-        Server server = new Server(lib);
+        TestServer server = new TestServer(lib);
         server.setPort(8080);
         assertEquals(true, server.start());
     }
 
     @Test
     public void testBookMark() throws ZimFileFormatException, JNIKiwixException {
-        Archive archive = new Archive("small.zim");
-        Library lib = new Library();
-        Book book = new Book();
+        TestArchive archive = new TestArchive("small.zim");
+        TestLibrary lib = new TestLibrary();
+        TestBook book = new TestBook();
         book.update(archive);
         lib.addBook(book);
         Bookmark bookmark = new Bookmark();
