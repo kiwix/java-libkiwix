@@ -21,11 +21,11 @@ package org.kiwix.test.libkiwix;
 
 import org.kiwix.libkiwix.Library;
 import org.kiwix.test.libzim.TestArchive;
+import org.kiwix.test.libkiwix.TestBookmark;
 import org.kiwix.libzim.Searcher;
 import org.kiwix.libkiwix.Filter;
-import org.kiwix.libkiwix.Book;
 import org.kiwix.libkiwix.JNIKiwixException;
-import org.kiwix.libkiwix.Bookmark;
+import java.util.stream.Stream;
 
 public class TestLibrary
 {
@@ -56,7 +56,7 @@ public class TestLibrary
   public String[] getBooksCreators() { return inner.getBooksCreators(); }
   public String[] getBooksPublishers() { return inner.getBooksPublishers(); }
 
-  public void addBookmark(Bookmark bookmark) { inner.addBookmark(bookmark); }
+  public void addBookmark(TestBookmark bookmark) { inner.addBookmark(bookmark.inner()); }
   public boolean removeBookmark(String zimId, String url) { return inner.removeBookmark(zimId, url); }
-  public Bookmark[] getBookmarks(boolean onlyValidBookmarks) { return inner.getBookmarks(onlyValidBookmarks); }
+  public TestBookmark[] getBookmarks(boolean onlyValidBookmarks) { return Stream.of(inner.getBookmarks(onlyValidBookmarks)).map(b -> new TestBookmark(b)).toArray(TestBookmark[]::new); }
 }

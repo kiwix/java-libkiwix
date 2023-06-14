@@ -154,7 +154,7 @@ public class test {
         TestBook book = new TestBook();
         book.update(archive);
         lib.addBook(book);
-        Bookmark bookmark = new Bookmark();
+        TestBookmark bookmark = new TestBookmark();
         bookmark.setBookId(book.getId());
         bookmark.setTitle(book.getTitle());
         bookmark.setUrl(book.getUrl());
@@ -163,7 +163,7 @@ public class test {
         bookmark.setBookTitle(book.getName());
         // add bookmark to library
         lib.addBookmark(bookmark);
-        Bookmark[] bookmarkArray = lib.getBookmarks(true);
+        TestBookmark[] bookmarkArray = lib.getBookmarks(true);
         assertEquals(1, bookmarkArray.length);
         bookmark = bookmarkArray[0];
         // test saved bookmark
