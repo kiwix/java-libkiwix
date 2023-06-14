@@ -111,7 +111,7 @@ task unzipLibzim(type: Copy) {
 }
 
 task renameLibzimFolders() {
-    renameFolders(buildDir.path,"libzim_")
+    removeDateFromFolderName(buildDir.path,"libzim_")
 }
 
 task copyLibzimHeaderAndSoFiles(type: Copy) {
@@ -175,10 +175,10 @@ task downloadLibkiwixSoAndHeaderFiles(type: Download) {
 }
 
 task renameLibkiwixFolders() {
-    renameFolders(buildDir.path,"libkiwix_")
+    removeDateFromFolderName(buildDir.path,"libkiwix_")
 }
 
-static void renameFolders(String path, String startWith) {
+static void removeDateFromFolderName(String path, String startWith) {
     File directory = new File(path)
     if (directory.exists() && directory.isDirectory()) {
         Arrays.stream(directory.listFiles())
