@@ -85,11 +85,11 @@ public class TestArchive
   public boolean isMultiPart() { return inner.isMultiPart(); }
   public boolean hasNewNamespaceScheme() { return inner.hasNewNamespaceScheme(); }
 
-  public EntryIterator iterByPath() { return inner.iterByPath(); }
-  public EntryIterator iterByTitle() { return inner.iterByTitle(); }
-  public EntryIterator iterEfficient() { return inner.iterEfficient(); }
-  public EntryIterator findByPath(String path) { return inner.findByPath(path); }
-  public EntryIterator findByTitle(String path) { return inner.findByTitle(path); }
+  public TestEntryIterator iterByPath() { return new TestEntryIterator(inner.iterByPath()); }
+  public TestEntryIterator iterByTitle() { return new TestEntryIterator(inner.iterByTitle()); }
+  public TestEntryIterator iterEfficient() { return new TestEntryIterator(inner.iterEfficient()); }
+  public TestEntryIterator findByPath(String path) { return new TestEntryIterator(inner.findByPath(path)); }
+  public TestEntryIterator findByTitle(String path) { return new TestEntryIterator(inner.findByTitle(path)); }
 
   public void dispose() { inner.dispose(); }
 }
