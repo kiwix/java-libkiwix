@@ -86,7 +86,7 @@ task downloadLibzimSoAndHeaderFiles(type: Download) {
             libzim_base_url + '/libzim_android-arm64.tar.gz',
             libzim_base_url + '/libzim_android-x86.tar.gz',
             libzim_base_url + '/libzim_android-x86_64.tar.gz',
-            libzim_base_url + '/libzim_linux-x86_64.tar.gz'
+            libzim_base_url + '/libzim_linux-x86_64-bionic.tar.gz'
     ])
     dest buildDir
     overwrite true
@@ -106,12 +106,12 @@ task unzipLibzim(type: Copy) {
     from tarTree(buildDir.path + "/libzim_android-x86_64.tar.gz")
     into buildDir
     // unzip linux x86_64
-    from tarTree(buildDir.path + "/libzim_linux-x86_64.tar.gz")
+    from tarTree(buildDir.path + "/libzim_linux-x86_64-bionic.tar.gz")
     into buildDir
 }
 
 task renameLibzimFolders() {
-    renameFolders(buildDir.path,"libzim_")
+    removeDateFromFolderName(buildDir.path,"libzim_")
 }
 
 task copyLibzimHeaderAndSoFiles(type: Copy) {
@@ -147,8 +147,8 @@ task copyLibzimHeaderAndSoFiles(type: Copy) {
 
     copy {
         // copying linux_x86_64 so file
-        project.ext.set("libzim_version", getFileFromFolder(buildDir.path + "/libzim_linux-x86_64/lib/x86_64-linux-gnu/"))
-        from buildDir.path + "/libzim_linux-x86_64/lib/x86_64-linux-gnu/" + libzim_version
+        project.ext.set("libzim_version", getFileFromFolder(buildDir.path + "/libzim_linux-x86_64-bionic/lib/x86_64-linux-gnu/"))
+        from buildDir.path + "/libzim_linux-x86_64-bionic/lib/x86_64-linux-gnu/" + libzim_version
         into buildDir.path
     }
 }
@@ -175,10 +175,10 @@ task downloadLibkiwixSoAndHeaderFiles(type: Download) {
 }
 
 task renameLibkiwixFolders() {
-    renameFolders(buildDir.path,"libkiwix_")
+    removeDateFromFolderName(buildDir.path,"libkiwix_")
 }
 
-static void renameFolders(String path, String startWith) {
+static void removeDateFromFolderName(String path, String startWith) {
     File directory = new File(path)
     if (directory.exists() && directory.isDirectory()) {
         Arrays.stream(directory.listFiles())
@@ -274,20 +274,20 @@ task testSourceJar(type: Jar) {
 
 task compileTestFile(type: JavaCompile) {
     dependsOn testSourceJar
-    source = file('src/test/test.java')
-    destinationDirectory = file('src/test/')
+    source = file('src/test')
+    destinationDirectory = file("$buildDir")
     classpath = files("src/test/junit-4.13.jar" , "src/test/hamcrest-core-1.4.jar", "build/libs/test-sources.jar")
 }
 
 task runTests(type: JavaExec) {
     workingDir("$projectDir/src/test/")
     dependsOn compileTestFile
-    classpath = files('src/test/', 'src/test/java/', 'src/test/junit-4.13.jar', 'src/test/hamcrest-core-1.3.jar')
+    classpath = files("$buildDir", 'src/test/java/', 'src/test/junit-4.13.jar', 'src/test/hamcrest-core-1.3.jar')
     main = 'org.junit.runner.JUnitCore'
     args = ['test']
     jvmArgs = [
             '-Djava.library.path=' + buildDir.path,
-            '-javaagent:jacoco-0.8.7/lib/jacocoagent.jar'
+            '-javaagent:jacoco-0.8.7/lib/jacocoagent.jar=destfile=../../build/jacoco/jacoco.exec'
     ]
 }
 
@@ -297,9 +297,9 @@ task createCodeCoverageReport(type: JavaExec) {
     classpath = files('src/test/', 'src/test/java/', 'src/test/junit-4.13.jar', 'src/test/hamcrest-core-1.3.jar', 'src/test/jacoco-0.8.7/lib/*')
     main = 'org.jacoco.cli.internal.Main'
     args = [
-            'report', 'jacoco.exec',
-            '--classfiles', 'java/org/kiwix/libkiwix/', '--classfiles', 'java/org/kiwix/libzim/',
-            '--html', '../../build/coverage-report', '--xml', 'coverage.xml'
+            'report', '../../build/jacoco/jacoco.exec',
+            '--classfiles', 'java/org/kiwix', '--classfiles', '../../build/org/kiwix',
+            '--html', '../../build/coverage-report', '--xml', '../../build/coverage.xml'
     ]
 }
 

@@ -7,6 +7,8 @@ import static org.junit.Assert.*;
 
 import org.kiwix.libkiwix.*;
 import org.kiwix.libzim.*;
+import org.kiwix.test.libzim.*;
+import org.kiwix.test.libkiwix.*;
 
 public class test {
     static {
@@ -44,7 +46,7 @@ public class test {
         return new String(getFileContent(path));
     }
 
-    private void testArchive(Archive archive)
+    private void testArchive(TestArchive archive)
         throws IOException {
         // test the zim file main page title
         assertEquals("Test ZIM file", archive.getMainEntry().getTitle());
@@ -60,7 +62,7 @@ public class test {
         // test zim file icon
         assertEquals(true, archive.hasIllustration(48));
         byte[] faviconData = getFileContent("small_zimfile_data/favicon.png");
-        Item item = archive.getIllustrationItem(48);
+        TestItem item = archive.getIllustrationItem(48);
         assertEquals(faviconData.length, item.getSize());
         assert(Arrays.equals(faviconData, item.getData().getData()));
 
@@ -74,14 +76,14 @@ public class test {
     @Test
     public void testArchiveDirect()
             throws JNIKiwixException, IOException, ZimFileFormatException {
-        Archive archive = new Archive("small.zim");
+        TestArchive archive = new TestArchive("small.zim");
         testArchive(archive);
         archive.dispose();
 
         // test reader with invalid zim file
         String zimFile = "test.zim";
         try {
-            Archive archive1 = new Archive(zimFile);
+            TestArchive archive1 = new TestArchive(zimFile);
             fail("ERROR: Archive created with invalid Zim file!");
         } catch (ZimFileFormatException zimFileFormatException) {
             assertEquals("Cannot open zimfile " + zimFile, zimFileFormatException.getMessage());
@@ -92,7 +94,7 @@ public class test {
     public void testArchiveByFd()
             throws JNIKiwixException, IOException, ZimFileFormatException {
         FileInputStream fis = new FileInputStream("small.zim");
-        Archive archive = new Archive(fis.getFD());
+        TestArchive archive = new TestArchive(fis.getFD());
         testArchive(archive);
         archive.dispose();
     }
@@ -102,7 +104,7 @@ public class test {
             throws JNIKiwixException, IOException, ZimFileFormatException {
         File plainArchive = new File("small.zim");
         FileInputStream fis = new FileInputStream("small.zim.embedded");
-        Archive archive = new Archive(fis.getFD(), 8, plainArchive.length());
+        TestArchive archive = new TestArchive(fis.getFD(), 8, plainArchive.length());
         testArchive(archive);
         archive.dispose();
     }
@@ -110,8 +112,8 @@ public class test {
     @Test
     public void testLibrary()
             throws IOException {
-        Library lib = new Library();
-        Manager manager = new Manager(lib);
+        TestLibrary lib = new TestLibrary();
+        TestManager manager = new TestManager(lib);
         String content = getTextFileContent("catalog.xml");
         manager.readOpds(content, "http://localhost");
         assertEquals(lib.getBookCount(true, true), 1);
@@ -119,7 +121,7 @@ public class test {
         assertEquals(bookIds.length, 1);
         lib.filter(new Filter().local(true));
 
-        Book book = lib.getBookById(bookIds[0]);
+        TestBook book = lib.getBookById(bookIds[0]);
         assertEquals(book.getTitle(), "Test ZIM file");
         assertEquals(book.getTags(), "unit;test");
         assertEquals(book.getIllustration(48).width(), 48);
@@ -134,25 +136,25 @@ public class test {
 
     @Test
     public void testServer() throws ZimFileFormatException, JNIKiwixException {
-        Archive archive = new Archive("small.zim");
-        Library lib = new Library();
-        Book book = new Book();
+        TestArchive archive = new TestArchive("small.zim");
+        TestLibrary lib = new TestLibrary();
+        TestBook book = new TestBook();
         book.update(archive);
         lib.addBook(book);
         assertEquals(1, lib.getBookCount(true, true));
-        Server server = new Server(lib);
+        TestServer server = new TestServer(lib);
         server.setPort(8080);
         assertEquals(true, server.start());
     }
 
     @Test
     public void testBookMark() throws ZimFileFormatException, JNIKiwixException {
-        Archive archive = new Archive("small.zim");
-        Library lib = new Library();
-        Book book = new Book();
+        TestArchive archive = new TestArchive("small.zim");
+        TestLibrary lib = new TestLibrary();
+        TestBook book = new TestBook();
         book.update(archive);
         lib.addBook(book);
-        Bookmark bookmark = new Bookmark();
+        TestBookmark bookmark = new TestBookmark();
         bookmark.setBookId(book.getId());
         bookmark.setTitle(book.getTitle());
         bookmark.setUrl(book.getUrl());
@@ -161,7 +163,7 @@ public class test {
         bookmark.setBookTitle(book.getName());
         // add bookmark to library
         lib.addBookmark(bookmark);
-        Bookmark[] bookmarkArray = lib.getBookmarks(true);
+        TestBookmark[] bookmarkArray = lib.getBookmarks(true);
         assertEquals(1, bookmarkArray.length);
         bookmark = bookmarkArray[0];
         // test saved bookmark
