@@ -12,6 +12,10 @@
     <author>
       <name>Kiwix</name>
     </author>
+    <publisher>
+      <name>Publisher</name>
+    </publisher>
+    <category>Super category</category>
     <link rel="http://opds-spec.org/acquisition/open-access" type="application/x-zim" href="http://localhost/small.zim" length="78982" />
     <link rel="http://opds-spec.org/image/thumbnail" type="image/png" href="/meta?name=favicon&amp;content=small" />
   </entry>

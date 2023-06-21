@@ -209,6 +209,14 @@ public class test {
         String[] bookIds = lib.getBooksIds();
         assertEquals(bookIds.length, 1);
         lib.filter(new Filter().local(true));
+        assertTrue(Arrays.equals(lib.getBooksPublishers(), new String[]{"Publisher"}));
+        assertTrue(Arrays.equals(lib.getBooksCreators(), new String[]{"Kiwix"}));
+        assertTrue(Arrays.equals(lib.getBooksCategories(), new String[]{"Super category"}));
+        assertTrue(Arrays.equals(lib.getBooksLanguages(), new String[]{"en"}));
+
+
+        // getArchiveById needs books with valid path. Which is not possible by definition if library is initialized by opds stream.
+        //assertEquals("86c91e51-55bf-8882-464e-072aca37a3e8", lib.getArchiveById("86c91e51-55bf-8882-464e-072aca37a3e8").getUuid());
 
         TestBook book = lib.getBookById(bookIds[0]);
         assertEquals(book.getTitle(), "Test ZIM file");
@@ -216,6 +224,21 @@ public class test {
         assertEquals(book.getIllustration(48).width(), 48);
         assertEquals(book.getIllustration(48).url(), "http://localhost/meta?name=favicon&content=small");
         assertEquals(book.getUrl(), "http://localhost/small.zim");
+        assertEquals(book.getPath(), "");
+        assertEquals(book.getHumanReadableIdFromPath(), "");
+        assertFalse(book.isPathValid());
+        assertEquals(book.getDescription(), "This is a ZIM file used in libzim unit-tests");
+        assertEquals(book.getCreator(), "Kiwix");
+        assertEquals(book.getPublisher(), "Publisher");
+        assertEquals(book.getFlavour(), "");
+        assertEquals(book.getCategory(), "Super category");
+        assertEquals(book.getArticleCount(), 0);
+        assertEquals(book.getMediaCount(), 0);
+        assertEquals(book.getSize(), 78982);
+        Illustration[] illustrations = book.getIllustrations();
+        assertEquals(1, illustrations.length);
+
+        assertEquals(book.getTagStr("video"), "");
 
         // remove book from library by id
         lib.removeBookById(bookIds[0]);
@@ -233,7 +256,13 @@ public class test {
         assertEquals(1, lib.getBookCount(true, true));
         TestServer server = new TestServer(lib);
         server.setPort(8080);
+        server.setRoot("FOO");
+        server.setAddress("127.0.0.1");
+        server.setNbThreads(1);
+        server.setBlockExternalLinks(true);
+        server.setTaskbar(true, true);
         assertTrue(server.start());
+        server.stop();
     }
 
     @Test
@@ -261,6 +290,7 @@ public class test {
         assertEquals(bookmark.getUrl(), book.getUrl());
         assertEquals(bookmark.getLanguage(), book.getLanguage());
         assertEquals(bookmark.getDate(), book.getDate());
+        assertEquals(bookmark.getBookTitle(), book.getName());
         // remove bookmark from library
         lib.removeBookmark(bookmark.getBookId(), bookmark.getUrl());
         bookmarkArray = lib.getBookmarks(true);
