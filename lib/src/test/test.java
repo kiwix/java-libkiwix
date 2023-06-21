@@ -199,7 +199,7 @@ public class test {
         TestSuggestionSearch suggestionSearch = suggestionSearcher.suggest("test");
         int matches = (int) suggestionSearch.getEstimatedMatches();
         assertEquals(1, matches);
-        TestSuggestionIterator results = suggestionSearch.getResults(1, matches);
+        TestSuggestionIterator results = suggestionSearch.getResults(0, matches);
         TestSuggestionItem suggestionItem = results.next();
         assertEquals("Test ZIM file", suggestionItem.getTitle());
         suggestionSearcher.dispose();
