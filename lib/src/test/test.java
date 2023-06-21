@@ -198,13 +198,8 @@ public class test {
         archive.dispose();
     }
 
-    @Test
-    public void testLibrary()
+    private void testLibrary(TestLibrary lib)
             throws IOException {
-        TestLibrary lib = new TestLibrary();
-        TestManager manager = new TestManager(lib);
-        String content = getTextFileContent("catalog.xml");
-        manager.readOpds(content, "http://localhost");
         assertEquals(lib.getBookCount(true, true), 1);
         String[] bookIds = lib.getBooksIds();
         assertEquals(bookIds.length, 1);
@@ -244,6 +239,15 @@ public class test {
         lib.removeBookById(bookIds[0]);
         bookIds = lib.getBooksIds();
         assertEquals(bookIds.length, 0);
+    }
+
+    @Test
+    public void testLibraryOPDS() throws IOException {
+        TestLibrary lib = new TestLibrary();
+        TestManager manager = new TestManager(lib);
+        String content = getTextFileContent("catalog.xml");
+        manager.readOpds(content, "http://localhost");
+        testLibrary(lib);
     }
 
     @Test
