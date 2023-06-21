@@ -13,10 +13,11 @@ zimwriterfs -w main.html \
             -I favicon.png \
             -l eng \
             -t "Test ZIM file" \
-            -d "N/A" \
-            -L "Test File" \
-            -c "N/A" \
-            -p "N/A" \
+            -d "Description" \
+            -L "Long Description" \
+            -c "Creator" \
+            -p "Publisher" \
+            --tags "_category:Category" \
             small_zimfile_data \
             small.zim \
 && echo 'small.zim was successfully created' \

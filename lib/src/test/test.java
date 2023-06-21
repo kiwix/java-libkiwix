@@ -60,7 +60,7 @@ public class test {
         assertEquals("main.html", mainPage.getItem(true).getPath());
 
         // test zim file size
-        assertEquals(66910, archive.getFilesize()); // The file size is in KiB
+        assertEquals(66937, archive.getFilesize()); // The file size is in KiB
         // test zim file content
         byte[] mainData = getFileContent("small_zimfile_data/main.html");
         byte[] inZimMainData = archive.getEntryByPath("main.html").getItem(true).getData().getData();
@@ -86,7 +86,7 @@ public class test {
         assertFalse(archive.isMultiPart());
         assertTrue(archive.hasNewNamespaceScheme());
         assertTrue(archive.hasChecksum());
-        assertEquals("f4373bda1fdce141ba8e5c80baaf905d", archive.getChecksum());
+        assertEquals("4a2709fddbee8c27db708c20b4952a06", archive.getChecksum());
         assertTrue(archive.hasTitleIndex());
         assertTrue(archive.hasFulltextIndex());
         assertTrue(archive.hasMainEntry());
@@ -97,7 +97,7 @@ public class test {
                 metaKeys,
                 archive.getMetadataKeys()
         ));
-        assertEquals("c23a31c1-c357-9e82-3b43-f87aaf706d04", archive.getUuid());
+        assertEquals("e34f5109-ed0d-b93e-943d-06f7717c7340", archive.getUuid());
         assertEquals(1, archive.getMediaCount());
         assertEquals(1, archive.getArticleCount());
         assertEquals(2, archive.getEntryCount());
@@ -205,9 +205,10 @@ public class test {
         assertEquals(bookIds.length, 1);
         lib.filter(new Filter().local(true));
         assertTrue(Arrays.equals(lib.getBooksPublishers(), new String[]{"Publisher"}));
-        assertTrue(Arrays.equals(lib.getBooksCreators(), new String[]{"Kiwix"}));
-        assertTrue(Arrays.equals(lib.getBooksCategories(), new String[]{"Super category"}));
-        assertTrue(Arrays.equals(lib.getBooksLanguages(), new String[]{"en"}));
+        assertTrue(Arrays.equals(lib.getBooksCreators(), new String[]{"Creator"}));
+        System.out.println(Arrays.toString(lib.getBooksCategories()));
+        assertTrue(Arrays.equals(lib.getBooksCategories(), new String[]{"Category"}));
+        assertTrue(Arrays.equals(lib.getBooksLanguages(), new String[]{"eng"}));
 
 
         // getArchiveById needs books with valid path. Which is not possible by definition if library is initialized by opds stream.
@@ -215,30 +216,69 @@ public class test {
 
         TestBook book = lib.getBookById(bookIds[0]);
         assertEquals(book.getTitle(), "Test ZIM file");
-        assertEquals(book.getTags(), "unit;test");
+        assertEquals(book.getTags(), "_category:Category;_ftindex:yes;_ftindex:yes;_pictures:yes;_videos:yes;_details:yes");
         assertEquals(book.getIllustration(48).width(), 48);
-        assertEquals(book.getIllustration(48).url(), "http://localhost/meta?name=favicon&content=small");
         assertEquals(book.getUrl(), "http://localhost/small.zim");
-        assertEquals(book.getPath(), "");
-        assertEquals(book.getHumanReadableIdFromPath(), "");
-        assertFalse(book.isPathValid());
-        assertEquals(book.getDescription(), "This is a ZIM file used in libzim unit-tests");
-        assertEquals(book.getCreator(), "Kiwix");
+        assertEquals(book.getDescription(), "Description");
+        assertEquals(book.getCreator(), "Creator");
         assertEquals(book.getPublisher(), "Publisher");
         assertEquals(book.getFlavour(), "");
-        assertEquals(book.getCategory(), "Super category");
-        assertEquals(book.getArticleCount(), 0);
-        assertEquals(book.getMediaCount(), 0);
-        assertEquals(book.getSize(), 78982);
+        assertEquals(book.getCategory(), "Category");
+        assertEquals(book.getArticleCount(), 1);
+        assertEquals(book.getMediaCount(), 1);
+        assertEquals(book.getSize(), 66560);
         Illustration[] illustrations = book.getIllustrations();
         assertEquals(1, illustrations.length);
 
         assertEquals(book.getTagStr("video"), "");
+    }
+
+    @Test
+    public void testLibrarySimple() throws IOException {
+        TestLibrary lib = new TestLibrary();
+        TestManager manager = new TestManager(lib);
+        manager.addBookFromPath("small.zim", "small.zim", "http://localhost/small.zim", true);
+        testLibrary(lib);
+        String[] bookIds = lib.getBooksIds();
+        TestBook book = lib.getBookById(bookIds[0]);
+        assertEquals(book.getIllustration(48).url(), "");
+        assertEquals(book.getPath(), new File("small.zim").getAbsolutePath());
+        assertEquals(book.getHumanReadableIdFromPath(), "small");
+        assertTrue(book.isPathValid());
 
         // remove book from library by id
         lib.removeBookById(bookIds[0]);
         bookIds = lib.getBooksIds();
         assertEquals(bookIds.length, 0);
+    }
+
+    @Test
+    public void testLibraryXml() throws IOException {
+        TestLibrary lib = new TestLibrary();
+        TestManager manager = new TestManager(lib);
+        manager.readFile("library.xml");
+        testLibrary(lib);
+        String[] bookIds = lib.getBooksIds();
+        TestBook book = lib.getBookById(bookIds[0]);
+        assertEquals(book.getIllustration(48).url(), "");
+        assertEquals(book.getPath(), new File("small.zim").getAbsolutePath());
+        assertEquals(book.getHumanReadableIdFromPath(), "small");
+        assertTrue(book.isPathValid());
+    }
+
+    @Test
+    public void testLibraryXmlContent() throws IOException {
+        TestLibrary lib = new TestLibrary();
+        TestManager manager = new TestManager(lib);
+        String content = getTextFileContent("library.xml");
+        manager.readXml(content, "library.xml");
+        testLibrary(lib);
+        String[] bookIds = lib.getBooksIds();
+        TestBook book = lib.getBookById(bookIds[0]);
+        assertEquals(book.getIllustration(48).url(), "");
+        assertEquals(book.getPath(), new File("small.zim").getAbsolutePath());
+        assertEquals(book.getHumanReadableIdFromPath(), "small");
+        assertTrue(book.isPathValid());
     }
 
     @Test
@@ -248,6 +288,12 @@ public class test {
         String content = getTextFileContent("catalog.xml");
         manager.readOpds(content, "http://localhost");
         testLibrary(lib);
+        String[] bookIds = lib.getBooksIds();
+        TestBook book = lib.getBookById(bookIds[0]);
+        assertEquals(book.getIllustration(48).url(), "http://localhost/meta?name=favicon&content=small");
+        assertEquals(book.getPath(), "");
+        assertEquals(book.getHumanReadableIdFromPath(), "");
+        assertFalse(book.isPathValid());
     }
 
     @Test
@@ -322,7 +368,7 @@ public class test {
         assertEquals(3, iterator.getWordCount());
         assertEquals(0, iterator.getFileIndex());
         assertEquals(-1, iterator.getSize());
-        assertEquals("c23a31c1-c357-9e82-3b43-f87aaf706d04", iterator.getZimId());
+        assertEquals("e34f5109-ed0d-b93e-943d-06f7717c7340", iterator.getZimId());
         TestEntry entry = iterator.next();
         assertEquals("main.html", entry.getPath());
 
