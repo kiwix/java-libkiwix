@@ -66,22 +66,19 @@ METHOD0(void, dispose)
 METHOD0(jboolean, hasNext) {
   switch (get_order(env, thisObj)) {
     case 0: {
-      PATH_NATIVE_TYPE next(*GET_PTR(PATH_NATIVE_TYPE));
-      next++;
+      PATH_NATIVE_TYPE current(*GET_PTR(PATH_NATIVE_TYPE));
       auto end = getPtr<PATH_NATIVE_TYPE>(env, thisObj, "nativeHandleEnd");
-      return next == *end;
+      return current != *end;
     }
     case 1: {
-      TITLE_NATIVE_TYPE next(*GET_PTR(TITLE_NATIVE_TYPE));
-      next++;
+      TITLE_NATIVE_TYPE current(*GET_PTR(TITLE_NATIVE_TYPE));
       auto end = getPtr<TITLE_NATIVE_TYPE>(env, thisObj, "nativeHandleEnd");
-      return next == *end;
+      return current != *end;
     }
     case 2: {
-      EFFICIENT_NATIVE_TYPE next(*GET_PTR(EFFICIENT_NATIVE_TYPE));
-      next++;
+      EFFICIENT_NATIVE_TYPE current(*GET_PTR(EFFICIENT_NATIVE_TYPE));
       auto end = getPtr<EFFICIENT_NATIVE_TYPE>(env, thisObj, "nativeHandleEnd");
-      return next == *end;
+      return current != *end;
     }
     default:
       // unreachable!()
@@ -92,18 +89,18 @@ METHOD0(jboolean, hasNext) {
 METHOD0(jobject, next) {
   switch (get_order(env, thisObj)) {
     case 0: {
-      (*GET_PTR(PATH_NATIVE_TYPE))++;
       zim::Entry entry = **GET_PTR(PATH_NATIVE_TYPE);
+      (*GET_PTR(PATH_NATIVE_TYPE))++;
       return BUILD_WRAPPER("org/kiwix/libzim/Entry", entry);
     }
     case 1: {
-      (*GET_PTR(TITLE_NATIVE_TYPE))++;
       zim::Entry entry = **GET_PTR(TITLE_NATIVE_TYPE);
+      (*GET_PTR(TITLE_NATIVE_TYPE))++;
       return BUILD_WRAPPER("org/kiwix/libzim/Entry", entry);
     }
     case 2: {
-      (*GET_PTR(EFFICIENT_NATIVE_TYPE))++;
       zim::Entry entry = **GET_PTR(EFFICIENT_NATIVE_TYPE);
+      (*GET_PTR(EFFICIENT_NATIVE_TYPE))++;
       return BUILD_WRAPPER("org/kiwix/libzim/Entry", entry);
     }
     default:

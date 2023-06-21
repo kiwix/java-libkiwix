@@ -57,10 +57,8 @@ METHOD0(jstring, getZimId) {
 }
 
 METHOD0(jboolean, hasNext) {
-  zim::SearchIterator next(*THIS);
-  next++;
   auto end = getPtr<NATIVE_TYPE>(env, thisObj, "nativeHandleEnd");
-  return next == *end;
+  return *THIS != *end;
 }
 
 METHOD0(jobject, next) {
