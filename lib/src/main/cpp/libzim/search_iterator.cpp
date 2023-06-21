@@ -64,8 +64,8 @@ METHOD0(jboolean, hasNext) {
 }
 
 METHOD0(jobject, next) {
-  (*THIS)++;
   zim::Entry entry = **THIS;
+  (*THIS)++;
   return BUILD_WRAPPER("org/kiwix/libzim/Entry", entry);
 }
 
