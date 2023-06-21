@@ -93,7 +93,7 @@ METHOD0(jobjectArray, getIllustrations) {
   jobjectArray retArray = createArray(env, illustrations.size(), "org/kiwix/libkiwix/Illustration");
   size_t index = 0;
   for (auto illu: illustrations) {
-    auto wrapper = BUILD_WRAPPER("org/kiwix/libkiwx/Illustration", illu);
+    auto wrapper = BUILD_WRAPPER("org/kiwix/libkiwix/Illustration", illu);
     env->SetObjectArrayElement(retArray, index++, wrapper);
   }
   return retArray;
