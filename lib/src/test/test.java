@@ -49,14 +49,18 @@ public class test {
     private void testArchive(TestArchive archive)
         throws IOException {
         // test the zim file main page title
-        assertEquals("Test ZIM file", archive.getMainEntry().getTitle());
-        // test zim file size
-        assertEquals(4070, archive.getFilesize()); // The file size is in KiB
+        TestEntry mainPage = archive.getMainEntry();
+        assertEquals("mainPage", mainPage.getTitle());
+        assertEquals("Test ZIM file", mainPage.getItem(true).getTitle());
         // test zim file main url
-        assertEquals("A/main.html", archive.getMainEntry().getPath());
+        assertEquals("mainPage", mainPage.getPath());
+        assertEquals("main.html", mainPage.getItem(true).getPath());
+
+        // test zim file size
+        assertEquals(66910, archive.getFilesize()); // The file size is in KiB
         // test zim file content
         byte[] mainData = getFileContent("small_zimfile_data/main.html");
-        byte[] inZimMainData = archive.getEntryByPath("A/main.html").getItem(true).getData().getData();
+        byte[] inZimMainData = archive.getEntryByPath("main.html").getItem(true).getData().getData();
         assert(Arrays.equals(mainData, inZimMainData));
 
         // test zim file icon
