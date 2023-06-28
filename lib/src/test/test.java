@@ -50,31 +50,109 @@ public class test {
         throws IOException {
         // test the zim file main page title
         TestEntry mainPage = archive.getMainEntry();
+        assertTrue(mainPage.isRedirect());
         assertEquals("mainPage", mainPage.getTitle());
         assertEquals("Test ZIM file", mainPage.getItem(true).getTitle());
+        assertEquals("Test ZIM file", mainPage.getRedirectEntry().getTitle());
+        assertEquals("Test ZIM file", mainPage.getRedirect().getTitle());
         // test zim file main url
         assertEquals("mainPage", mainPage.getPath());
         assertEquals("main.html", mainPage.getItem(true).getPath());
 
         // test zim file size
-        assertEquals(66910, archive.getFilesize()); // The file size is in KiB
+        assertEquals(66937, archive.getFilesize()); // The file size is in KiB
         // test zim file content
         byte[] mainData = getFileContent("small_zimfile_data/main.html");
         byte[] inZimMainData = archive.getEntryByPath("main.html").getItem(true).getData().getData();
-        assert(Arrays.equals(mainData, inZimMainData));
+        assertTrue(Arrays.equals(mainData, inZimMainData));
 
         // test zim file icon
-        assertEquals(true, archive.hasIllustration(48));
+        assertTrue(archive.hasIllustration(48));
         byte[] faviconData = getFileContent("small_zimfile_data/favicon.png");
         TestItem item = archive.getIllustrationItem(48);
         assertEquals(faviconData.length, item.getSize());
-        assert(Arrays.equals(faviconData, item.getData().getData()));
+        assertEquals("image/png", item.getMimetype());
+        TestBlob illustrationData = item.getData();
+        assertEquals(faviconData.length, illustrationData.size());
+        assertTrue(Arrays.equals(faviconData, illustrationData.getData()));
 
         // Checking direct access information
         DirectAccessInfo dai = item.getDirectAccessInformation();
         assertNotEquals("", dai.filename);
         byte[] readData = getFileContentPartial(dai.filename, (int) dai.offset, (int) item.getSize());
-        assert(Arrays.equals(faviconData, readData));
+        assertTrue(Arrays.equals(faviconData, readData));
+
+        // Checking all metadata
+        assertFalse(archive.isMultiPart());
+        assertTrue(archive.hasNewNamespaceScheme());
+        assertTrue(archive.hasChecksum());
+        assertEquals("4a2709fddbee8c27db708c20b4952a06", archive.getChecksum());
+        assertTrue(archive.hasTitleIndex());
+        assertTrue(archive.hasFulltextIndex());
+        assertTrue(archive.hasMainEntry());
+        long[] illuSizes = {48};
+        assertTrue(Arrays.equals(illuSizes, archive.getIllustrationSizes()));
+        String[] metaKeys = {"Counter", "Creator", "Date", "Description", "Illustration_48x48@1", "Language", "LongDescription", "Name", "Publisher", "Scraper", "Tags", "Title"};
+        assertTrue(Arrays.equals(
+                metaKeys,
+                archive.getMetadataKeys()
+        ));
+        assertEquals("e34f5109-ed0d-b93e-943d-06f7717c7340", archive.getUuid());
+        assertEquals(1, archive.getMediaCount());
+        assertEquals(1, archive.getArticleCount());
+        assertEquals(2, archive.getEntryCount());
+        assertEquals(19, archive.getAllEntryCount());
+        assertTrue(archive.hasEntryByTitle("Test ZIM file"));
+        assertTrue(archive.hasEntryByPath("main.html"));
+        assertEquals("Test ZIM file", archive.getEntryByTitle("Test ZIM file").getTitle());
+        assertEquals("main.html", archive.getEntryByPath("main.html").getPath());
+        assertEquals("Test ZIM file", archive.getEntryByTitle(0).getTitle());
+        assertEquals("main.html", archive.getEntryByPath(1).getPath());
+        assertEquals("main.html", archive.getEntryByClusterOrder(0).getPath());
+
+
+        assertEquals("Test ZIM file", archive.getMetadata("Title"));
+        assertEquals("Title", archive.getMetadataItem("Title").getTitle());
+
+        assertFalse(archive.getRandomEntry().getTitle().isEmpty());
+
+        {
+                TestEntryIterator iter = archive.iterByPath();
+                assertTrue(iter.hasNext());
+                assertEquals("favicon.png", iter.next().getPath());
+                assertEquals("main.html", iter.next().getPath());
+                assertFalse(iter.hasNext());
+        }
+
+        {
+                TestEntryIterator iter = archive.iterByTitle();
+                assertTrue(iter.hasNext());
+                assertEquals("main.html", iter.next().getPath());
+                // No favicon, because favicon is not a main article (no title)
+                assertFalse(iter.hasNext());
+        }
+
+        {
+                TestEntryIterator iter = archive.iterEfficient();
+                assertTrue(iter.hasNext());
+                assertEquals("main.html", iter.next().getPath());
+                assertEquals("favicon.png", iter.next().getPath());
+                assertFalse(iter.hasNext());
+        }
+
+        {
+                TestEntryIterator iter = archive.findByPath("ma");
+                assertTrue(iter.hasNext());
+                assertEquals("main.html", iter.next().getPath());
+                assertFalse(iter.hasNext());
+        }
+
+        {
+                TestEntryIterator iter = archive.findByTitle("Test");
+                assertTrue(iter.hasNext());
+                assertEquals("main.html", iter.next().getPath());
+                assertFalse(iter.hasNext());
+        }
    }
 
     @Test
@@ -82,6 +160,8 @@ public class test {
             throws JNIKiwixException, IOException, ZimFileFormatException {
         TestArchive archive = new TestArchive("small.zim");
         testArchive(archive);
+        assertTrue(archive.check());
+        assertEquals("small.zim", archive.getFilename());
         archive.dispose();
 
         // test reader with invalid zim file
@@ -100,6 +180,8 @@ public class test {
         FileInputStream fis = new FileInputStream("small.zim");
         TestArchive archive = new TestArchive(fis.getFD());
         testArchive(archive);
+        assertTrue(archive.check());
+        assertEquals("", archive.getFilename());
         archive.dispose();
     }
 
@@ -109,33 +191,109 @@ public class test {
         File plainArchive = new File("small.zim");
         FileInputStream fis = new FileInputStream("small.zim.embedded");
         TestArchive archive = new TestArchive(fis.getFD(), 8, plainArchive.length());
+        // This fails. See https://github.com/openzim/libzim/issues/812
+        //assertTrue(archive.check());
         testArchive(archive);
+        assertEquals("", archive.getFilename());
         archive.dispose();
     }
 
-    @Test
-    public void testLibrary()
+    private void testLibrary(TestLibrary lib)
             throws IOException {
-        TestLibrary lib = new TestLibrary();
-        TestManager manager = new TestManager(lib);
-        String content = getTextFileContent("catalog.xml");
-        manager.readOpds(content, "http://localhost");
         assertEquals(lib.getBookCount(true, true), 1);
         String[] bookIds = lib.getBooksIds();
         assertEquals(bookIds.length, 1);
         lib.filter(new Filter().local(true));
+        assertTrue(Arrays.equals(lib.getBooksPublishers(), new String[]{"Publisher"}));
+        assertTrue(Arrays.equals(lib.getBooksCreators(), new String[]{"Creator"}));
+        System.out.println(Arrays.toString(lib.getBooksCategories()));
+        assertTrue(Arrays.equals(lib.getBooksCategories(), new String[]{"Category"}));
+        assertTrue(Arrays.equals(lib.getBooksLanguages(), new String[]{"eng"}));
+
+
+        // getArchiveById needs books with valid path. Which is not possible by definition if library is initialized by opds stream.
+        //assertEquals("86c91e51-55bf-8882-464e-072aca37a3e8", lib.getArchiveById("86c91e51-55bf-8882-464e-072aca37a3e8").getUuid());
 
         TestBook book = lib.getBookById(bookIds[0]);
         assertEquals(book.getTitle(), "Test ZIM file");
-        assertEquals(book.getTags(), "unit;test");
+        assertEquals(book.getTags(), "_category:Category;_ftindex:yes;_ftindex:yes;_pictures:yes;_videos:yes;_details:yes");
         assertEquals(book.getIllustration(48).width(), 48);
-        assertEquals(book.getIllustration(48).url(), "http://localhost/meta?name=favicon&content=small");
         assertEquals(book.getUrl(), "http://localhost/small.zim");
+        assertEquals(book.getDescription(), "Description");
+        assertEquals(book.getCreator(), "Creator");
+        assertEquals(book.getPublisher(), "Publisher");
+        assertEquals(book.getFlavour(), "");
+        assertEquals(book.getCategory(), "Category");
+        assertEquals(book.getArticleCount(), 1);
+        assertEquals(book.getMediaCount(), 1);
+        assertEquals(book.getSize(), 66560);
+        Illustration[] illustrations = book.getIllustrations();
+        assertEquals(1, illustrations.length);
+
+        assertEquals(book.getTagStr("video"), "");
+    }
+
+    @Test
+    public void testLibrarySimple() throws IOException {
+        TestLibrary lib = new TestLibrary();
+        TestManager manager = new TestManager(lib);
+        manager.addBookFromPath("small.zim", "small.zim", "http://localhost/small.zim", true);
+        testLibrary(lib);
+        String[] bookIds = lib.getBooksIds();
+        TestBook book = lib.getBookById(bookIds[0]);
+        assertEquals(book.getIllustration(48).url(), "");
+        assertEquals(book.getPath(), new File("small.zim").getAbsolutePath());
+        assertEquals(book.getHumanReadableIdFromPath(), "small");
+        assertTrue(book.isPathValid());
 
         // remove book from library by id
         lib.removeBookById(bookIds[0]);
         bookIds = lib.getBooksIds();
         assertEquals(bookIds.length, 0);
+    }
+
+    @Test
+    public void testLibraryXml() throws IOException {
+        TestLibrary lib = new TestLibrary();
+        TestManager manager = new TestManager(lib);
+        manager.readFile("library.xml");
+        testLibrary(lib);
+        String[] bookIds = lib.getBooksIds();
+        TestBook book = lib.getBookById(bookIds[0]);
+        assertEquals(book.getIllustration(48).url(), "");
+        assertEquals(book.getPath(), new File("small.zim").getAbsolutePath());
+        assertEquals(book.getHumanReadableIdFromPath(), "small");
+        assertTrue(book.isPathValid());
+    }
+
+    @Test
+    public void testLibraryXmlContent() throws IOException {
+        TestLibrary lib = new TestLibrary();
+        TestManager manager = new TestManager(lib);
+        String content = getTextFileContent("library.xml");
+        manager.readXml(content, "library.xml");
+        testLibrary(lib);
+        String[] bookIds = lib.getBooksIds();
+        TestBook book = lib.getBookById(bookIds[0]);
+        assertEquals(book.getIllustration(48).url(), "");
+        assertEquals(book.getPath(), new File("small.zim").getAbsolutePath());
+        assertEquals(book.getHumanReadableIdFromPath(), "small");
+        assertTrue(book.isPathValid());
+    }
+
+    @Test
+    public void testLibraryOPDS() throws IOException {
+        TestLibrary lib = new TestLibrary();
+        TestManager manager = new TestManager(lib);
+        String content = getTextFileContent("catalog.xml");
+        manager.readOpds(content, "http://localhost");
+        testLibrary(lib);
+        String[] bookIds = lib.getBooksIds();
+        TestBook book = lib.getBookById(bookIds[0]);
+        assertEquals(book.getIllustration(48).url(), "http://localhost/meta?name=favicon&content=small");
+        assertEquals(book.getPath(), "");
+        assertEquals(book.getHumanReadableIdFromPath(), "");
+        assertFalse(book.isPathValid());
     }
 
     @Test
@@ -148,7 +306,13 @@ public class test {
         assertEquals(1, lib.getBookCount(true, true));
         TestServer server = new TestServer(lib);
         server.setPort(8080);
-        assertEquals(true, server.start());
+        server.setRoot("FOO");
+        server.setAddress("127.0.0.1");
+        server.setNbThreads(1);
+        server.setBlockExternalLinks(true);
+        server.setTaskbar(true, true);
+        assertTrue(server.start());
+        server.stop();
     }
 
     @Test
@@ -176,6 +340,7 @@ public class test {
         assertEquals(bookmark.getUrl(), book.getUrl());
         assertEquals(bookmark.getLanguage(), book.getLanguage());
         assertEquals(bookmark.getDate(), book.getDate());
+        assertEquals(bookmark.getBookTitle(), book.getName());
         // remove bookmark from library
         lib.removeBookmark(bookmark.getBookId(), bookmark.getUrl());
         bookmarkArray = lib.getBookmarks(true);
@@ -187,21 +352,47 @@ public class test {
         TestArchive archive = new TestArchive("small.zim");
 
         TestSearcher searcher = new TestSearcher(archive);
-        TestQuery query = new TestQuery("test");
+        searcher.setVerbose(true);
+        TestQuery query = new TestQuery("test__");
+        query.setQuery("test");
+
         TestSearch search = searcher.search(query);
         int estimatedMatches = (int) search.getEstimatedMatches();
         assertEquals(1, estimatedMatches);
         TestSearchIterator iterator = search.getResults(0, estimatedMatches);
+        assertTrue(iterator.hasNext());
         assertEquals("Test ZIM file", iterator.getTitle());
+        assertEquals("main.html", iterator.getPath());
+        assertEquals(100, iterator.getScore());
+        assertEquals("<b>Test</b> ZIM file", iterator.getSnippet());
+        assertEquals(3, iterator.getWordCount());
+        assertEquals(0, iterator.getFileIndex());
+        assertEquals(-1, iterator.getSize());
+        assertEquals("e34f5109-ed0d-b93e-943d-06f7717c7340", iterator.getZimId());
+        TestEntry entry = iterator.next();
+        assertEquals("main.html", entry.getPath());
+
+        query.setGeorange(50,70,50);
+        assertEquals(0, searcher.search(query).getEstimatedMatches());
         searcher.dispose();
 
+        TestSearcher searcher2 = new TestSearcher(new TestArchive[0]);
+        searcher2.addArchive(archive);
+        assertEquals(1, searcher2.search(new TestQuery("test")).getEstimatedMatches());
+
         TestSuggestionSearcher suggestionSearcher = new TestSuggestionSearcher(archive);
+        suggestionSearcher.setVerbose(true);
         TestSuggestionSearch suggestionSearch = suggestionSearcher.suggest("test");
         int matches = (int) suggestionSearch.getEstimatedMatches();
         assertEquals(1, matches);
         TestSuggestionIterator results = suggestionSearch.getResults(0, matches);
+        assertTrue(results.hasNext());
         TestSuggestionItem suggestionItem = results.next();
+        assertFalse(results.hasNext());
         assertEquals("Test ZIM file", suggestionItem.getTitle());
+        assertEquals("main.html", suggestionItem.getPath());
+        assertTrue(suggestionItem.hasSnippet());
+        assertEquals("<b>Test</b> ZIM file", suggestionItem.getSnippet());
         suggestionSearcher.dispose();
     }
 

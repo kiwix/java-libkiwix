@@ -164,7 +164,7 @@ METHOD(jobject, getEntryByTitle__I, jint index) {
 }
 
 METHOD(jboolean, hasEntryByTitle, jstring title) {
-  return TO_JNI(THIS->hasEntryByPath(TO_C(title)));
+  return TO_JNI(THIS->hasEntryByTitle(TO_C(title)));
 }
 
 METHOD(jobject, getEntryByClusterOrder, jint index) {

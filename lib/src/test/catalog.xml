@@ -2,17 +2,24 @@
   <id>00000000-0000-0000-0000-000000000000</id>
   <entry>
     <title>Test ZIM file</title>
-    <id>urn:uuid:86c91e51-55bf-8882-464e-072aca37a3e8</id>
+    <id>urn:uuid:e34f5109-ed0d-b93e-943d-06f7717c7340</id>
     <icon>/meta?name=favicon&amp;content=small</icon>
     <updated>2020-11-27:00::00:Z</updated>
-    <language>en</language>
-    <summary>This is a ZIM file used in libzim unit-tests</summary>
-    <tags>unit;test</tags>
+    <path>small.zim</path>
+    <language>eng</language>
+    <summary>Description</summary>
+    <tags>_category:Category;_ftindex:yes;_ftindex:yes;_pictures:yes;_videos:yes;_details:yes</tags>
     <link type="text/html" href="/small" />
     <author>
-      <name>Kiwix</name>
+      <name>Creator</name>
     </author>
-    <link rel="http://opds-spec.org/acquisition/open-access" type="application/x-zim" href="http://localhost/small.zim" length="78982" />
+    <publisher>
+      <name>Publisher</name>
+    </publisher>
+    <category>Category</category>
+    <articleCount>1</articleCount>
+    <mediaCount>1</mediaCount>
+    <link rel="http://opds-spec.org/acquisition/open-access" type="application/x-zim" href="http://localhost/small.zim" length="66560" />
     <link rel="http://opds-spec.org/image/thumbnail" type="image/png" href="/meta?name=favicon&amp;content=small" />
   </entry>
 </feed>
