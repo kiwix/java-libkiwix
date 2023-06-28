@@ -49,14 +49,18 @@ public class test {
     private void testArchive(TestArchive archive)
         throws IOException {
         // test the zim file main page title
-        assertEquals("Test ZIM file", archive.getMainEntry().getTitle());
-        // test zim file size
-        assertEquals(4070, archive.getFilesize()); // The file size is in KiB
+        TestEntry mainPage = archive.getMainEntry();
+        assertEquals("mainPage", mainPage.getTitle());
+        assertEquals("Test ZIM file", mainPage.getItem(true).getTitle());
         // test zim file main url
-        assertEquals("A/main.html", archive.getMainEntry().getPath());
+        assertEquals("mainPage", mainPage.getPath());
+        assertEquals("main.html", mainPage.getItem(true).getPath());
+
+        // test zim file size
+        assertEquals(66910, archive.getFilesize()); // The file size is in KiB
         // test zim file content
         byte[] mainData = getFileContent("small_zimfile_data/main.html");
-        byte[] inZimMainData = archive.getEntryByPath("A/main.html").getItem(true).getData().getData();
+        byte[] inZimMainData = archive.getEntryByPath("main.html").getItem(true).getData().getData();
         assert(Arrays.equals(mainData, inZimMainData));
 
         // test zim file icon
@@ -177,30 +181,30 @@ public class test {
         bookmarkArray = lib.getBookmarks(true);
         assertEquals(0, bookmarkArray.length);
     }
-/*
+
     @Test
     public void testSearcher() throws Exception, ZimFileFormatException, JNIKiwixException {
-        Archive archive = new Archive("small.zim");
+        TestArchive archive = new TestArchive("small.zim");
 
-        Searcher searcher = new Searcher(archive);
-        Query query = new Query("test");
-        Search search = searcher.search(query);
+        TestSearcher searcher = new TestSearcher(archive);
+        TestQuery query = new TestQuery("test");
+        TestSearch search = searcher.search(query);
         int estimatedMatches = (int) search.getEstimatedMatches();
         assertEquals(1, estimatedMatches);
-        SearchIterator iterator = search.getResults(0, estimatedMatches);
+        TestSearchIterator iterator = search.getResults(0, estimatedMatches);
         assertEquals("Test ZIM file", iterator.getTitle());
         searcher.dispose();
 
-        SuggestionSearcher suggestionSearcher = new SuggestionSearcher(archive);
-        SuggestionSearch suggestionSearch = suggestionSearcher.suggest("test");
+        TestSuggestionSearcher suggestionSearcher = new TestSuggestionSearcher(archive);
+        TestSuggestionSearch suggestionSearch = suggestionSearcher.suggest("test");
         int matches = (int) suggestionSearch.getEstimatedMatches();
         assertEquals(1, matches);
-        SuggestionIterator results = suggestionSearch.getResults(1, matches);
-        SuggestionItem suggestionItem = results.next();
+        TestSuggestionIterator results = suggestionSearch.getResults(0, matches);
+        TestSuggestionItem suggestionItem = results.next();
         assertEquals("Test ZIM file", suggestionItem.getTitle());
         suggestionSearcher.dispose();
     }
-*/
+
     static
     public void main(String[] args) {
         Library lib = new Library();

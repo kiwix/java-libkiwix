@@ -37,7 +37,7 @@ DISPOSE
 
 METHOD(jobject, getResults, jint start, jint maxResults) {
   auto results = THIS->getResults(TO_C(start), TO_C(maxResults));
-  auto obj = NEW_OBJECT("ork/kiwix/libzim/SuggestionIterator");
+  auto obj = NEW_OBJECT("org/kiwix/libzim/SuggestionIterator");
   SET_HANDLE(zim::SuggestionIterator, obj, results.begin());
 
   // We have to set the nativeHandleEnd but no macro ease our work here.

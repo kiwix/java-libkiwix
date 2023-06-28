@@ -8,12 +8,13 @@ die()
 
 cd "$(dirname "$0")"
 rm -f small.zim
-zimwriterfs --withoutFTIndex \
-            -w main.html \
-            -f favicon.png \
-            -l en \
+zimwriterfs -w main.html \
+            -n "Test" \
+            -I favicon.png \
+            -l eng \
             -t "Test ZIM file" \
             -d "N/A" \
+            -L "Test File" \
             -c "N/A" \
             -p "N/A" \
             small_zimfile_data \

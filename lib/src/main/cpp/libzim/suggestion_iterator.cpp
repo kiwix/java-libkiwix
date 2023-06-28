@@ -49,8 +49,8 @@ METHOD0(jboolean, hasNext) {
 }
 
 METHOD0(jobject, next) {
-  (*THIS)++;
   zim::SuggestionItem item = **THIS;
+  (*THIS)++;
   return BUILD_WRAPPER("org/kiwix/libzim/SuggestionItem", item);
 }
 
