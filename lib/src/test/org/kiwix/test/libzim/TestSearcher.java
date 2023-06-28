@@ -39,7 +39,10 @@ public class TestSearcher
     );
   }
 
-  public TestSearcher addArchive(TestArchive archive) { inner.addArchive(archive.inner()); return this; }
+  public TestSearcher addArchive(TestArchive archive) {
+    inner.addArchive(archive.inner());
+    return this;
+  }
   public TestSearch search(TestQuery query) { return new TestSearch(inner.search(query.inner())); }
   public void setVerbose(boolean verbose) { inner.setVerbose(verbose); }
 

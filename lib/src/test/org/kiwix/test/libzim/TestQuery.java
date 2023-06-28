@@ -29,7 +29,14 @@ public class TestQuery
     inner = new Query(query);
   }
 
-  public TestQuery setQuery(String query) { inner.setQuery(query); return this; }
-  public TestQuery setGeorange(float latitude, float longitute, float distance) { inner.setGeorange(latitude, latitude, distance); return this; }
+  public TestQuery setQuery(String query) {
+    inner.setQuery(query);
+    return this;
+  }
+
+  public TestQuery setGeorange(float latitude, float longitute, float distance) {
+    inner.setGeorange(latitude, latitude, distance);
+    return this;
+  }
 
 }
