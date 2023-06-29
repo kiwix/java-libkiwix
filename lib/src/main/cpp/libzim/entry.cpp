@@ -42,12 +42,12 @@ GETTER(jstring, getTitle)
 GETTER(jstring, getPath)
 METHOD(jobject, getItem, jboolean follow) {
   return BUILD_WRAPPER("org/kiwix/libzim/Item", THIS->getItem(TO_C(follow)));
-}
+} CATCH_EXCEPTION(nullptr)
 
 METHOD0(jobject, getRedirect) {
   return BUILD_WRAPPER("org/kiwix/libzim/Item", THIS->getRedirect());
-}
+} CATCH_EXCEPTION(nullptr)
 
 METHOD0(jobject, getRedirectEntry) {
   return BUILD_WRAPPER("org/kiwix/libzim/Entry", THIS->getRedirectEntry());
-}
+} CATCH_EXCEPTION(nullptr)

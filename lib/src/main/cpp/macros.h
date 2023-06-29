@@ -29,14 +29,34 @@
 
 #define METHOD0(retType, name) \
 JNIEXPORT retType JNICALL BUILD_METHOD(TYPENAME, name) ( \
-  JNIEnv* env, jobject thisObj)
+  JNIEnv* env, jobject thisObj) try
 
 #define METHOD(retType, name, ...) \
 JNIEXPORT retType JNICALL BUILD_METHOD(TYPENAME ,name) ( \
-  JNIEnv* env, jobject thisObj, __VA_ARGS__)
+  JNIEnv* env, jobject thisObj, __VA_ARGS__) try
 
 #define GETTER(retType, name) METHOD0(retType, name) { \
   return TO_JNI(THIS->name()); \
-}
+} CATCH_EXCEPTION(0)
 
-#define DISPOSE  METHOD0(void, dispose)  { dispose<NATIVE_TYPE>(env, thisObj); }
+#define DISPOSE  METHOD0(void, dispose) { dispose<NATIVE_TYPE>(env, thisObj); } CATCH_EXCEPTION()
+
+#include <zim/error.h>
+
+#define CATCH_EXCEPTION(RET) \
+catch(const zim::ZimFileFormatError& e) { \
+  throwException(env, "org/kiwix/libzim/ZimFileFormatException", "Zim file format error."); \
+  return RET; \
+} catch(const zim::InvalidType& e) { \
+  throwException(env, "java/lang/Exception", "Invalid type."); \
+  return RET; \
+} catch(const zim::EntryNotFound& e) { \
+  throwException(env, "java/lang/Exception", "Entry Not Found."); \
+  return RET; \
+} catch (const std::ios_base::failure& e) { \
+  throwException(env, "java/io/IOException", e.what()); \
+  return RET; \
+} catch(const std::exception& e) { \
+  throwException(env, "java/lang/Exception", e.what()); \
+  return RET; \
+}

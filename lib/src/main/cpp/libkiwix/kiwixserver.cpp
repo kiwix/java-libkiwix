@@ -34,15 +34,11 @@
 /* Kiwix Reader JNI functions */
 METHOD(void, setNativeServer, jobject jLibrary)
 {
-  LOG("Attempting to create server");
-  try {
-    auto library = getPtr<kiwix::Library>(env, jLibrary);
-    SET_PTR(std::make_shared<NATIVE_TYPE>(library.get()));
-  } catch (std::exception& e) {
-    LOG("Error creating the server");
-    LOG("%s", e.what());
-  }
-}
+  auto library = getPtr<kiwix::Library>(env, jLibrary);
+  SET_PTR(std::make_shared<NATIVE_TYPE>(library.get()));
+} catch (std::exception& e) {
+  throwException(env, "java/lang/Exception", "Error creating the server");
+} CATCH_EXCEPTION()
 
 
 DISPOSE
@@ -51,39 +47,39 @@ DISPOSE
 METHOD(void, setRoot, jstring root)
 {
   THIS->setRoot(TO_C(root));
-}
+} CATCH_EXCEPTION()
 
 METHOD(void, setAddress, jstring address)
 {
   THIS->setAddress(TO_C(address));
-}
+} CATCH_EXCEPTION()
 
 METHOD(void, setPort, int port)
 {
   THIS->setPort(TO_C(port));
-}
+} CATCH_EXCEPTION()
 
 METHOD(void, setNbThreads, int threads)
 {
   THIS->setNbThreads(TO_C(threads));
-}
+} CATCH_EXCEPTION()
 
 METHOD(void, setTaskbar, jboolean withTaskbar, jboolean withLibraryButton)
 {
   THIS->setTaskbar(TO_C(withTaskbar), TO_C(withLibraryButton));
-}
+} CATCH_EXCEPTION()
 
 METHOD(void, setBlockExternalLinks, jboolean blockExternalLinks)
 {
   THIS->setBlockExternalLinks(TO_C(blockExternalLinks));
-}
+} CATCH_EXCEPTION()
 
 METHOD0(jboolean, start)
 {
   return THIS->start();
-}
+} CATCH_EXCEPTION(false)
 
 METHOD0(void, stop)
 {
   THIS->stop();
-}
+} CATCH_EXCEPTION()

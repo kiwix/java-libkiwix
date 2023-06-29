@@ -36,22 +36,17 @@
 METHOD(void, setNativeSearcher, jobject archive)
 {
   auto cArchive = getPtr<zim::Archive>(env, archive);
-  try {
-    auto searcher = std::make_shared<zim::SuggestionSearcher>(*cArchive);
-    SET_PTR(searcher);
-  } catch (std::exception& e) {
-    LOG("Cannot create searcher");
-      LOG("%s", e.what());
-  }
-}
+  auto searcher = std::make_shared<zim::SuggestionSearcher>(*cArchive);
+  SET_PTR(searcher);
+} CATCH_EXCEPTION()
 
 DISPOSE
 
 METHOD(jobject, suggest, jstring query) {
   return BUILD_WRAPPER("org/kiwix/libzim/SuggestionSearch", THIS->suggest(TO_C(query)));
-}
+} CATCH_EXCEPTION(nullptr)
 
 METHOD(void, setVerbose, jboolean verbose) {
   THIS->setVerbose(TO_C(verbose));
-}
+} CATCH_EXCEPTION()
 

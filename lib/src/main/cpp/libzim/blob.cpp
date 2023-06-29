@@ -37,5 +37,5 @@ DISPOSE
 
 METHOD0(jbyteArray, getData) {
   return cArray2jni(THIS->data(), THIS->size(), env);
-}
+} CATCH_EXCEPTION(nullptr)
 GETTER(jlong, size)

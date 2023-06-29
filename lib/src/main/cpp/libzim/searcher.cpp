@@ -36,14 +36,9 @@
 METHOD(void, setNativeSearcher, jobject archive)
 {
   auto cArchive = getPtr<zim::Archive>(env, archive);
-  try {
-    auto searcher = std::make_shared<zim::Searcher>(*cArchive);
-    SET_PTR(searcher);
-  } catch (std::exception& e) {
-    LOG("Cannot create searcher");
-      LOG("%s", e.what());
-  }
-}
+  auto searcher = std::make_shared<zim::Searcher>(*cArchive);
+  SET_PTR(searcher);
+} CATCH_EXCEPTION()
 
 METHOD(void, setNativeSearcherMulti, jobjectArray archives)
 {
@@ -54,14 +49,9 @@ METHOD(void, setNativeSearcherMulti, jobjectArray archives)
     auto cArchive = getPtr<zim::Archive>(env, archive);
     cArchives.push_back(*cArchive);
   }
-  try {
-    auto searcher = std::make_shared<zim::Searcher>(cArchives);
-    SET_PTR(searcher);
-  } catch (std::exception& e) {
-    LOG("Cannot create searcher");
-      LOG("%s", e.what());
-  }
-}
+  auto searcher = std::make_shared<zim::Searcher>(cArchives);
+  SET_PTR(searcher);
+} CATCH_EXCEPTION()
 
 DISPOSE
 
@@ -69,14 +59,14 @@ METHOD(jobject, addArchive, jobject archive) {
   auto cArchive = getPtr<zim::Archive>(env, archive);
   THIS->addArchive(*cArchive);
   return thisObj;
-}
+} CATCH_EXCEPTION(nullptr)
 
 METHOD(jobject, search, jobject query) {
   auto cQuery = getPtr<zim::Query>(env, query);
   return BUILD_WRAPPER("org/kiwix/libzim/Search", THIS->search(*cQuery));
-}
+} CATCH_EXCEPTION(nullptr)
 
 METHOD(void, setVerbose, jboolean verbose) {
   THIS->setVerbose(TO_C(verbose));
-}
+} CATCH_EXCEPTION()
 

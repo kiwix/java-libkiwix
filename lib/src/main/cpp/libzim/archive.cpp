@@ -40,15 +40,9 @@ METHOD(void, setNativeArchive, jstring filename)
 {
   std::string cPath = TO_C(filename);
 
-  LOG("Attempting to create reader with: %s", cPath.c_str());
-  try {
-    auto archive = std::make_shared<zim::Archive>(cPath);
-    SET_PTR(archive);
-  } catch (std::exception& e) {
-    LOG("Error opening ZIM file");
-      LOG("%s", e.what());
-  }
-}
+  auto archive = std::make_shared<zim::Archive>(cPath);
+  SET_PTR(archive);
+} CATCH_EXCEPTION()
 
 namespace
 {
@@ -71,7 +65,7 @@ int jni2fd(const jobject& fdObj, JNIEnv* env)
 } // unnamed namespace
 
 JNIEXPORT void JNICALL Java_org_kiwix_libzim_Archive_setNativeArchiveByFD(
-    JNIEnv* env, jobject thisObj, jobject fdObj)
+    JNIEnv* env, jobject thisObj, jobject fdObj) try
 {
 #ifndef _WIN32
   int fd = jni2fd(fdObj, env);
@@ -88,10 +82,10 @@ JNIEXPORT void JNICALL Java_org_kiwix_libzim_Archive_setNativeArchiveByFD(
   jclass exception = env->FindClass("java/lang/UnsupportedOperationException");
   env->ThrowNew(exception, "org.kiwix.libzim.Archive.setNativeArchiveByFD() is not supported under Windows");
 #endif
-}
+} CATCH_EXCEPTION()
 
 JNIEXPORT void JNICALL Java_org_kiwix_libzim_Archive_setNativeArchiveEmbedded(
-    JNIEnv* env, jobject thisObj, jobject fdObj, jlong offset, jlong size)
+    JNIEnv* env, jobject thisObj, jobject fdObj, jlong offset, jlong size) try
 {
 #ifndef _WIN32
   int fd = jni2fd(fdObj, env);
@@ -108,7 +102,7 @@ JNIEXPORT void JNICALL Java_org_kiwix_libzim_Archive_setNativeArchiveEmbedded(
   jclass exception = env->FindClass("java/lang/UnsupportedOperationException");
   env->ThrowNew(exception, "org.kiwix.libzim.Archive.setNativeArchiveEmbedded() is not supported under Windows");
 #endif
-}
+} CATCH_EXCEPTION()
 
 DISPOSE
 
@@ -121,65 +115,65 @@ GETTER(jint, getMediaCount)
 
 METHOD0(jstring, getUuid) {
   return TO_JNI(std::string(THIS->getUuid()));
-}
+} CATCH_EXCEPTION(nullptr)
 
 METHOD(jstring, getMetadata, jstring name) {
   return TO_JNI(THIS->getMetadata(TO_C(name)));
-}
+} CATCH_EXCEPTION(nullptr)
 
 METHOD(jobject, getMetadataItem, jstring name) {
   return BUILD_WRAPPER("org/kiwix/libzim/Item", THIS->getMetadataItem(TO_C(name)));
-}
+} CATCH_EXCEPTION(nullptr)
 
 GETTER(jobjectArray, getMetadataKeys)
 
 METHOD(jobject, getIllustrationItem, jint size) {
   return BUILD_WRAPPER("org/kiwix/libzim/Item", THIS->getIllustrationItem(TO_C(size)));
-}
+} CATCH_EXCEPTION(nullptr)
 
 METHOD(jboolean, hasIllustration, jint size) {
   return TO_JNI(THIS->hasIllustration(TO_C(size)));
-}
+} CATCH_EXCEPTION(false)
 
 GETTER(jlongArray, getIllustrationSizes)
 
 METHOD(jobject, getEntryByPath__Ljava_lang_String_2, jstring path) {
   return BUILD_WRAPPER("org/kiwix/libzim/Entry", THIS->getEntryByPath(TO_C(path)));
-}
+} CATCH_EXCEPTION(nullptr)
 
 METHOD(jobject, getEntryByPath__I, jint index) {
   return BUILD_WRAPPER("org/kiwix/libzim/Entry", THIS->getEntryByPath(TO_C(index)));
-}
+} CATCH_EXCEPTION(nullptr)
 
 METHOD(jboolean, hasEntryByPath, jstring path) {
   return TO_JNI(THIS->hasEntryByPath(TO_C(path)));
-}
+} CATCH_EXCEPTION(false)
 
 METHOD(jobject, getEntryByTitle__Ljava_lang_String_2, jstring title) {
   return BUILD_WRAPPER("org/kiwix/libzim/Entry", THIS->getEntryByTitle(TO_C(title)));
-}
+} CATCH_EXCEPTION(nullptr)
 
 METHOD(jobject, getEntryByTitle__I, jint index) {
   return BUILD_WRAPPER("org/kiwix/libzim/Entry", THIS->getEntryByTitle(TO_C(index)));
-}
+} CATCH_EXCEPTION(nullptr)
 
 METHOD(jboolean, hasEntryByTitle, jstring title) {
   return TO_JNI(THIS->hasEntryByTitle(TO_C(title)));
-}
+} CATCH_EXCEPTION(false)
 
 METHOD(jobject, getEntryByClusterOrder, jint index) {
   return BUILD_WRAPPER("org/kiwix/libzim/Entry", THIS->getEntryByClusterOrder(TO_C(index)));
-}
+} CATCH_EXCEPTION(nullptr)
 
 METHOD0(jobject, getMainEntry) {
   return BUILD_WRAPPER("org/kiwix/libzim/Entry", THIS->getMainEntry());
-}
+} CATCH_EXCEPTION(nullptr)
 
 GETTER(jboolean, hasMainEntry)
 
 METHOD0(jobject, getRandomEntry) {
   return BUILD_WRAPPER("org/kiwix/libzim/Entry", THIS->getRandomEntry());
-}
+} CATCH_EXCEPTION(nullptr)
 
 GETTER(jboolean, hasFulltextIndex)
 GETTER(jboolean, hasTitleIndex)
@@ -202,7 +196,7 @@ METHOD0(jobject, iterByPath) {
   auto end_ptr = std::make_shared<zim::Archive::iterator<zim::EntryOrder::pathOrder>>(range.end());
   setPtr(env, obj, std::move(end_ptr), "nativeHandleEnd");
   return obj;
-}
+} CATCH_EXCEPTION(nullptr)
 
 METHOD0(jobject, iterByTitle) {
   auto range = THIS->iterByTitle();
@@ -214,7 +208,7 @@ METHOD0(jobject, iterByTitle) {
   auto end_ptr = std::make_shared<zim::Archive::iterator<zim::EntryOrder::titleOrder>>(range.end());
   setPtr(env, obj, std::move(end_ptr), "nativeHandleEnd");
   return obj;
-}
+} CATCH_EXCEPTION(nullptr)
 
 METHOD0(jobject, iterEfficient) {
   auto range = THIS->iterEfficient();
@@ -226,7 +220,7 @@ METHOD0(jobject, iterEfficient) {
   auto end_ptr = std::make_shared<zim::Archive::iterator<zim::EntryOrder::efficientOrder>>(range.end());
   setPtr(env, obj, std::move(end_ptr), "nativeHandleEnd");
   return obj;
-}
+} CATCH_EXCEPTION(nullptr)
 
 METHOD(jobject, findByPath, jstring path) {
   auto range = THIS->findByPath(TO_C(path));
@@ -238,7 +232,7 @@ METHOD(jobject, findByPath, jstring path) {
   auto end_ptr = std::make_shared<zim::Archive::iterator<zim::EntryOrder::pathOrder>>(range.end());
   setPtr(env, obj, std::move(end_ptr), "nativeHandleEnd");
   return obj;
-}
+} CATCH_EXCEPTION(nullptr)
 
 METHOD(jobject, findByTitle, jstring title) {
   auto range = THIS->findByTitle(TO_C(title));
@@ -250,4 +244,4 @@ METHOD(jobject, findByTitle, jstring title) {
   auto end_ptr = std::make_shared<zim::Archive::iterator<zim::EntryOrder::titleOrder>>(range.end());
   setPtr(env, obj, std::move(end_ptr), "nativeHandleEnd");
   return obj;
-}
+} CATCH_EXCEPTION(nullptr)

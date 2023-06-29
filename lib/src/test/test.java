@@ -169,8 +169,8 @@ public class test {
         try {
             TestArchive archive1 = new TestArchive(zimFile);
             fail("ERROR: Archive created with invalid Zim file!");
-        } catch (ZimFileFormatException zimFileFormatException) {
-            assertEquals("Cannot open zimfile " + zimFile, zimFileFormatException.getMessage());
+        } catch (Exception e) {
+            assertEquals("error 2 opening file \"" + zimFile, e.getMessage());
         }
     }
 

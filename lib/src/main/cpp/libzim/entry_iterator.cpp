@@ -60,7 +60,7 @@ METHOD0(void, dispose)
       dispose<EFFICIENT_NATIVE_TYPE>(env, thisObj);
       break;
   }
-}
+} CATCH_EXCEPTION()
 
 
 METHOD0(jboolean, hasNext) {
@@ -84,7 +84,7 @@ METHOD0(jboolean, hasNext) {
       // unreachable!()
       return false;
   }
-}
+} CATCH_EXCEPTION(false)
 
 METHOD0(jobject, next) {
   switch (get_order(env, thisObj)) {
@@ -107,5 +107,5 @@ METHOD0(jobject, next) {
       // unreachable!()
       return nullptr;
   }
-}
+} CATCH_EXCEPTION(nullptr)
 

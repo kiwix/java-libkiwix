@@ -31,7 +31,7 @@
 METHOD0(void, setNativeBookmark)
 {
   SET_PTR(std::make_shared<NATIVE_TYPE>());
-}
+} CATCH_EXCEPTION()
 
 DISPOSE
 
@@ -49,24 +49,24 @@ GETTER(jstring, getDate)
 
 METHOD(void, setBookId, jstring bookId) {
   THIS->setBookId(TO_C(bookId));
-}
+} CATCH_EXCEPTION()
 
 METHOD(void, setBookTitle, jstring bookTitle) {
   THIS->setBookTitle(TO_C(bookTitle));
-}
+} CATCH_EXCEPTION()
 
 METHOD(void, setUrl, jstring url) {
   THIS->setUrl(TO_C(url));
-}
+} CATCH_EXCEPTION()
 
 METHOD(void, setTitle, jstring title) {
   THIS->setTitle(TO_C(title));
-}
+} CATCH_EXCEPTION()
 
 METHOD(void, setLanguage, jstring lang) {
   THIS->setLanguage(TO_C(lang));
-}
+} CATCH_EXCEPTION()
 
 METHOD(void, setDate, jstring date) {
   THIS->setDate(TO_C(date));
-}
+} CATCH_EXCEPTION()

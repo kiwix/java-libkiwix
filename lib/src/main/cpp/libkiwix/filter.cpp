@@ -33,7 +33,7 @@
 /* Kiwix Reader JNI functions */
 METHOD0(void, allocate) {
   SET_PTR(std::make_shared<NATIVE_TYPE>());
-}
+} CATCH_EXCEPTION()
 
 DISPOSE
 
@@ -41,13 +41,13 @@ DISPOSE
 METHOD(jobject, name, args_type value) { \
   THIS->name(jni2c(value, env)); \
   return thisObj; \
-}
+} CATCH_EXCEPTION(nullptr)
 
 #define FORWARDA(name, args_type) \
 METHOD(jobject, name, jobjectArray value) { \
   THIS->name(jni2c<args_type>(value, env)); \
   return thisObj; \
-}
+} CATCH_EXCEPTION(nullptr)
 
 
 

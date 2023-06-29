@@ -41,7 +41,7 @@ METHOD0(void, dispose)
   // Delete end iterator
   dispose<NATIVE_TYPE>(env, thisObj, "nativeHandleEnd");
   dispose<NATIVE_TYPE>(env, thisObj);
-}
+} CATCH_EXCEPTION()
 
 
 GETTER(jstring, getPath)
@@ -54,16 +54,16 @@ GETTER(jint, getSize)
 
 METHOD0(jstring, getZimId) {
     return TO_JNI(std::string(THIS->getZimId()));
-}
+} CATCH_EXCEPTION(0)
 
 METHOD0(jboolean, hasNext) {
   auto end = getPtr<NATIVE_TYPE>(env, thisObj, "nativeHandleEnd");
   return *THIS != *end;
-}
+} CATCH_EXCEPTION(false)
 
 METHOD0(jobject, next) {
   zim::Entry entry = **THIS;
   (*THIS)++;
   return BUILD_WRAPPER("org/kiwix/libzim/Entry", entry);
-}
+} CATCH_EXCEPTION(nullptr)
 

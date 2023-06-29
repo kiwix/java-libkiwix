@@ -28,11 +28,9 @@
 #include "zim/tools.h"
 
 JNIEXPORT void JNICALL Java_org_kiwix_kiwixlib_JNIICU_setDataDirectory(
-    JNIEnv* env, jclass kclass, jstring dirStr)
+    JNIEnv* env, jclass kclass, jstring dirStr) try
 {
-  try {
-    zim::setICUDataDirectory(TO_C(dirStr));
-  } catch (...) {
-    std::cerr << "Unable to set data directory " << TO_C(dirStr) << std::endl;
-  }
+  zim::setICUDataDirectory(TO_C(dirStr));
+} catch(...) {
+  throwException(env, "java/lang/Exception", "Unable to set data directory");
 }
