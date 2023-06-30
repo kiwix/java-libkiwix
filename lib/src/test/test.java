@@ -47,7 +47,7 @@ public class test {
     }
 
     private void testArchive(TestArchive archive)
-        throws IOException {
+        throws IOException, EntryNotFoundException {
         // test the zim file main page title
         TestEntry mainPage = archive.getMainEntry();
         assertTrue(mainPage.isRedirect());
@@ -158,20 +158,24 @@ public class test {
         // Test invalid path
         try {
                 archive.getEntryByTitle("Wrong title");
-        } catch(Exception e) {
+        } catch(EntryNotFoundException e) {
                 assertEquals("Cannot find entry", e.getMessage());
+        } catch(Exception e) {
+                fail("ERROR: Must be a EntryNotFoundException.");
         }
 
         try {
                 archive.getEntryByPath("wrong_path.html");
-        } catch(Exception e) {
+        } catch(EntryNotFoundException e) {
                 assertEquals("Cannot find entry", e.getMessage());
+        } catch(Exception e) {
+                fail("ERROR: Must be a EntryNotFoundException.");
         }
     }
 
     @Test
     public void testArchiveDirect()
-            throws JNIKiwixException, IOException, ZimFileFormatException {
+            throws JNIKiwixException, IOException, ZimFileFormatException, EntryNotFoundException {
         TestArchive archive = new TestArchive("small.zim");
         testArchive(archive);
         assertTrue(archive.check());
@@ -200,12 +204,14 @@ public class test {
             fail("ERROR: Archive created with invalid Zim file!");
         } catch (ZimFileFormatException e) {
             assertEquals("Invalid magic number", e.getMessage());
+        } catch(Exception e) {
+                fail("ERROR: Must be a ZimFileFormatException.");
         }
     }
 
     @Test
     public void testArchiveByFd()
-            throws JNIKiwixException, IOException, ZimFileFormatException {
+            throws JNIKiwixException, IOException, ZimFileFormatException, EntryNotFoundException {
         FileInputStream fis = new FileInputStream("small.zim");
         TestArchive archive = new TestArchive(fis.getFD());
         testArchive(archive);
@@ -216,7 +222,7 @@ public class test {
 
     @Test
     public void testArchiveWithAnEmbeddedArchive()
-            throws JNIKiwixException, IOException, ZimFileFormatException {
+            throws JNIKiwixException, IOException, ZimFileFormatException, EntryNotFoundException {
         File plainArchive = new File("small.zim");
         FileInputStream fis = new FileInputStream("small.zim.embedded");
         TestArchive archive = new TestArchive(fis.getFD(), 8, plainArchive.length());
