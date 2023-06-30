@@ -45,13 +45,13 @@ JNIEXPORT retType JNICALL BUILD_METHOD(TYPENAME ,name) ( \
 
 #define CATCH_EXCEPTION(RET) \
 catch(const zim::ZimFileFormatError& e) { \
-  throwException(env, "org/kiwix/libzim/ZimFileFormatException", "Zim file format error."); \
+  throwException(env, "org/kiwix/libzim/ZimFileFormatException", e.what()); \
   return RET; \
 } catch(const zim::InvalidType& e) { \
-  throwException(env, "java/lang/Exception", "Invalid type."); \
+  throwException(env, "java/lang/Exception", e.what()); \
   return RET; \
 } catch(const zim::EntryNotFound& e) { \
-  throwException(env, "java/lang/Exception", "Entry Not Found."); \
+  throwException(env, "java/lang/Exception", e.what()); \
   return RET; \
 } catch (const std::ios_base::failure& e) { \
   throwException(env, "java/io/IOException", e.what()); \
