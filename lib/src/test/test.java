@@ -116,6 +116,7 @@ public class test {
 
         assertFalse(archive.getRandomEntry().getTitle().isEmpty());
 
+        // Test different iterators
         {
                 TestEntryIterator iter = archive.iterByPath();
                 assertTrue(iter.hasNext());
@@ -153,7 +154,20 @@ public class test {
                 assertEquals("main.html", iter.next().getPath());
                 assertFalse(iter.hasNext());
         }
-   }
+
+        // Test invalid path
+        try {
+                archive.getEntryByTitle("Wrong title");
+        } catch(Exception e) {
+                assertEquals("Cannot find entry", e.getMessage());
+        }
+
+        try {
+                archive.getEntryByPath("wrong_path.html");
+        } catch(Exception e) {
+                assertEquals("Cannot find entry", e.getMessage());
+        }
+    }
 
     @Test
     public void testArchiveDirect()
@@ -163,14 +177,29 @@ public class test {
         assertTrue(archive.check());
         assertEquals("small.zim", archive.getFilename());
         archive.dispose();
+   }
 
-        // test reader with invalid zim file
-        String zimFile = "test.zim";
+   @Test
+   public void testNonExistant() {
+        // test reader with non existant zim file
+        String zimFile = "non_existant.zim";
         try {
             TestArchive archive1 = new TestArchive(zimFile);
             fail("ERROR: Archive created with invalid Zim file!");
         } catch (Exception e) {
             assertEquals("error 2 opening file \"" + zimFile, e.getMessage());
+        }
+    }
+
+    @Test
+    public void testNotValid() {
+        // test reader with non existant zim file
+        String zimFile = "test.java";
+        try {
+            TestArchive archive1 = new TestArchive(zimFile);
+            fail("ERROR: Archive created with invalid Zim file!");
+        } catch (ZimFileFormatException e) {
+            assertEquals("Invalid magic number", e.getMessage());
         }
     }
 
