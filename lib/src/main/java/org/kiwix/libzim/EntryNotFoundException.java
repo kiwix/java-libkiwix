@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2013 Emmanuel Engelhart <kelson@kiwix.org>
- * Copyright (C) 2017 Matthieu Gautier <mgautier@kymeria.fr>
+ * Copyright (C) 2017 Matthieu Gautier <mgautier@kymeria.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU  General Public License as published by
@@ -18,24 +17,11 @@
  * MA 02110-1301, USA.
  */
 
-#include <jni.h>
-#include <exception>
-#include "org_kiwix_libzim_Blob.h"
+package org.kiwix.libzim;
 
-#include "utils.h"
-
-#include <string>
-
-#include <zim/blob.h>
-
-#define CLASSNAME "org/kiwix/libzim/Blob"
-#define NATIVE_TYPE zim::Blob
-#define TYPENAME libzim_Blob
-#include <macros.h>
-
-DISPOSE
-
-METHOD0(jbyteArray, getData) {
-  return cArray2jni(THIS->data(), THIS->size(), env);
-} CATCH_EXCEPTION(nullptr)
-GETTER(jlong, size)
+public class EntryNotFoundException extends Exception
+{
+  public EntryNotFoundException(String message) {
+    super(message);
+  }
+}

@@ -400,4 +400,8 @@ inline void setDaiObjValue(const std::string& filename, const long offset,
   env->SetLongField(obj, offsetFid, offset);
 }
 
+inline int throwException(JNIEnv* env, const char* exception, const char* message) {
+  return env->ThrowNew(env->FindClass(exception), message);
+}
+
 #endif // _ANDROID_JNI_UTILS_H

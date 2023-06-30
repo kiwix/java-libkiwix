@@ -342,7 +342,8 @@ String getLibzimFiles() {
         "${projectDir}/src/main/java/org/kiwix/libzim/SuggestionIterator.java " +
         "${projectDir}/src/main/java/org/kiwix/libzim/SuggestionSearcher.java " +
         "${projectDir}/src/main/java/org/kiwix/libzim/SuggestionSearch.java " +
-        "${projectDir}/src/main/java/org/kiwix/libzim/ZimFileFormatException.java"
+        "${projectDir}/src/main/java/org/kiwix/libzim/ZimFileFormatException.java " +
+        "${projectDir}/src/main/java/org/kiwix/libzim/EntryNotFoundException.java"
 }
 
 task buildLinuxBinding(type: Exec) {

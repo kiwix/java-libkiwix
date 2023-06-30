@@ -32,22 +32,22 @@
 METHOD0(void, dispose)
 {
   dispose<NATIVE_TYPE>(env, thisObj);
-}
+} CATCH_EXCEPTION()
 
 METHOD0(jint, width) {
   return TO_JNI(THIS->width);
-}
+} CATCH_EXCEPTION(0)
 
 METHOD0(jint, height) {
   return TO_JNI(THIS->height);
-}
+} CATCH_EXCEPTION(0)
 
 METHOD0(jstring, mimeType) {
   return TO_JNI(THIS->mimeType);
-}
+} CATCH_EXCEPTION(nullptr)
 
 METHOD0(jstring, url) {
   return TO_JNI(THIS->url);
-}
+} CATCH_EXCEPTION(nullptr)
 
 GETTER(jstring, getData)

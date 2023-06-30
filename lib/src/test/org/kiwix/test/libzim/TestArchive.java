@@ -54,25 +54,25 @@ public class TestArchive
   public int getArticleCount() { return inner.getArticleCount(); }
   public int getMediaCount() { return inner.getMediaCount(); }
   public String getUuid() { return inner.getUuid(); }
-  public String getMetadata(String name) { return inner.getMetadata(name); }
-  public TestItem getMetadataItem(String name) { return new TestItem(inner.getMetadataItem(name)); }
+  public String getMetadata(String name) throws EntryNotFoundException { return inner.getMetadata(name); }
+  public TestItem getMetadataItem(String name) throws EntryNotFoundException { return new TestItem(inner.getMetadataItem(name)); }
   public String[] getMetadataKeys() { return inner.getMetadataKeys(); }
 
   public TestItem getIllustrationItem(int size) { return new TestItem(inner.getIllustrationItem(size)); }
   public boolean hasIllustration(int size) { return inner.hasIllustration(size); }
   public long[] getIllustrationSizes() { return inner.getIllustrationSizes(); }
 
-  public TestEntry getEntryByPath(String path) { return new TestEntry(inner.getEntryByPath(path)); }
-  public TestEntry getEntryByPath(int index) { return new TestEntry(inner.getEntryByPath(index)); }
+  public TestEntry getEntryByPath(String path) throws EntryNotFoundException { return new TestEntry(inner.getEntryByPath(path)); }
+  public TestEntry getEntryByPath(int index) throws EntryNotFoundException { return new TestEntry(inner.getEntryByPath(index)); }
   public boolean hasEntryByPath(String path) { return inner.hasEntryByPath(path); }
 
-  public TestEntry getEntryByTitle(String title) { return new TestEntry(inner.getEntryByTitle(title)); }
-  public TestEntry getEntryByTitle(int index) { return new TestEntry(inner.getEntryByTitle(index)); }
+  public TestEntry getEntryByTitle(String title) throws EntryNotFoundException { return new TestEntry(inner.getEntryByTitle(title)); }
+  public TestEntry getEntryByTitle(int index) throws EntryNotFoundException { return new TestEntry(inner.getEntryByTitle(index)); }
   public boolean hasEntryByTitle(String title) { return inner.hasEntryByTitle(title); }
 
-  public TestEntry getEntryByClusterOrder(int index) { return new TestEntry(inner.getEntryByClusterOrder(index)); }
+  public TestEntry getEntryByClusterOrder(int index) throws EntryNotFoundException { return new TestEntry(inner.getEntryByClusterOrder(index)); }
 
-  public TestEntry getMainEntry() { return new TestEntry(inner.getMainEntry()); }
+  public TestEntry getMainEntry() throws EntryNotFoundException { return new TestEntry(inner.getMainEntry()); }
   public boolean hasMainEntry() { return inner.hasMainEntry(); }
 
   public TestEntry getRandomEntry() { return new TestEntry(inner.getRandomEntry()); }

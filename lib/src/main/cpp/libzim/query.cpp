@@ -36,24 +36,19 @@
 METHOD(void, setNativeQuery, jstring query)
 {
   auto cQuery = TO_C(query);
-  try {
-    auto query = std::make_shared<NATIVE_TYPE>(cQuery);
-    SET_PTR(query);
-  } catch (std::exception& e) {
-    LOG("Cannot create query");
-      LOG("%s", e.what());
-  }
-}
+  auto zimQuery = std::make_shared<NATIVE_TYPE>(cQuery);
+  SET_PTR(zimQuery);
+} CATCH_EXCEPTION()
 
 DISPOSE
 
 METHOD(jobject, setQuery, jstring query) {
   THIS->setQuery(TO_C(query));
   return thisObj;
-}
+} CATCH_EXCEPTION(nullptr)
 
 METHOD(jobject, setGeorange, jfloat latitude, jfloat longitude, jfloat distance) {
   THIS->setGeorange(TO_C(latitude), TO_C(longitude), TO_C(distance));
   return thisObj;
-}
+} CATCH_EXCEPTION(nullptr)
 

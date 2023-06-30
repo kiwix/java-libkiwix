@@ -44,6 +44,6 @@ METHOD(jobject, getResults, jint start, jint maxResults) {
   auto end_ptr = std::make_shared<zim::SearchIterator>(results.end());
   setPtr(env, obj, std::move(end_ptr), "nativeHandleEnd");
   return obj;
-}
+} CATCH_EXCEPTION(nullptr)
 
 GETTER(jlong, getEstimatedMatches)

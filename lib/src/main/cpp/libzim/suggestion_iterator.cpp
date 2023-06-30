@@ -39,18 +39,18 @@ METHOD0(void, dispose)
   // Delete end iterator
   dispose<NATIVE_TYPE>(env, thisObj, "nativeHandleEnd");
   dispose<NATIVE_TYPE>(env, thisObj);
-}
+} CATCH_EXCEPTION()
 
 METHOD0(jboolean, hasNext) {
   NATIVE_TYPE next(*THIS);
   next++;
   auto end = getPtr<NATIVE_TYPE>(env, thisObj, "nativeHandleEnd");
   return next == *end;
-}
+} CATCH_EXCEPTION(false)
 
 METHOD0(jobject, next) {
   zim::SuggestionItem item = **THIS;
   (*THIS)++;
   return BUILD_WRAPPER("org/kiwix/libzim/SuggestionItem", item);
-}
+} CATCH_EXCEPTION(nullptr)
 

@@ -32,7 +32,7 @@
 METHOD0(void, setNativeHandler)
 {
   SET_PTR(std::make_shared<NATIVE_TYPE>());
-}
+} CATCH_EXCEPTION()
 
 DISPOSE
 
@@ -41,43 +41,41 @@ METHOD(jboolean, addBook, jobject book)
 {
   auto cBook = getPtr<kiwix::Book>(env, book);
 
-  try {
-    return THIS->addBook(*cBook);
-  } catch (std::exception& e) {
-    LOG("Unable to add the book");
-    LOG("%s", e.what()); }
-  return false;
-}
+  return THIS->addBook(*cBook);
+} CATCH_EXCEPTION(false)
 
 METHOD(jobject, getBookById, jstring id) {
   return BUILD_WRAPPER2("org/kiwix/libkiwix/Book", THIS->getBookById(TO_C(id)));
-}
+} CATCH_EXCEPTION(nullptr)
 
 METHOD(jobject, getArchiveById, jstring id) {
-  return BUILD_WRAPPER("org/kiwix/libzim/Archive", THIS->getArchiveById(TO_C(id)));
-}
+  auto archive = THIS->getArchiveById(TO_C(id));
+  std::cout << "archive is " << archive << std::endl;
+  return BUILD_WRAPPER2("org/kiwix/libzim/Archive", archive);
+} CATCH_EXCEPTION(nullptr)
 
 METHOD(jboolean, removeBookById, jstring id) {
   return TO_JNI(THIS->removeBookById(TO_C(id)));
-}
+} CATCH_EXCEPTION(false)
 
 METHOD(jboolean, writeToFile, jstring path) {
   return TO_JNI(THIS->writeToFile(TO_C(path)));
-}
+} CATCH_EXCEPTION(false)
+
 METHOD(jboolean, writeBookmarksToFile, jstring path) {
   return TO_JNI(THIS->writeBookmarksToFile(TO_C(path)));
-}
+} CATCH_EXCEPTION(false)
 
 METHOD(jint, getBookCount, jboolean localBooks, jboolean remoteBooks) {
   return TO_JNI(THIS->getBookCount(TO_C(localBooks), TO_C(remoteBooks)));
-}
+} CATCH_EXCEPTION(0)
 
 GETTER(jobjectArray, getBooksIds)
 
 METHOD(jobjectArray, filter, jobject filterObj) {
   auto filter = getPtr<kiwix::Filter>(env, filterObj);
   return c2jni(THIS->filter(*filter), env);
-}
+} CATCH_EXCEPTION(nullptr)
 
 GETTER(jobjectArray, getBooksLanguages)
 GETTER(jobjectArray, getBooksCategories)
@@ -87,11 +85,11 @@ GETTER(jobjectArray, getBooksPublishers)
 METHOD(void, addBookmark, jobject bookmark) {
   auto cBookmark = getPtr<kiwix::Bookmark>(env, bookmark);
   THIS->addBookmark(*cBookmark);
-}
+} CATCH_EXCEPTION()
 
 METHOD(jboolean, removeBookmark, jstring zimId, jstring url) {
   return TO_JNI(THIS->removeBookmark(TO_C(zimId), TO_C(url)));
-}
+} CATCH_EXCEPTION(false)
 
 METHOD(jobjectArray, getBookmarks, jboolean onlyValidBookmarks) {
   auto bookmarks = THIS->getBookmarks(TO_C(onlyValidBookmarks));
@@ -108,4 +106,4 @@ METHOD(jobjectArray, getBookmarks, jboolean onlyValidBookmarks) {
     env->SetObjectArrayElement(retArray, index++, wrapper);
   }
   return retArray;
-}
+} CATCH_EXCEPTION(nullptr)

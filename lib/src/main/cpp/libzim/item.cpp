@@ -41,7 +41,7 @@ GETTER(jstring, getMimetype)
 
 METHOD0(jobject, getData) {
   return BUILD_WRAPPER("org/kiwix/libzim/Blob", THIS->getData());
-}
+} CATCH_EXCEPTION(nullptr)
 
 GETTER(jlong, getSize)
 
@@ -53,4 +53,4 @@ METHOD0(jobject, getDirectAccessInformation) {
   auto cDirectObjInfo = THIS->getDirectAccessInformation();
   setDaiObjValue(cDirectObjInfo.first, cDirectObjInfo.second, directObjInfo, env);
   return directObjInfo;
-}
+} CATCH_EXCEPTION(nullptr)

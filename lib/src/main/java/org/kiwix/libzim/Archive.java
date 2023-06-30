@@ -31,26 +31,17 @@ public class Archive
   public Archive(String filename) throws ZimFileFormatException
   {
     setNativeArchive(filename);
-    if (nativeHandle == 0) {
-      throw new ZimFileFormatException("Cannot open zimfile "+filename);
-    }
   }
 
   public Archive(FileDescriptor fd) throws ZimFileFormatException
   {
     setNativeArchiveByFD(fd);
-    if (nativeHandle == 0) {
-      throw new ZimFileFormatException("Cannot open zimfile by fd "+fd.toString());
-    }
   }
 
   public Archive(FileDescriptor fd, long offset, long size)
           throws ZimFileFormatException
   {
     setNativeArchiveEmbedded(fd, offset, size);
-    if (nativeHandle == 0) {
-      throw new ZimFileFormatException(String.format("Cannot open embedded zimfile (fd=%s, offset=%d, size=%d)", fd, offset, size));
-    }
   }
 
   public native String getFilename();
@@ -60,25 +51,25 @@ public class Archive
   public native int getArticleCount();
   public native int getMediaCount();
   public native String getUuid();
-  public native String getMetadata(String name);
-  public native Item getMetadataItem(String name);
+  public native String getMetadata(String name) throws EntryNotFoundException;
+  public native Item getMetadataItem(String name) throws EntryNotFoundException;
   public native String[] getMetadataKeys();
 
   public native Item getIllustrationItem(int size);
   public native boolean hasIllustration(int size);
   public native long[] getIllustrationSizes();
 
-  public native Entry getEntryByPath(String path);
-  public native Entry getEntryByPath(int index);
+  public native Entry getEntryByPath(String path) throws EntryNotFoundException;
+  public native Entry getEntryByPath(int index) throws EntryNotFoundException;
   public native boolean hasEntryByPath(String path);
 
-  public native Entry getEntryByTitle(String title);
-  public native Entry getEntryByTitle(int index);
+  public native Entry getEntryByTitle(String title) throws EntryNotFoundException;
+  public native Entry getEntryByTitle(int index) throws EntryNotFoundException;
   public native boolean hasEntryByTitle(String title);
 
-  public native Entry getEntryByClusterOrder(int index);
+  public native Entry getEntryByClusterOrder(int index) throws EntryNotFoundException;
 
-  public native Entry getMainEntry();
+  public native Entry getMainEntry() throws EntryNotFoundException;
   public native boolean hasMainEntry();
 
   public native Entry getRandomEntry();

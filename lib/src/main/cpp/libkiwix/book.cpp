@@ -32,19 +32,19 @@
 METHOD0(void, allocate)
 {
   SET_PTR(std::make_shared<NATIVE_TYPE>());
-}
+} CATCH_EXCEPTION()
 
 DISPOSE
 
 METHOD(void, update__Lorg_kiwix_libkiwix_Book_2, jobject otherBook)
 {
   THIS->update(*getPtr<kiwix::Book>(env, otherBook));
-}
+} CATCH_EXCEPTION()
 
 METHOD(void, update__Lorg_kiwix_libzim_Archive_2, jobject archive)
 {
   THIS->update(*getPtr<zim::Archive>(env, archive));
-}
+} CATCH_EXCEPTION()
 
 GETTER(jstring, getId)
 
@@ -76,7 +76,7 @@ GETTER(jstring, getCategory)
 
 GETTER(jstring, getTags)
 
-METHOD(jstring, getTagStr, jstring tagName) try {
+METHOD(jstring, getTagStr, jstring tagName) {
   return TO_JNI(THIS->getTagStr(TO_C(tagName)));
 } catch(...) {
   return c2jni<std::string>("", env);
@@ -97,8 +97,8 @@ METHOD0(jobjectArray, getIllustrations) {
     env->SetObjectArrayElement(retArray, index++, wrapper);
   }
   return retArray;
-}
+} CATCH_EXCEPTION(nullptr)
 
 METHOD(jobject, getIllustration, jint size) {
   return BUILD_WRAPPER("org/kiwix/libkiwix/Illustration", THIS->getIllustration(TO_C(size)));
-}
+} CATCH_EXCEPTION(nullptr)

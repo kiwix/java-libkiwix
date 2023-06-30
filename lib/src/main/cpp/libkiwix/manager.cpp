@@ -32,7 +32,7 @@ METHOD(void, allocate, jobject libraryObj)
 {
   auto lib = getPtr<kiwix::Library>(env, libraryObj);
   SET_PTR(std::make_shared<NATIVE_TYPE>(lib.get()));
-}
+} CATCH_EXCEPTION()
 
 DISPOSE
 
@@ -41,58 +41,30 @@ METHOD(jboolean, readFile, jstring path)
 {
   auto cPath = TO_C(path);
 
-  try {
-    return THIS->readFile(cPath);
-  } catch (std::exception& e) {
-    LOG("Unable to get readFile");
-    LOG("%s", e.what());
-  }
-  return false;
-}
+  return THIS->readFile(cPath);
+} CATCH_EXCEPTION(false)
 
 METHOD(jboolean, readXml, jstring content, jstring libraryPath)
 {
   auto cContent = TO_C(content);
   auto cPath = TO_C(libraryPath);
 
-  try {
-    return THIS->readXml(cContent, false, cPath);
-  } catch (std::exception& e) {
-    LOG("Unable to get ZIM id");
-    LOG("%s", e.what());
-  }
-
-  return false;
-}
+  return THIS->readXml(cContent, false, cPath);
+} CATCH_EXCEPTION(false)
 
 METHOD(jboolean, readOpds, jstring content, jstring urlHost)
 {
   auto cContent = TO_C(content);
   auto cUrl = TO_C(urlHost);
 
-  try {
-    return THIS->readOpds(cContent, cUrl);
-  } catch (std::exception& e) {
-    LOG("Unable to get ZIM id");
-    LOG("%s", e.what());
-  }
-
-  return false;
-}
+  return THIS->readOpds(cContent, cUrl);
+} CATCH_EXCEPTION(false)
 
 METHOD(jboolean, readBookmarkFile, jstring path)
 {
   auto cPath = TO_C(path);
-
-  try {
-    return THIS->readBookmarkFile(cPath);
-  } catch (std::exception& e) {
-    LOG("Unable to get ZIM id");
-    LOG("%s", e.what());
-  }
-
-  return false;
-}
+  return THIS->readBookmarkFile(cPath);
+} CATCH_EXCEPTION(false)
 
 METHOD(jstring, addBookFromPath, jstring pathToOpen, jstring pathToSave, jstring url, jboolean checkMetaData)
 {
@@ -101,15 +73,10 @@ METHOD(jstring, addBookFromPath, jstring pathToOpen, jstring pathToSave, jstring
   auto cUrl = TO_C(url);
   jstring id = NULL;
 
-  try {
-    auto cId = THIS->addBookFromPathAndGetId(cPathToOpen, cPathToSave, cUrl, checkMetaData);
-    if ( !cId.empty() ) {
-      id = c2jni(cId, env);
-    }
-  } catch (std::exception& e) {
-    LOG("Unable to get ZIM file size");
-    LOG("%s", e.what());
+  auto cId = THIS->addBookFromPathAndGetId(cPathToOpen, cPathToSave, cUrl, checkMetaData);
+  if ( !cId.empty() ) {
+    id = c2jni(cId, env);
   }
 
   return id;
-}
+} CATCH_EXCEPTION(0)
