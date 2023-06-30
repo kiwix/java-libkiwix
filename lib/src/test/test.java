@@ -22,8 +22,8 @@ public class test {
             throws IOException {
         File file = new File(path);
         DataInputStream in = new DataInputStream(
-                new BufferedInputStream(
-                        new FileInputStream(file)));
+            new BufferedInputStream(
+                new FileInputStream(file)));
         byte[] data = new byte[(int) file.length()];
         in.read(data);
         return data;
@@ -33,8 +33,8 @@ public class test {
             throws IOException {
         File file = new File(path);
         DataInputStream in = new DataInputStream(
-                new BufferedInputStream(
-                        new FileInputStream(file)));
+            new BufferedInputStream(
+                new FileInputStream(file)));
         byte[] data = new byte[size];
         in.skipBytes(offset);
         in.read(data, 0, size);
@@ -47,7 +47,7 @@ public class test {
     }
 
     private void testArchive(TestArchive archive)
-        throws IOException, EntryNotFoundException {
+            throws IOException, EntryNotFoundException {
         // test the zim file main page title
         TestEntry mainPage = archive.getMainEntry();
         assertTrue(mainPage.isRedirect());
@@ -94,8 +94,8 @@ public class test {
         assertTrue(Arrays.equals(illuSizes, archive.getIllustrationSizes()));
         String[] metaKeys = {"Counter", "Creator", "Date", "Description", "Illustration_48x48@1", "Language", "LongDescription", "Name", "Publisher", "Scraper", "Tags", "Title"};
         assertTrue(Arrays.equals(
-                metaKeys,
-                archive.getMetadataKeys()
+            metaKeys,
+            archive.getMetadataKeys()
         ));
         assertEquals("e34f5109-ed0d-b93e-943d-06f7717c7340", archive.getUuid());
         assertEquals(1, archive.getMediaCount());
@@ -118,58 +118,58 @@ public class test {
 
         // Test different iterators
         {
-                TestEntryIterator iter = archive.iterByPath();
-                assertTrue(iter.hasNext());
-                assertEquals("favicon.png", iter.next().getPath());
-                assertEquals("main.html", iter.next().getPath());
-                assertFalse(iter.hasNext());
+            TestEntryIterator iter = archive.iterByPath();
+            assertTrue(iter.hasNext());
+            assertEquals("favicon.png", iter.next().getPath());
+            assertEquals("main.html", iter.next().getPath());
+            assertFalse(iter.hasNext());
         }
 
         {
-                TestEntryIterator iter = archive.iterByTitle();
-                assertTrue(iter.hasNext());
-                assertEquals("main.html", iter.next().getPath());
-                // No favicon, because favicon is not a main article (no title)
-                assertFalse(iter.hasNext());
+            TestEntryIterator iter = archive.iterByTitle();
+            assertTrue(iter.hasNext());
+            assertEquals("main.html", iter.next().getPath());
+            // No favicon, because favicon is not a main article (no title)
+            assertFalse(iter.hasNext());
         }
 
         {
-                TestEntryIterator iter = archive.iterEfficient();
-                assertTrue(iter.hasNext());
-                assertEquals("main.html", iter.next().getPath());
-                assertEquals("favicon.png", iter.next().getPath());
-                assertFalse(iter.hasNext());
+            TestEntryIterator iter = archive.iterEfficient();
+            assertTrue(iter.hasNext());
+            assertEquals("main.html", iter.next().getPath());
+            assertEquals("favicon.png", iter.next().getPath());
+            assertFalse(iter.hasNext());
         }
 
         {
-                TestEntryIterator iter = archive.findByPath("ma");
-                assertTrue(iter.hasNext());
-                assertEquals("main.html", iter.next().getPath());
-                assertFalse(iter.hasNext());
+            TestEntryIterator iter = archive.findByPath("ma");
+            assertTrue(iter.hasNext());
+            assertEquals("main.html", iter.next().getPath());
+            assertFalse(iter.hasNext());
         }
 
         {
-                TestEntryIterator iter = archive.findByTitle("Test");
-                assertTrue(iter.hasNext());
-                assertEquals("main.html", iter.next().getPath());
-                assertFalse(iter.hasNext());
+            TestEntryIterator iter = archive.findByTitle("Test");
+            assertTrue(iter.hasNext());
+            assertEquals("main.html", iter.next().getPath());
+            assertFalse(iter.hasNext());
         }
 
         // Test invalid path
         try {
-                archive.getEntryByTitle("Wrong title");
+            archive.getEntryByTitle("Wrong title");
         } catch(EntryNotFoundException e) {
-                assertEquals("Cannot find entry", e.getMessage());
+            assertEquals("Cannot find entry", e.getMessage());
         } catch(Exception e) {
-                fail("ERROR: Must be a EntryNotFoundException.");
+            fail("ERROR: Must be a EntryNotFoundException.");
         }
 
         try {
-                archive.getEntryByPath("wrong_path.html");
+            archive.getEntryByPath("wrong_path.html");
         } catch(EntryNotFoundException e) {
-                assertEquals("Cannot find entry", e.getMessage());
+            assertEquals("Cannot find entry", e.getMessage());
         } catch(Exception e) {
-                fail("ERROR: Must be a EntryNotFoundException.");
+            fail("ERROR: Must be a EntryNotFoundException.");
         }
     }
 
