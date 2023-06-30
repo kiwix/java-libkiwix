@@ -171,16 +171,21 @@ public class test {
         } catch(Exception e) {
             fail("ERROR: Must be a EntryNotFoundException.");
         }
+        System.gc();
+        System.runFinalization();
     }
 
     @Test
     public void testArchiveDirect()
             throws JNIKiwixException, IOException, ZimFileFormatException, EntryNotFoundException {
-        TestArchive archive = new TestArchive("small.zim");
-        testArchive(archive);
-        assertTrue(archive.check());
-        assertEquals("small.zim", archive.getFilename());
-        archive.dispose();
+        {
+            TestArchive archive = new TestArchive("small.zim");
+            testArchive(archive);
+            assertTrue(archive.check());
+            assertEquals("small.zim", archive.getFilename());
+        }
+        System.gc();
+        System.runFinalization();
    }
 
    @Test
@@ -212,25 +217,31 @@ public class test {
     @Test
     public void testArchiveByFd()
             throws JNIKiwixException, IOException, ZimFileFormatException, EntryNotFoundException {
-        FileInputStream fis = new FileInputStream("small.zim");
-        TestArchive archive = new TestArchive(fis.getFD());
-        testArchive(archive);
-        assertTrue(archive.check());
-        assertEquals("", archive.getFilename());
-        archive.dispose();
+        {
+            FileInputStream fis = new FileInputStream("small.zim");
+            TestArchive archive = new TestArchive(fis.getFD());
+            testArchive(archive);
+            assertTrue(archive.check());
+            assertEquals("", archive.getFilename());
+        }
+        System.gc();
+        System.runFinalization();
     }
 
     @Test
     public void testArchiveWithAnEmbeddedArchive()
             throws JNIKiwixException, IOException, ZimFileFormatException, EntryNotFoundException {
-        File plainArchive = new File("small.zim");
-        FileInputStream fis = new FileInputStream("small.zim.embedded");
-        TestArchive archive = new TestArchive(fis.getFD(), 8, plainArchive.length());
-        // This fails. See https://github.com/openzim/libzim/issues/812
-        //assertTrue(archive.check());
-        testArchive(archive);
-        assertEquals("", archive.getFilename());
-        archive.dispose();
+        {
+            File plainArchive = new File("small.zim");
+            FileInputStream fis = new FileInputStream("small.zim.embedded");
+            TestArchive archive = new TestArchive(fis.getFD(), 8, plainArchive.length());
+            // This fails. See https://github.com/openzim/libzim/issues/812
+            //assertTrue(archive.check());
+            testArchive(archive);
+            assertEquals("", archive.getFilename());
+        }
+        System.gc();
+        System.runFinalization();
     }
 
     private void testLibrary(TestLibrary lib)
@@ -270,165 +281,191 @@ public class test {
 
     @Test
     public void testLibrarySimple() throws IOException {
-        TestLibrary lib = new TestLibrary();
-        TestManager manager = new TestManager(lib);
-        manager.addBookFromPath("small.zim", "small.zim", "http://localhost/small.zim", true);
-        testLibrary(lib);
-        String[] bookIds = lib.getBooksIds();
-        TestBook book = lib.getBookById(bookIds[0]);
-        assertEquals(book.getIllustration(48).url(), "");
-        assertEquals(book.getPath(), new File("small.zim").getAbsolutePath());
-        assertEquals(book.getHumanReadableIdFromPath(), "small");
-        assertTrue(book.isPathValid());
+        {
+            TestLibrary lib = new TestLibrary();
+            TestManager manager = new TestManager(lib);
+            manager.addBookFromPath("small.zim", "small.zim", "http://localhost/small.zim", true);
+            testLibrary(lib);
+            String[] bookIds = lib.getBooksIds();
+            TestBook book = lib.getBookById(bookIds[0]);
+            assertEquals(book.getIllustration(48).url(), "");
+            assertEquals(book.getPath(), new File("small.zim").getAbsolutePath());
+            assertEquals(book.getHumanReadableIdFromPath(), "small");
+            assertTrue(book.isPathValid());
 
-        // remove book from library by id
-        lib.removeBookById(bookIds[0]);
-        bookIds = lib.getBooksIds();
-        assertEquals(bookIds.length, 0);
+            // remove book from library by id
+            lib.removeBookById(bookIds[0]);
+            bookIds = lib.getBooksIds();
+            assertEquals(bookIds.length, 0);
+        }
+        System.gc();
+        System.runFinalization();
     }
 
     @Test
     public void testLibraryXml() throws IOException {
-        TestLibrary lib = new TestLibrary();
-        TestManager manager = new TestManager(lib);
-        manager.readFile("library.xml");
-        testLibrary(lib);
-        String[] bookIds = lib.getBooksIds();
-        TestBook book = lib.getBookById(bookIds[0]);
-        assertEquals(book.getIllustration(48).url(), "");
-        assertEquals(book.getPath(), new File("small.zim").getAbsolutePath());
-        assertEquals(book.getHumanReadableIdFromPath(), "small");
-        assertTrue(book.isPathValid());
+        {
+            TestLibrary lib = new TestLibrary();
+            TestManager manager = new TestManager(lib);
+            manager.readFile("library.xml");
+            testLibrary(lib);
+            String[] bookIds = lib.getBooksIds();
+            TestBook book = lib.getBookById(bookIds[0]);
+            assertEquals(book.getIllustration(48).url(), "");
+            assertEquals(book.getPath(), new File("small.zim").getAbsolutePath());
+            assertEquals(book.getHumanReadableIdFromPath(), "small");
+            assertTrue(book.isPathValid());
+        }
+        System.gc();
+        System.runFinalization();
     }
 
     @Test
     public void testLibraryXmlContent() throws IOException {
-        TestLibrary lib = new TestLibrary();
-        TestManager manager = new TestManager(lib);
-        String content = getTextFileContent("library.xml");
-        manager.readXml(content, "library.xml");
-        testLibrary(lib);
-        String[] bookIds = lib.getBooksIds();
-        TestBook book = lib.getBookById(bookIds[0]);
-        assertEquals(book.getIllustration(48).url(), "");
-        assertEquals(book.getPath(), new File("small.zim").getAbsolutePath());
-        assertEquals(book.getHumanReadableIdFromPath(), "small");
-        assertTrue(book.isPathValid());
+        {
+            TestLibrary lib = new TestLibrary();
+            TestManager manager = new TestManager(lib);
+            String content = getTextFileContent("library.xml");
+            manager.readXml(content, "library.xml");
+            testLibrary(lib);
+            String[] bookIds = lib.getBooksIds();
+            TestBook book = lib.getBookById(bookIds[0]);
+            assertEquals(book.getIllustration(48).url(), "");
+            assertEquals(book.getPath(), new File("small.zim").getAbsolutePath());
+            assertEquals(book.getHumanReadableIdFromPath(), "small");
+            assertTrue(book.isPathValid());
+        }
+        System.gc();
+        System.runFinalization();
     }
 
     @Test
     public void testLibraryOPDS() throws IOException {
-        TestLibrary lib = new TestLibrary();
-        TestManager manager = new TestManager(lib);
-        String content = getTextFileContent("catalog.xml");
-        manager.readOpds(content, "http://localhost");
-        testLibrary(lib);
-        String[] bookIds = lib.getBooksIds();
-        TestBook book = lib.getBookById(bookIds[0]);
-        assertEquals(book.getIllustration(48).url(), "http://localhost/meta?name=favicon&content=small");
-        assertEquals(book.getPath(), "");
-        assertEquals(book.getHumanReadableIdFromPath(), "");
-        assertFalse(book.isPathValid());
+        {
+            TestLibrary lib = new TestLibrary();
+            TestManager manager = new TestManager(lib);
+            String content = getTextFileContent("catalog.xml");
+            manager.readOpds(content, "http://localhost");
+            testLibrary(lib);
+            String[] bookIds = lib.getBooksIds();
+            TestBook book = lib.getBookById(bookIds[0]);
+            assertEquals(book.getIllustration(48).url(), "http://localhost/meta?name=favicon&content=small");
+            assertEquals(book.getPath(), "");
+            assertEquals(book.getHumanReadableIdFromPath(), "");
+            assertFalse(book.isPathValid());
+        }
+        System.gc();
+        System.runFinalization();
     }
 
     @Test
     public void testServer() throws ZimFileFormatException, JNIKiwixException {
-        TestArchive archive = new TestArchive("small.zim");
-        TestLibrary lib = new TestLibrary();
-        TestBook book = new TestBook();
-        book.update(archive);
-        lib.addBook(book);
-        assertEquals(1, lib.getBookCount(true, true));
-        TestServer server = new TestServer(lib);
-        server.setPort(8080);
-        server.setRoot("FOO");
-        server.setAddress("127.0.0.1");
-        server.setNbThreads(1);
-        server.setBlockExternalLinks(true);
-        server.setTaskbar(true, true);
-        assertTrue(server.start());
-        server.stop();
+        {
+            TestArchive archive = new TestArchive("small.zim");
+            TestLibrary lib = new TestLibrary();
+            TestBook book = new TestBook();
+            book.update(archive);
+            lib.addBook(book);
+            assertEquals(1, lib.getBookCount(true, true));
+            TestServer server = new TestServer(lib);
+            server.setPort(8080);
+            server.setRoot("FOO");
+            server.setAddress("127.0.0.1");
+            server.setNbThreads(1);
+            server.setBlockExternalLinks(true);
+            server.setTaskbar(true, true);
+            assertTrue(server.start());
+            server.stop();
+        }
+        System.gc();
+        System.runFinalization();
     }
 
     @Test
     public void testBookMark() throws ZimFileFormatException, JNIKiwixException {
-        TestArchive archive = new TestArchive("small.zim");
-        TestLibrary lib = new TestLibrary();
-        TestBook book = new TestBook();
-        book.update(archive);
-        lib.addBook(book);
-        TestBookmark bookmark = new TestBookmark();
-        bookmark.setBookId(book.getId());
-        bookmark.setTitle(book.getTitle());
-        bookmark.setUrl(book.getUrl());
-        bookmark.setLanguage(book.getLanguage());
-        bookmark.setDate(book.getDate());
-        bookmark.setBookTitle(book.getName());
-        // add bookmark to library
-        lib.addBookmark(bookmark);
-        TestBookmark[] bookmarkArray = lib.getBookmarks(true);
-        assertEquals(1, bookmarkArray.length);
-        bookmark = bookmarkArray[0];
-        // test saved bookmark
-        assertEquals(bookmark.getBookId(), book.getId());
-        assertEquals(bookmark.getTitle(), book.getTitle());
-        assertEquals(bookmark.getUrl(), book.getUrl());
-        assertEquals(bookmark.getLanguage(), book.getLanguage());
-        assertEquals(bookmark.getDate(), book.getDate());
-        assertEquals(bookmark.getBookTitle(), book.getName());
-        // remove bookmark from library
-        lib.removeBookmark(bookmark.getBookId(), bookmark.getUrl());
-        bookmarkArray = lib.getBookmarks(true);
-        assertEquals(0, bookmarkArray.length);
+        {
+            TestArchive archive = new TestArchive("small.zim");
+            TestLibrary lib = new TestLibrary();
+            TestBook book = new TestBook();
+            book.update(archive);
+            lib.addBook(book);
+            TestBookmark bookmark = new TestBookmark();
+            bookmark.setBookId(book.getId());
+            bookmark.setTitle(book.getTitle());
+            bookmark.setUrl(book.getUrl());
+            bookmark.setLanguage(book.getLanguage());
+            bookmark.setDate(book.getDate());
+            bookmark.setBookTitle(book.getName());
+            // add bookmark to library
+            lib.addBookmark(bookmark);
+            TestBookmark[] bookmarkArray = lib.getBookmarks(true);
+            assertEquals(1, bookmarkArray.length);
+            bookmark = bookmarkArray[0];
+            // test saved bookmark
+            assertEquals(bookmark.getBookId(), book.getId());
+            assertEquals(bookmark.getTitle(), book.getTitle());
+            assertEquals(bookmark.getUrl(), book.getUrl());
+            assertEquals(bookmark.getLanguage(), book.getLanguage());
+            assertEquals(bookmark.getDate(), book.getDate());
+            assertEquals(bookmark.getBookTitle(), book.getName());
+            // remove bookmark from library
+            lib.removeBookmark(bookmark.getBookId(), bookmark.getUrl());
+            bookmarkArray = lib.getBookmarks(true);
+            assertEquals(0, bookmarkArray.length);
+        }
+        System.gc();
+        System.runFinalization();
     }
 
     @Test
     public void testSearcher() throws Exception, ZimFileFormatException, JNIKiwixException {
-        TestArchive archive = new TestArchive("small.zim");
+        {
+            TestArchive archive = new TestArchive("small.zim");
 
-        TestSearcher searcher = new TestSearcher(archive);
-        searcher.setVerbose(true);
-        TestQuery query = new TestQuery("test__");
-        query.setQuery("test");
+            TestSearcher searcher = new TestSearcher(archive);
+            searcher.setVerbose(true);
+            TestQuery query = new TestQuery("test__");
+            query.setQuery("test");
 
-        TestSearch search = searcher.search(query);
-        int estimatedMatches = (int) search.getEstimatedMatches();
-        assertEquals(1, estimatedMatches);
-        TestSearchIterator iterator = search.getResults(0, estimatedMatches);
-        assertTrue(iterator.hasNext());
-        assertEquals("Test ZIM file", iterator.getTitle());
-        assertEquals("main.html", iterator.getPath());
-        assertEquals(100, iterator.getScore());
-        assertEquals("<b>Test</b> ZIM file", iterator.getSnippet());
-        assertEquals(3, iterator.getWordCount());
-        assertEquals(0, iterator.getFileIndex());
-        assertEquals(-1, iterator.getSize());
-        assertEquals("e34f5109-ed0d-b93e-943d-06f7717c7340", iterator.getZimId());
-        TestEntry entry = iterator.next();
-        assertEquals("main.html", entry.getPath());
+            TestSearch search = searcher.search(query);
+            int estimatedMatches = (int) search.getEstimatedMatches();
+            assertEquals(1, estimatedMatches);
+            TestSearchIterator iterator = search.getResults(0, estimatedMatches);
+            assertTrue(iterator.hasNext());
+            assertEquals("Test ZIM file", iterator.getTitle());
+            assertEquals("main.html", iterator.getPath());
+            assertEquals(100, iterator.getScore());
+            assertEquals("<b>Test</b> ZIM file", iterator.getSnippet());
+            assertEquals(3, iterator.getWordCount());
+            assertEquals(0, iterator.getFileIndex());
+            assertEquals(-1, iterator.getSize());
+            assertEquals("e34f5109-ed0d-b93e-943d-06f7717c7340", iterator.getZimId());
+            TestEntry entry = iterator.next();
+            assertEquals("main.html", entry.getPath());
 
-        query.setGeorange(50,70,50);
-        assertEquals(0, searcher.search(query).getEstimatedMatches());
-        searcher.dispose();
+            query.setGeorange(50,70,50);
+            assertEquals(0, searcher.search(query).getEstimatedMatches());
 
-        TestSearcher searcher2 = new TestSearcher(new TestArchive[0]);
-        searcher2.addArchive(archive);
-        assertEquals(1, searcher2.search(new TestQuery("test")).getEstimatedMatches());
+            TestSearcher searcher2 = new TestSearcher(new TestArchive[0]);
+            searcher2.addArchive(archive);
+            assertEquals(1, searcher2.search(new TestQuery("test")).getEstimatedMatches());
 
-        TestSuggestionSearcher suggestionSearcher = new TestSuggestionSearcher(archive);
-        suggestionSearcher.setVerbose(true);
-        TestSuggestionSearch suggestionSearch = suggestionSearcher.suggest("test");
-        int matches = (int) suggestionSearch.getEstimatedMatches();
-        assertEquals(1, matches);
-        TestSuggestionIterator results = suggestionSearch.getResults(0, matches);
-        assertTrue(results.hasNext());
-        TestSuggestionItem suggestionItem = results.next();
-        assertFalse(results.hasNext());
-        assertEquals("Test ZIM file", suggestionItem.getTitle());
-        assertEquals("main.html", suggestionItem.getPath());
-        assertTrue(suggestionItem.hasSnippet());
-        assertEquals("<b>Test</b> ZIM file", suggestionItem.getSnippet());
-        suggestionSearcher.dispose();
+            TestSuggestionSearcher suggestionSearcher = new TestSuggestionSearcher(archive);
+            suggestionSearcher.setVerbose(true);
+            TestSuggestionSearch suggestionSearch = suggestionSearcher.suggest("test");
+            int matches = (int) suggestionSearch.getEstimatedMatches();
+            assertEquals(1, matches);
+            TestSuggestionIterator results = suggestionSearch.getResults(0, matches);
+            assertTrue(results.hasNext());
+            TestSuggestionItem suggestionItem = results.next();
+            assertFalse(results.hasNext());
+            assertEquals("Test ZIM file", suggestionItem.getTitle());
+            assertEquals("main.html", suggestionItem.getPath());
+            assertTrue(suggestionItem.hasSnippet());
+            assertEquals("<b>Test</b> ZIM file", suggestionItem.getSnippet());
+        }
+        System.gc();
+        System.runFinalization();
     }
 
     static
