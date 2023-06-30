@@ -31,26 +31,17 @@ public class Archive
   public Archive(String filename) throws ZimFileFormatException
   {
     setNativeArchive(filename);
-    if (nativeHandle == 0) {
-      throw new ZimFileFormatException("Cannot open zimfile "+filename);
-    }
   }
 
   public Archive(FileDescriptor fd) throws ZimFileFormatException
   {
     setNativeArchiveByFD(fd);
-    if (nativeHandle == 0) {
-      throw new ZimFileFormatException("Cannot open zimfile by fd "+fd.toString());
-    }
   }
 
   public Archive(FileDescriptor fd, long offset, long size)
           throws ZimFileFormatException
   {
     setNativeArchiveEmbedded(fd, offset, size);
-    if (nativeHandle == 0) {
-      throw new ZimFileFormatException(String.format("Cannot open embedded zimfile (fd=%s, offset=%d, size=%d)", fd, offset, size));
-    }
   }
 
   public native String getFilename();
