@@ -26,9 +26,11 @@ import org.kiwix.libkiwix.JNIICU;
 
 public class JNIKiwix
 {
-  public JNIKiwix(final Context context){
+  public JNIKiwix(final Context context) {
     ReLinker.loadLibrary(context, "kiwix");
     ReLinker.loadLibrary(context, "zim");
+    ReLinker.loadLibrary(context, "kiwix_wrapper");
+    ReLinker.loadLibrary(context, "zim_wrapper");
   }
 
   public void setDataDirectory(String icuDataDir) {
