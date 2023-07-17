@@ -21,7 +21,10 @@ ext["sonatypeStagingProfileId"] = properties.getProperty("sonatypeStagingProfile
 ext {
     set("GROUP_ID", "org.kiwix.kiwixlib")
     set("ARTIFACT_ID", "kiwixlib")
-    set("VERSION", "11.0.0")
+    /* Please update the version of java-libkiwix before releasing it,
+     according to the latest version of libkiwix available at https://github.com/kiwix/libkiwix/releases.
+    */
+    set("VERSION", "12.0.0")
 }
 
 apply from: 'publish.gradle'
