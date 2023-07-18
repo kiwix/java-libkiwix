@@ -19,9 +19,9 @@ ext["ossrhPassword"] = properties.getProperty("ossrhPassword", System.getenv('OS
 ext["sonatypeStagingProfileId"] = properties.getProperty("sonatypeStagingProfileId", System.getenv('SONATYPE_STAGING_PROFILE_ID'))
 
 ext {
-    set("GROUP_ID", "org.kiwix.kiwixlib")
-    set("ARTIFACT_ID", "kiwixlib")
-    set("VERSION", "11.0.0")
+    set("GROUP_ID", "org.kiwix.libkiwix")
+    set("ARTIFACT_ID", "libkiwix")
+    set("VERSION", "1.0.0")
 }
 
 apply from: 'publish.gradle'
