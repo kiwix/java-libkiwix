@@ -1,5 +1,3 @@
-import java.util.stream.Collectors
-
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
@@ -19,10 +17,14 @@ ext["ossrhPassword"] = properties.getProperty("ossrhPassword", System.getenv('OS
 ext["sonatypeStagingProfileId"] = properties.getProperty("sonatypeStagingProfileId", System.getenv('SONATYPE_STAGING_PROFILE_ID'))
 
 ext {
-    set("GROUP_ID", "org.kiwix.kiwixlib")
-    set("ARTIFACT_ID", "kiwixlib")
-    set("VERSION", "11.0.0")
+    set("GROUP_ID", "org.kiwix.libkiwix")
+    set("ARTIFACT_ID", "libkiwix")
+    set("VERSION", "1.0.0")
 }
+
+// Replace these versions with the latest available versions of libkiwix and libzim
+ext.libkiwix_version = "12.0.0"
+ext.libzim_version = "8.2.0"
 
 apply from: 'publish.gradle'
 android {
@@ -74,19 +76,16 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.7.0'
 }
 
-ext.libkiwix_base_url = 'https://download.kiwix.org/nightly'
-ext.libzim_base_url = 'https://download.openzim.org/nightly'
-
-ext.libkiwix_version = project.properties["libkiwix_version"] ?: ""
-ext.libzim_version = project.properties["libzim_version"] ?: ""
+ext.libkiwix_base_url = 'https://download.kiwix.org/release/libkiwix/'
+ext.libzim_base_url = 'https://download.openzim.org/release/libzim/'
 
 task downloadLibzimSoAndHeaderFiles(type: Download) {
     src([
-            libzim_base_url + '/libzim_android-arm.tar.gz',
-            libzim_base_url + '/libzim_android-arm64.tar.gz',
-            libzim_base_url + '/libzim_android-x86.tar.gz',
-            libzim_base_url + '/libzim_android-x86_64.tar.gz',
-            libzim_base_url + '/libzim_linux-x86_64-bionic.tar.gz'
+            libzim_base_url + 'libzim_android-arm-' + libzim_version + '.tar.gz',
+            libzim_base_url + 'libzim_android-arm64-' + libzim_version + '.tar.gz',
+            libzim_base_url + 'libzim_android-x86-' + libzim_version + '.tar.gz',
+            libzim_base_url + 'libzim_android-x86_64-' + libzim_version + '.tar.gz',
+            libzim_base_url + 'libzim_linux-x86_64-bionic-' + libzim_version + '.tar.gz'
     ])
     dest buildDir
     overwrite true
@@ -94,24 +93,24 @@ task downloadLibzimSoAndHeaderFiles(type: Download) {
 
 task unzipLibzim(type: Copy) {
     // unzip android arm
-    from tarTree(buildDir.path + "/libzim_android-arm.tar.gz")
+    from tarTree(buildDir.path + "/libzim_android-arm-" + libzim_version + ".tar.gz")
     into buildDir
     // unzip android arm64
-    from tarTree(buildDir.path + "/libzim_android-arm64.tar.gz")
+    from tarTree(buildDir.path + "/libzim_android-arm64-" + libzim_version + ".tar.gz")
     into buildDir
     // unzip android x86
-    from tarTree(buildDir.path + "/libzim_android-x86.tar.gz")
+    from tarTree(buildDir.path + "/libzim_android-x86-" + libzim_version + ".tar.gz")
     into buildDir
     // unzip android x86_64
-    from tarTree(buildDir.path + "/libzim_android-x86_64.tar.gz")
+    from tarTree(buildDir.path + "/libzim_android-x86_64-" + libzim_version + ".tar.gz")
     into buildDir
     // unzip linux x86_64
-    from tarTree(buildDir.path + "/libzim_linux-x86_64-bionic.tar.gz")
+    from tarTree(buildDir.path + "/libzim_linux-x86_64-bionic-" + libzim_version + ".tar.gz")
     into buildDir
 }
 
 task renameLibzimFolders() {
-    removeDateFromFolderName(buildDir.path,"libzim_")
+    removeVersionFromFolderName(buildDir.path, "libzim_", libzim_version)
 }
 
 task copyLibzimHeaderAndSoFiles(type: Copy) {
@@ -147,8 +146,7 @@ task copyLibzimHeaderAndSoFiles(type: Copy) {
 
     copy {
         // copying linux_x86_64 so file
-        project.ext.set("libzim_version", getFileFromFolder(buildDir.path + "/libzim_linux-x86_64-bionic/lib/x86_64-linux-gnu/"))
-        from buildDir.path + "/libzim_linux-x86_64-bionic/lib/x86_64-linux-gnu/" + libzim_version
+        from buildDir.path + "/libzim_linux-x86_64-bionic/lib/x86_64-linux-gnu/libzim.so." + libzim_version
         into buildDir.path
     }
 }
@@ -156,35 +154,35 @@ task copyLibzimHeaderAndSoFiles(type: Copy) {
 task renameLibzimSoFile(type: Copy) {
     if (libzim_version != null) {
         from(buildDir.path)
-        include libzim_version
+        include "libzim.so." + libzim_version
         destinationDir file(buildDir.path)
-        rename libzim_version, "libzim.so"
+        rename "libzim.so." + libzim_version, "libzim.so"
     }
 }
 
 task downloadLibkiwixSoAndHeaderFiles(type: Download) {
     src([
-            libkiwix_base_url + '/libkiwix_android-arm.tar.gz',
-            libkiwix_base_url + '/libkiwix_android-arm64.tar.gz',
-            libkiwix_base_url + '/libkiwix_android-x86.tar.gz',
-            libkiwix_base_url + '/libkiwix_android-x86_64.tar.gz',
-            libkiwix_base_url + '/libkiwix_linux-x86_64.tar.gz'
+            libkiwix_base_url + 'libkiwix_android-arm-' + libkiwix_version + '.tar.gz',
+            libkiwix_base_url + 'libkiwix_android-arm64-' + libkiwix_version + '.tar.gz',
+            libkiwix_base_url + 'libkiwix_android-x86-' + libkiwix_version + '.tar.gz',
+            libkiwix_base_url + 'libkiwix_android-x86_64-' + libkiwix_version + '.tar.gz',
+            libkiwix_base_url + 'libkiwix_linux-x86_64-' + libkiwix_version + '.tar.gz'
     ])
     dest buildDir
     overwrite true
 }
 
 task renameLibkiwixFolders() {
-    removeDateFromFolderName(buildDir.path,"libkiwix_")
+    removeVersionFromFolderName(buildDir.path, "libkiwix_", libkiwix_version)
 }
 
-static void removeDateFromFolderName(String path, String startWith) {
+static void removeVersionFromFolderName(String path, String startWith, String version) {
     File directory = new File(path)
     if (directory.exists() && directory.isDirectory()) {
         Arrays.stream(directory.listFiles())
                 .filter(folder -> folder.isDirectory() && folder.getName().startsWith(startWith))
                 .forEach(file -> {
-                    String newName = file.getName().replaceAll("-\\d{4}-\\d{2}-\\d{2}", "")
+                    String newName = file.getName().replace("-" + version, "")
                     File newFile = new File(directory, newName)
                     file.renameTo(newFile)
                 })
@@ -193,19 +191,19 @@ static void removeDateFromFolderName(String path, String startWith) {
 
 task unzipLibkiwix(type: Copy) {
     // unzip android arm
-    from tarTree(buildDir.path + "/libkiwix_android-arm.tar.gz")
+    from tarTree(buildDir.path + "/libkiwix_android-arm-" + libkiwix_version + ".tar.gz")
     into buildDir
     // unzip android arm64
-    from tarTree(buildDir.path + "/libkiwix_android-arm64.tar.gz")
+    from tarTree(buildDir.path + "/libkiwix_android-arm64-" + libkiwix_version + ".tar.gz")
     into buildDir
     // unzip android x86
-    from tarTree(buildDir.path + "/libkiwix_android-x86.tar.gz")
+    from tarTree(buildDir.path + "/libkiwix_android-x86-" + libkiwix_version + ".tar.gz")
     into buildDir
     // unzip android x86_64
-    from tarTree(buildDir.path + "/libkiwix_android-x86_64.tar.gz")
+    from tarTree(buildDir.path + "/libkiwix_android-x86_64-" + libkiwix_version + ".tar.gz")
     into buildDir
     // unzip linux x86_64
-    from tarTree(buildDir.path + "/libkiwix_linux-x86_64.tar.gz")
+    from tarTree(buildDir.path + "/libkiwix_linux-x86_64-" + libkiwix_version + ".tar.gz")
     into buildDir
 }
 
@@ -242,28 +240,17 @@ task copyLibkiwixHeaderAndSoFiles(type: Copy) {
 
     copy {
         // copying linux_x86_64 so file
-        project.ext.set("libkiwix_version", getFileFromFolder(buildDir.path + "/libkiwix_linux-x86_64/lib/x86_64-linux-gnu/"))
-        from buildDir.path + "/libkiwix_linux-x86_64/lib/x86_64-linux-gnu/" + libkiwix_version
+        from buildDir.path + "/libkiwix_linux-x86_64/lib/x86_64-linux-gnu/libkiwix.so." + libkiwix_version
         into buildDir.path
-    }
-}
-
-static String getFileFromFolder(String path) {
-    File folderFile = new File(path)
-    if (folderFile.exists()) {
-        return folderFile.listFiles()
-                .stream()
-                .filter(f -> f.length() > 0)
-                .collect(Collectors.toList())[0].name
     }
 }
 
 task renameLibkiwixSoFile(type: Copy) {
     if (libkiwix_version != null) {
         from(buildDir.path)
-        include libkiwix_version
+        include "libkiwix.so." + libkiwix_version
         destinationDir file(buildDir.path)
-        rename libkiwix_version, "libkiwix.so"
+        rename "libkiwix.so." + libkiwix_version, "libkiwix.so"
     }
 }
 
