@@ -468,6 +468,11 @@ public class test {
         System.runFinalization();
     }
 
+    @Test
+    public void testICUInit() {
+        TestJNIICU.setDataDirectory(".");
+    }
+
     static
     public void main(String[] args) {
         Library lib = new Library();
