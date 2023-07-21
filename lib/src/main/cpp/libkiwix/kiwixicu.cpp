@@ -27,7 +27,7 @@
 #include "utils.h"
 #include "zim/tools.h"
 
-JNIEXPORT void JNICALL Java_org_kiwix_kiwixlib_JNIICU_setDataDirectory(
+JNIEXPORT void JNICALL Java_org_kiwix_libkiwix_JNIICU_setDataDirectory(
     JNIEnv* env, jclass kclass, jstring dirStr) try
 {
   zim::setICUDataDirectory(TO_C(dirStr));
