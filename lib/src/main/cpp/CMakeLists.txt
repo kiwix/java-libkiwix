@@ -79,7 +79,7 @@ endif ()
 
 # Android target
 if (ANDROID)
-        set(CMAKE_ANDROID_STL_TYPE llvm-libc++_static)
+        set(CMAKE_ANDROID_STL_TYPE llvm-libc++_shared)
 
         find_library(
                 log-lib
