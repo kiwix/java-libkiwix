@@ -1,23 +1,16 @@
-name: Build Java-LibKiwix
+name: Publish to Maven Central
 
 on:
-  push:
-    branches-ignore:
-      - '*'
-      - '*/**'
-    tags:
-      - '*'
-      - '*/**'
+  release:
+    types: [published]
 
 jobs:
   publish:
-
     runs-on: ubuntu-20.04
 
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Set up JDK 11
         uses: actions/setup-java@v2
@@ -28,20 +21,15 @@ jobs:
       - name: Install dependencies
         run: bash ./install_deps.sh
 
-      - name: Compile Project
+      - name: Compile and prepare package
         run: |
           ./gradlew buildHeaders build
-
-      - name: Release build
-        run: |
           ./gradlew assemble
-
-      - name: Generate Source jar
-        run: |
           ./gradlew androidSourcesJar
 
-      - name: Publish to MavenCentral
+      - name: Publish
         run: ./gradlew publishReleasePublicationToSonatypeRepository --max-workers 1 closeAndReleaseSonatypeStagingRepository
+        if: github.event_name == 'release'
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
