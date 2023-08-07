@@ -89,16 +89,34 @@ METHOD0(jboolean, hasNext) {
 METHOD0(jobject, next) {
   switch (get_order(env, thisObj)) {
     case 0: {
+      auto end = getPtr<PATH_NATIVE_TYPE>(env, thisObj, "nativeHandleEnd");
+      if ((*GET_PTR(PATH_NATIVE_TYPE)) == *end) {
+        throwException(env, "java/util/NoSuchElementException", "");
+        return nullptr;
+      }
+
       zim::Entry entry = **GET_PTR(PATH_NATIVE_TYPE);
       (*GET_PTR(PATH_NATIVE_TYPE))++;
       return BUILD_WRAPPER("org/kiwix/libzim/Entry", entry);
     }
     case 1: {
+      auto end = getPtr<TITLE_NATIVE_TYPE>(env, thisObj, "nativeHandleEnd");
+      if ((*GET_PTR(TITLE_NATIVE_TYPE)) == *end) {
+        throwException(env, "java/util/NoSuchElementException", "");
+        return nullptr;
+      }
+
       zim::Entry entry = **GET_PTR(TITLE_NATIVE_TYPE);
       (*GET_PTR(TITLE_NATIVE_TYPE))++;
       return BUILD_WRAPPER("org/kiwix/libzim/Entry", entry);
     }
     case 2: {
+      auto end = getPtr<EFFICIENT_NATIVE_TYPE>(env, thisObj, "nativeHandleEnd");
+      if ((*GET_PTR(EFFICIENT_NATIVE_TYPE)) == *end) {
+        throwException(env, "java/util/NoSuchElementException", "");
+        return nullptr;
+      }
+
       zim::Entry entry = **GET_PTR(EFFICIENT_NATIVE_TYPE);
       (*GET_PTR(EFFICIENT_NATIVE_TYPE))++;
       return BUILD_WRAPPER("org/kiwix/libzim/Entry", entry);

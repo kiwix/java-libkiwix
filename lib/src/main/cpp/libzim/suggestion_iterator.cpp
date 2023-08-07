@@ -48,6 +48,12 @@ METHOD0(jboolean, hasNext) {
 } CATCH_EXCEPTION(false)
 
 METHOD0(jobject, next) {
+  // THIS is the next item to return. So we have to return it and advance for next round
+  auto end = getPtr<NATIVE_TYPE>(env, thisObj, "nativeHandleEnd");
+  if (*THIS == *end) {
+    throwException(env, "java/util/NoSuchElementException", "");
+    return nullptr;
+  }
 
   zim::SuggestionItem item = **THIS;
   (*THIS)++;
