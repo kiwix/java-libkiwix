@@ -42,13 +42,13 @@ METHOD0(void, dispose)
 } CATCH_EXCEPTION()
 
 METHOD0(jboolean, hasNext) {
-  NATIVE_TYPE next(*THIS);
-  next++;
+  // THIS is the next item to return. So we have to check it with end
   auto end = getPtr<NATIVE_TYPE>(env, thisObj, "nativeHandleEnd");
-  return next == *end;
+  return *THIS != *end;
 } CATCH_EXCEPTION(false)
 
 METHOD0(jobject, next) {
+
   zim::SuggestionItem item = **THIS;
   (*THIS)++;
   return BUILD_WRAPPER("org/kiwix/libzim/SuggestionItem", item);
