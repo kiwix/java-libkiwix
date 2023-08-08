@@ -123,6 +123,14 @@ public class test {
             assertEquals("favicon.png", iter.next().getPath());
             assertEquals("main.html", iter.next().getPath());
             assertFalse(iter.hasNext());
+            try {
+                iter.next();
+                fail("ERROR: next() should raise a NoSuchElementException.");
+            } catch (NoSuchElementException e) {
+                // We are good
+            } catch(Exception e) {
+                fail("ERROR: Must be a NoSuchElementException.");
+            }
         }
 
         {
@@ -131,6 +139,14 @@ public class test {
             assertEquals("main.html", iter.next().getPath());
             // No favicon, because favicon is not a main article (no title)
             assertFalse(iter.hasNext());
+            try {
+                iter.next();
+                fail("ERROR: next() should raise a NoSuchElementException.");
+            } catch (NoSuchElementException e) {
+                // We are good
+            } catch(Exception e) {
+                fail("ERROR: Must be a NoSuchElementException.");
+            }
         }
 
         {
@@ -139,6 +155,14 @@ public class test {
             assertEquals("main.html", iter.next().getPath());
             assertEquals("favicon.png", iter.next().getPath());
             assertFalse(iter.hasNext());
+            try {
+                iter.next();
+                fail("ERROR: next() should raise a NoSuchElementException.");
+            } catch (NoSuchElementException e) {
+                // We are good
+            } catch(Exception e) {
+                fail("ERROR: Must be a NoSuchElementException.");
+            }
         }
 
         {
@@ -146,6 +170,14 @@ public class test {
             assertTrue(iter.hasNext());
             assertEquals("main.html", iter.next().getPath());
             assertFalse(iter.hasNext());
+            try {
+                iter.next();
+                fail("ERROR: next() should raise a NoSuchElementException.");
+            } catch (NoSuchElementException e) {
+                // We are good
+            } catch(Exception e) {
+                fail("ERROR: Must be a NoSuchElementException.");
+            }
         }
 
         {
@@ -153,6 +185,14 @@ public class test {
             assertTrue(iter.hasNext());
             assertEquals("main.html", iter.next().getPath());
             assertFalse(iter.hasNext());
+            try {
+                iter.next();
+                fail("ERROR: next() should raise a NoSuchElementException.");
+            } catch (NoSuchElementException e) {
+                // We are good
+            } catch(Exception e) {
+                fail("ERROR: Must be a NoSuchElementException.");
+            }
         }
 
         // Test invalid path
@@ -210,7 +250,7 @@ public class test {
         } catch (ZimFileFormatException e) {
             assertEquals("Invalid magic number", e.getMessage());
         } catch(Exception e) {
-                fail("ERROR: Must be a ZimFileFormatException.");
+            fail("ERROR: Must be a ZimFileFormatException.");
         }
     }
 
@@ -459,6 +499,14 @@ public class test {
             assertTrue(results.hasNext());
             TestSuggestionItem suggestionItem = results.next();
             assertFalse(results.hasNext());
+            try {
+                results.next();
+                fail("ERROR: next() should raise a NoSuchElementException.");
+            } catch (NoSuchElementException e) {
+                // We are good
+            } catch(Exception e) {
+                fail("ERROR: Must be a NoSuchElementException.");
+            }
             assertEquals("Test ZIM file", suggestionItem.getTitle());
             assertEquals("main.html", suggestionItem.getPath());
             assertTrue(suggestionItem.hasSnippet());
