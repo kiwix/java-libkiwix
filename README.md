@@ -24,6 +24,68 @@ Library for accessing [libkiwix](https://github.com/kiwix/libkiwix) and [libzim]
 
 AAR file will be generated in directory `lib/build/outputs/aar`
 
+### Load zim file
+
+To load a ZIM file you need to create an `Archive` object.
+
+```kotlin
+val archive = Archive("your-file-path")
+```
+
+### Load main page
+
+The `mainPage` property is used to retrieve the path of the main entry page for a Kiwix content archive.
+If the main entry is a redirect, it will fetch the path of the redirected item;
+otherwise, it will return the path of the main entry itself.
+If the main entry is not found, the archive will throw an `EntryNotFoundException`.
+
+```kotlin
+val mainPage: String?
+    get() =
+        try {
+            archive.mainEntry.getItem(true).path
+        } catch (entryNotFoundException: EntryNotFoundException) {
+            // Return `null` if the main entry is not present in the archive.
+            null
+        } catch (exception: Exception) {
+            // Other exception will thrown here e.g. the file is corrupted or any other error happened.
+            null
+        }
+```
+
+### Load an article via title
+
+```kotlin
+    try {
+        // If the article with the specified title exists in the archive,
+        // retrieve its path using the `getEntryByTitle` method.
+        archive.getEntryByTitle(title).path
+    } catch (entryNotFoundException: EntryNotFoundException) {
+        // If the article with the specified title does not exist in the archive,
+        // return `null`.
+        null
+    }
+```
+
+### Load an Article via Path
+
+Ensure that the URL path is properly decode before passing it to `hasEntryByPath`,
+as `Libzim` does not support encoded URLs.
+
+```kotlin
+    val decodedPath = URLDecoder.decode(actualpath, "UTF-8")
+    try {
+        // If the article with the specified URL exists in the archive,
+        // retrieve its actual path using the `getEntryByPath` method.
+        archive.getEntryByPath(decodedPath)
+            .getItem(true)
+            .path
+    } catch (entryNotFoundException: EntryNotFoundException) {
+        // If the article with the specified URL does not exist in the archive,
+        // return `null`.
+        null
+    }
+```
 
 # License
 
