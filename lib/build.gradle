@@ -23,8 +23,8 @@ ext {
 }
 
 // Replace these versions with the latest available versions of libkiwix and libzim
-ext.libkiwix_version = "12.0.0"
-ext.libzim_version = "8.2.0"
+ext.libkiwix_version = "12.1.0"
+ext.libzim_version = "8.2.1"
 
 apply from: 'publish.gradle'
 android {
