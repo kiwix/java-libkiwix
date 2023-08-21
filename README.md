@@ -24,7 +24,29 @@ Library for accessing [libkiwix](https://github.com/kiwix/libkiwix) and [libzim]
 
 AAR file will be generated in directory `lib/build/outputs/aar`
 
-### Load zim file
+### Use the library in your project
+
+First, locate the compiled/generated `lib-debug.aar` in the
+`lib/build/outputs/aar` directory. Then open your project's Gradle
+configuration file and import the .aar file as a dependency.
+
+If you are using Kotlin for your Gradle file, add the following code snippet:
+
+```kotlin
+dependencies {
+    implementation(files("path-of-aar-file/lib-debug.aar"))
+}
+```
+
+If you are using Groovy for your Gradle file, use this code snippet:
+
+```kotlin
+dependencies {
+    implementation files("path-to-your-aar-file/lib-debug.aar")
+}
+```
+
+### Load ZIM file
 
 To load a ZIM file you need to create an `Archive` object.
 
@@ -32,12 +54,13 @@ To load a ZIM file you need to create an `Archive` object.
 val archive = Archive("your-file-path")
 ```
 
-### Load main page
+### Load ZIM main page
 
-The `mainPage` property is used to retrieve the path of the main entry page for a Kiwix content archive.
-If the main entry is a redirect, it will fetch the path of the redirected item;
-otherwise, it will return the path of the main entry itself.
-If the main entry is not found, the archive will throw an `EntryNotFoundException`.
+The `mainPage` property is used to retrieve the path of the main entry
+page for a Kiwix content archive.  If the main entry is a redirect, it
+will fetch the path of the redirected item; otherwise, it will return
+the path of the main entry itself.  If the main entry is not found,
+the archive will throw an `EntryNotFoundException`.
 
 ```kotlin
 val mainPage: String?
@@ -53,7 +76,7 @@ val mainPage: String?
         }
 ```
 
-### Load an article via title
+### Load a ZIM article via title
 
 ```kotlin
     try {
@@ -67,7 +90,7 @@ val mainPage: String?
     }
 ```
 
-### Load an Article via Path
+### Load a ZIM article via path
 
 Ensure that the URL path is properly decode before passing it to `hasEntryByPath`,
 as `Libzim` does not support encoded URLs.
