@@ -35,7 +35,7 @@
 METHOD(void, setNativeServer, jobject jLibrary)
 {
   auto library = getPtr<kiwix::Library>(env, jLibrary);
-  SET_PTR(std::make_shared<NATIVE_TYPE>(library.get()));
+  SET_PTR(std::make_shared<NATIVE_TYPE>(library));
 } catch (std::exception& e) {
   throwException(env, "java/lang/Exception", "Error creating the server");
 } CATCH_EXCEPTION()
