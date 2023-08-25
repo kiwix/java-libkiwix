@@ -3,7 +3,7 @@ Libkiwix binding for Java/Kotlin
 
 Library for accessing [libkiwix](https://github.com/kiwix/libkiwix) and [libzim](https://github.com/openzim/libzim/) with Java or Kotlin on Android.
 
-[![Maven Central](https://img.shields.io/maven-central/v/org.kiwix.libkiwix/libkiwix)](https://search.maven.org/artifact/org.kiwix.libkiwix/libkiwix)
+[![Maven Central](https://img.shields.io/maven-central/v/org.kiwix/libkiwix)](https://search.maven.org/artifact/org.kiwix/libkiwix)
 [![Build Status](https://github.com/kiwix/java-libkiwix/workflows/CI/badge.svg?query=branch%3Amain)](https://github.com/kiwix/java-libkiwix/actions?query=workflow%3ACI+branch%3Amain)
 [![CodeFactor](https://www.codefactor.io/repository/github/kiwix/java-libkiwix/badge)](https://www.codefactor.io/repository/github/kiwix/java-libkiwix)
 [![Codecov](https://codecov.io/gh/kiwix/java-libkiwix/branch/main/graph/badge.svg)](https://codecov.io/gh/kiwix/java-libkiwix)
