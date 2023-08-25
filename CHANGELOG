@@ -1,0 +1,7 @@
+1.0.0
+* NEW: Moved wrapper from libkiwix to java-libkiwix.
+* NEW: Adapted new build system.
+* FIX: Refactored the wrapper to support the updated 'libkiwix/libzim' API.
+* NEW: Introduced CI for building and testing the wrapper.
+* NEW: Uploaded binaries to new Maven repositories `org.kiwix/libkiwix` instead of jcenter.
+* NEW: Provided detailed instructions for developers on how to utilize the new wrapper.
