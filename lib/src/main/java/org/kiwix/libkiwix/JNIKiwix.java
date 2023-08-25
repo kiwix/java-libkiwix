@@ -27,6 +27,7 @@ import org.kiwix.libkiwix.JNIICU;
 public class JNIKiwix
 {
   public JNIKiwix(final Context context) {
+    ReLinker.loadLibrary(context, "c++_shared");
     ReLinker.loadLibrary(context, "kiwix");
     ReLinker.loadLibrary(context, "zim");
     ReLinker.loadLibrary(context, "kiwix_wrapper");
