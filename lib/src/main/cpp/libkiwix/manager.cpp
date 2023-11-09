@@ -41,7 +41,7 @@ METHOD(jboolean, readFile, jstring path)
 {
   auto cPath = TO_C(path);
 
-  return THIS->readFile(cPath);
+  return THIS->readFile(cPath, false);
 } CATCH_EXCEPTION(false)
 
 METHOD(jboolean, readXml, jstring content, jstring libraryPath)
