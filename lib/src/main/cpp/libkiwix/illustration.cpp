@@ -50,4 +50,7 @@ METHOD0(jstring, url) {
   return TO_JNI(THIS->url);
 } CATCH_EXCEPTION(nullptr)
 
-GETTER(jstring, getData)
+METHOD0(jbyteArray, getData) {
+  auto data = THIS->getData();
+  return cArray2jni(data.data(), data.size(), env);
+} CATCH_EXCEPTION(nullptr)

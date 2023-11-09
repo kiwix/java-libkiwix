@@ -8,7 +8,7 @@ public class Illustration
   public native String mimeType();
   public native String url();
 
-  public native String getData();
+  public native byte[] getData();
   @Override
   protected void finalize() { dispose();  }
 
