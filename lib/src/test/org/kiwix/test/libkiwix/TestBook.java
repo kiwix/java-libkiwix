@@ -2,8 +2,9 @@
 package org.kiwix.test.libkiwix;
 
 import org.kiwix.libkiwix.Book;
-import org.kiwix.libkiwix.Illustration;
+import org.kiwix.test.libkiwix.TestIllustration;
 import org.kiwix.test.libzim.TestArchive;
+import java.util.stream.Stream;
 
 public class TestBook
 {
@@ -35,6 +36,6 @@ public class TestBook
   public long getMediaCount() { return inner.getMediaCount(); }
   public long getSize() { return inner.getSize(); }
 
-  public Illustration[] getIllustrations() { return inner.getIllustrations(); }
-  public Illustration getIllustration(int size) { return inner.getIllustration(size); }
+  public TestIllustration[] getIllustrations() { return Stream.of(inner.getIllustrations()).map(i -> new TestIllustration(i)).toArray(TestIllustration[]::new); }
+  public TestIllustration getIllustration(int size) { return new TestIllustration(inner.getIllustration(size)); }
 }
