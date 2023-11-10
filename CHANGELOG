@@ -1,3 +1,8 @@
+1.0.1
+* FIX: Resolved an issue where the library was not saving all books that are read from the library. (https://github.com/kiwix/java-libkiwix/pull/72)
+* FIX: Fixed a problem where books were not returning the illustration. (https://github.com/kiwix/java-libkiwix/pull/74)
+
+
 1.0.0
 * NEW: Moved wrapper from libkiwix to java-libkiwix.
 * NEW: Adapted new build system.
