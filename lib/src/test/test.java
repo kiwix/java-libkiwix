@@ -303,7 +303,7 @@ public class test {
         TestBook book = lib.getBookById(bookIds[0]);
         assertEquals(book.getTitle(), "Test ZIM file");
         assertEquals(book.getTags(), "_category:Category;_ftindex:yes;_ftindex:yes;_pictures:yes;_videos:yes;_details:yes");
-        assertEquals(book.getIllustration(48).width(), 48);
+
         assertEquals(book.getUrl(), "http://localhost/small.zim");
         assertEquals(book.getDescription(), "Description");
         assertEquals(book.getCreator(), "Creator");
@@ -313,7 +313,7 @@ public class test {
         assertEquals(book.getArticleCount(), 1);
         assertEquals(book.getMediaCount(), 1);
         assertEquals(book.getSize(), 66560);
-        Illustration[] illustrations = book.getIllustrations();
+        TestIllustration[] illustrations = book.getIllustrations();
         assertEquals(1, illustrations.length);
 
         assertEquals(book.getTagStr("video"), "");
@@ -328,7 +328,15 @@ public class test {
             testLibrary(lib);
             String[] bookIds = lib.getBooksIds();
             TestBook book = lib.getBookById(bookIds[0]);
-            assertEquals(book.getIllustration(48).url(), "");
+
+            TestIllustration illustration = book.getIllustration(48);
+            assertEquals(illustration.width(), 48);
+            assertEquals(illustration.height(), 48);
+            assertEquals(illustration.mimeType(), "image/png");
+            assertEquals(illustration.url(), "");
+            byte[] faviconData = getFileContent("small_zimfile_data/favicon.png");
+            assertTrue(Arrays.equals(faviconData, illustration.getData()));
+
             assertEquals(book.getPath(), new File("small.zim").getAbsolutePath());
             assertEquals(book.getHumanReadableIdFromPath(), "small");
             assertTrue(book.isPathValid());
@@ -351,7 +359,15 @@ public class test {
             testLibrary(lib);
             String[] bookIds = lib.getBooksIds();
             TestBook book = lib.getBookById(bookIds[0]);
-            assertEquals(book.getIllustration(48).url(), "");
+
+            TestIllustration illustration = book.getIllustration(48);
+            assertEquals(illustration.width(), 48);
+            assertEquals(illustration.height(), 48);
+            assertEquals(illustration.mimeType(), "image/png");
+            assertEquals(illustration.url(), "");
+            byte[] faviconData = getFileContent("small_zimfile_data/favicon.png");
+            assertTrue(Arrays.equals(faviconData, illustration.getData()));
+
             assertEquals(book.getPath(), new File("small.zim").getAbsolutePath());
             assertEquals(book.getHumanReadableIdFromPath(), "small");
             assertTrue(book.isPathValid());
@@ -370,7 +386,15 @@ public class test {
             testLibrary(lib);
             String[] bookIds = lib.getBooksIds();
             TestBook book = lib.getBookById(bookIds[0]);
-            assertEquals(book.getIllustration(48).url(), "");
+
+            TestIllustration illustration = book.getIllustration(48);
+            assertEquals(illustration.width(), 48);
+            assertEquals(illustration.height(), 48);
+            assertEquals(illustration.mimeType(), "image/png");
+            assertEquals(illustration.url(), "");
+            byte[] faviconData = getFileContent("small_zimfile_data/favicon.png");
+            assertTrue(Arrays.equals(faviconData, illustration.getData()));
+
             assertEquals(book.getPath(), new File("small.zim").getAbsolutePath());
             assertEquals(book.getHumanReadableIdFromPath(), "small");
             assertTrue(book.isPathValid());
@@ -389,7 +413,15 @@ public class test {
             testLibrary(lib);
             String[] bookIds = lib.getBooksIds();
             TestBook book = lib.getBookById(bookIds[0]);
-            assertEquals(book.getIllustration(48).url(), "http://localhost/meta?name=favicon&content=small");
+
+            TestIllustration illustration = book.getIllustration(48);
+            assertEquals(illustration.width(), 48);
+            assertEquals(illustration.height(), 48);
+            assertEquals(illustration.mimeType(), "image/png");
+            assertEquals(illustration.url(), "http://localhost/meta?name=favicon&content=small");
+            // This will try to downoald to the data, but we have no local server. So return empty array.
+            assertTrue(Arrays.equals(illustration.getData(), new byte[0]));
+
             assertEquals(book.getPath(), "");
             assertEquals(book.getHumanReadableIdFromPath(), "");
             assertFalse(book.isPathValid());
