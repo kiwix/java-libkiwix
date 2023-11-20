@@ -31,7 +31,7 @@
 METHOD(void, allocate, jobject libraryObj)
 {
   auto lib = getPtr<kiwix::Library>(env, libraryObj);
-  SET_PTR(std::make_shared<NATIVE_TYPE>(lib.get()));
+  SET_PTR(std::make_shared<NATIVE_TYPE>(lib));
 } CATCH_EXCEPTION()
 
 DISPOSE

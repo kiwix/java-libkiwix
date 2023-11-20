@@ -31,7 +31,7 @@
 /* Kiwix Reader JNI functions */
 METHOD0(void, setNativeHandler)
 {
-  SET_PTR(std::make_shared<NATIVE_TYPE>());
+  SET_PTR(NATIVE_TYPE::create());
 } CATCH_EXCEPTION()
 
 DISPOSE
