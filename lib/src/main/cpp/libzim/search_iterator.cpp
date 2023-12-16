@@ -50,7 +50,6 @@ GETTER(jint, getScore)
 GETTER(jstring, getSnippet)
 GETTER(jint, getWordCount)
 GETTER(jint, getFileIndex)
-GETTER(jint, getSize)
 
 METHOD0(jstring, getZimId) {
     return TO_JNI(std::string(THIS->getZimId()));

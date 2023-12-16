@@ -510,7 +510,6 @@ public class test {
             assertEquals("<b>Test</b> ZIM file", iterator.getSnippet());
             assertEquals(3, iterator.getWordCount());
             assertEquals(0, iterator.getFileIndex());
-            assertEquals(-1, iterator.getSize());
             assertEquals("e34f5109-ed0d-b93e-943d-06f7717c7340", iterator.getZimId());
             TestEntry entry = iterator.next();
             assertEquals("main.html", entry.getPath());

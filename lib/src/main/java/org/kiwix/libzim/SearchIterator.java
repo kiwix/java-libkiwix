@@ -30,7 +30,6 @@ public class SearchIterator implements Iterator<Entry>
   public native String getSnippet();
   public native int getWordCount();
   public native int getFileIndex();
-  public native int getSize();
   public native String getZimId();
 
   public native boolean hasNext();

@@ -32,7 +32,6 @@ public class TestSearchIterator implements Iterator<TestEntry>
   public String getSnippet() { return inner.getSnippet(); }
   public int getWordCount() { return inner.getWordCount(); }
   public int getFileIndex() { return inner.getFileIndex(); }
-  public int getSize() { return inner.getSize(); }
   public String getZimId() { return inner.getZimId(); }
 
   public boolean hasNext() { return inner.hasNext(); }
