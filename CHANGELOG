@@ -1,7 +1,10 @@
+1.0.2
+* NEW: libkiwix 13.0.0 and libzim 9.1.0 (@mgautierfr https://github.com/kiwix/java-libkiwix/pull/68)
+* NEW: libkiwix and libzim with debug symbols (@mgautierfr https://github.com/kiwix/kiwix-build/pull/664)
+
 1.0.1
 * FIX: Resolved an issue where the library was not saving all books that are read from the library. (https://github.com/kiwix/java-libkiwix/pull/72)
 * FIX: Fixed a problem where books were not returning the illustration. (https://github.com/kiwix/java-libkiwix/pull/74)
-
 
 1.0.0
 * NEW: Moved wrapper from libkiwix to java-libkiwix.
