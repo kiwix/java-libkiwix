@@ -23,7 +23,7 @@ ext {
 }
 
 // Replace these versions with the latest available versions of libkiwix and libzim
-ext.libkiwix_version = "13.0.0"
+ext.libkiwix_version = "13.0.0-1"
 ext.libzim_version = "9.1.0"
 
 apply from: 'publish.gradle'
@@ -146,22 +146,24 @@ task copyLibzimHeaderAndSoFiles(type: Copy) {
 
     copy {
         // copying linux_x86_64 so file
-        from buildDir.path + "/libzim_linux-x86_64-bionic/lib/x86_64-linux-gnu/libzim.so." + libzim_version
+        from buildDir.path + "/libzim_linux-x86_64-bionic/lib/x86_64-linux-gnu/libzim.so." + getActualLibraryVersion(libzim_version)
         into buildDir.path
     }
 }
 
 task renameLibzimSoFile(type: Copy) {
     if (libzim_version != null) {
-        def sourceFile = file(buildDir.path + "/libzim.so." + libzim_version)
+        def finalLibzimVersion = getActualLibraryVersion(libzim_version)
+
+        def sourceFile = file(buildDir.path + "/libzim.so." + finalLibzimVersion)
 
         if (project.gradle.startParameter.taskNames.contains("renameLibzimSoFile") && !sourceFile.exists()) {
             throw new RuntimeException("Rename Libzim so file task failed, File not found: ${sourceFile}")
         }
         from(buildDir.path)
-        include "libzim.so." + libzim_version
+        include "libzim.so." + finalLibzimVersion
         destinationDir file(buildDir.path)
-        rename "libzim.so." + libzim_version, "libzim.so"
+        rename "libzim.so." + finalLibzimVersion, "libzim.so"
     }
 }
 
@@ -245,23 +247,34 @@ task copyLibkiwixHeaderAndSoFiles(type: Copy) {
 
     copy {
         // copying linux_x86_64 so file
-        from buildDir.path + "/libkiwix_linux-x86_64/lib/x86_64-linux-gnu/libkiwix.so." + libkiwix_version
+        from buildDir.path + "/libkiwix_linux-x86_64/lib/x86_64-linux-gnu/libkiwix.so." + getActualLibraryVersion(libkiwix_version)
         into buildDir.path
     }
 }
 
 task renameLibkiwixSoFile(type: Copy) {
     if (libkiwix_version != null) {
-        def sourceFile = file(buildDir.path + "/libkiwix.so." + libkiwix_version)
+        def finalLibkiwixVersion = getActualLibraryVersion(libkiwix_version)
+        def sourceFile = file(buildDir.path + "/libkiwix.so." + finalLibkiwixVersion)
 
         if (project.gradle.startParameter.taskNames.contains("renameLibkiwixSoFile") && !sourceFile.exists()) {
             throw new RuntimeException("Rename Libkiwix so file task failed, File not found: ${sourceFile}")
         }
         from(buildDir.path)
-        include "libkiwix.so." + libkiwix_version
+        include "libkiwix.so." + finalLibkiwixVersion
         destinationDir file(buildDir.path)
-        rename "libkiwix.so." + libkiwix_version, "libkiwix.so"
+        rename "libkiwix.so." + finalLibkiwixVersion, "libkiwix.so"
     }
+}
+
+// Extracting the library version before the "-"
+// see https://github.com/kiwix/java-libkiwix/pull/79 for more details
+static String getActualLibraryVersion(String libraryVersion) {
+    // Find the index of the first occurrence of "-"
+    Integer dashIndex = libraryVersion.indexOf('-')
+
+    // Get the substring before the first "-"
+    return dashIndex != -1 ? libraryVersion.substring(0, dashIndex) : libraryVersion
 }
 
 task testSourceJar(type: Jar) {
