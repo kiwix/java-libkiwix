@@ -153,6 +153,11 @@ task copyLibzimHeaderAndSoFiles(type: Copy) {
 
 task renameLibzimSoFile(type: Copy) {
     if (libzim_version != null) {
+        def sourceFile = file(buildDir.path + "/libzim.so." + libzim_version)
+
+        if (project.gradle.startParameter.taskNames.contains("renameLibzimSoFile") && !sourceFile.exists()) {
+            throw new RuntimeException("Rename Libzim so file task failed, File not found: ${sourceFile}")
+        }
         from(buildDir.path)
         include "libzim.so." + libzim_version
         destinationDir file(buildDir.path)
@@ -247,6 +252,11 @@ task copyLibkiwixHeaderAndSoFiles(type: Copy) {
 
 task renameLibkiwixSoFile(type: Copy) {
     if (libkiwix_version != null) {
+        def sourceFile = file(buildDir.path + "/libkiwix.so." + libkiwix_version)
+
+        if (project.gradle.startParameter.taskNames.contains("renameLibkiwixSoFile") && !sourceFile.exists()) {
+            throw new RuntimeException("Rename Libkiwix so file task failed, File not found: ${sourceFile}")
+        }
         from(buildDir.path)
         include "libkiwix.so." + libkiwix_version
         destinationDir file(buildDir.path)
