@@ -1,4 +1,4 @@
-1.0.2
+2.0.0
 * NEW: Fix crash when using more than 512 bookmarks (@mgautierfr https://github.com/kiwix/java-libkiwix/issues/80)
 * NEW: libkiwix 13.0.0 and libzim 9.1.0 (@mgautierfr https://github.com/kiwix/java-libkiwix/pull/68)
 * NEW: libkiwix and libzim with debug symbols (@mgautierfr https://github.com/kiwix/kiwix-build/pull/664)
