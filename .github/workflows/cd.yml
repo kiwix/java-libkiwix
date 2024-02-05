@@ -1,4 +1,4 @@
-name: Publish to Maven Central
+name: CD
 
 on:
   release:
@@ -24,7 +24,7 @@ jobs:
       - name: Compile and prepare package
         run: ./gradlew buildHeaders build assemble androidSourcesJar
 
-      - name: Publish
+      - name: Publish to Maven Central
         run: ./gradlew publishReleasePublicationToSonatypeRepository --max-workers 1 closeAndReleaseSonatypeStagingRepository
         if: github.event_name == 'release'
         env:
