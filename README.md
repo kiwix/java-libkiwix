@@ -5,6 +5,7 @@ Library for accessing [libkiwix](https://github.com/kiwix/libkiwix) and [libzim]
 
 [![Maven Central](https://img.shields.io/maven-central/v/org.kiwix/libkiwix)](https://search.maven.org/artifact/org.kiwix/libkiwix)
 [![Build Status](https://github.com/kiwix/java-libkiwix/workflows/CI/badge.svg?query=branch%3Amain)](https://github.com/kiwix/java-libkiwix/actions?query=workflow%3ACI+branch%3Amain)
+[![Continuous Deployment](https://github.com/kiwix/java-libkiwix/workflows/CD/badge.svg?query=branch%3Amain)](https://github.com/kiwix/java-libkiwix/actions?query=workflow%3ACD+branch%3Amain)
 [![CodeFactor](https://www.codefactor.io/repository/github/kiwix/java-libkiwix/badge)](https://www.codefactor.io/repository/github/kiwix/java-libkiwix)
 [![Codecov](https://codecov.io/gh/kiwix/java-libkiwix/branch/main/graph/badge.svg)](https://codecov.io/gh/kiwix/java-libkiwix)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
