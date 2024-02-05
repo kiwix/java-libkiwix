@@ -104,6 +104,7 @@ METHOD(jobjectArray, getBookmarks, jboolean onlyValidBookmarks) {
     shared_ptr<kiwix::Bookmark>* handle = new shared_ptr<kiwix::Bookmark>(new kiwix::Bookmark(std::move(bookmark)));
     jobject wrapper = env->NewObject(wrapperClass, initMethod, reinterpret_cast<jlong>(handle));
     env->SetObjectArrayElement(retArray, index++, wrapper);
+    env->DeleteLocalRef(wrapper);
   }
   return retArray;
 } CATCH_EXCEPTION(nullptr)

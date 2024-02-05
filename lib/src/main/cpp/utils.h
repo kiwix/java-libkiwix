@@ -263,6 +263,7 @@ template<> struct JTypeArray<std::string>{
     for(size_t index=0; index<length; index++) {
       auto jElem = c2jni(data[index], env);
       env->SetObjectArrayElement(array, index, jElem);
+      env->DeleteLocalRef(jElem);
     }
   }
 };

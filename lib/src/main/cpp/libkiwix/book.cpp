@@ -95,6 +95,7 @@ METHOD0(jobjectArray, getIllustrations) {
   for (auto illu: illustrations) {
     auto wrapper = BUILD_WRAPPER("org/kiwix/libkiwix/Illustration", illu);
     env->SetObjectArrayElement(retArray, index++, wrapper);
+    env->DeleteLocalRef(wrapper);
   }
   return retArray;
 } CATCH_EXCEPTION(nullptr)
