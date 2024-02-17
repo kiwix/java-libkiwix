@@ -31,6 +31,8 @@ public class Bookmark
 
   public native void setBookId(String bookId);
   public native void setBookTitle(String bookTitle);
+  public native void setBookName(String bookName);
+  public native void setBookFlavour(String bookFlavour);
   public native void setUrl(String url);
   public native void setTitle(String title);
   public native void setLanguage(String language);
@@ -38,6 +40,8 @@ public class Bookmark
 
   public native String getBookId();
   public native String getBookTitle();
+  public native String getBookName();
+  public native String getBookFlavour();
   public native String getUrl();
   public native String getTitle();
   public native String getLanguage();
