@@ -463,11 +463,13 @@ public class test {
             lib.addBook(book);
             TestBookmark bookmark = new TestBookmark();
             bookmark.setBookId(book.getId());
-            bookmark.setTitle(book.getTitle());
-            bookmark.setUrl(book.getUrl());
+            bookmark.setTitle("A title for an article");
+            bookmark.setUrl("foo/bar.html");
             bookmark.setLanguage(book.getLanguage());
             bookmark.setDate(book.getDate());
-            bookmark.setBookTitle(book.getName());
+            bookmark.setBookTitle(book.getTitle());
+            bookmark.setBookName(book.getName());
+            bookmark.setBookFlavour(book.getFlavour());
             // add bookmark to library
             lib.addBookmark(bookmark);
             TestBookmark[] bookmarkArray = lib.getBookmarks(true);
@@ -475,13 +477,28 @@ public class test {
             bookmark = bookmarkArray[0];
             // test saved bookmark
             assertEquals(bookmark.getBookId(), book.getId());
-            assertEquals(bookmark.getTitle(), book.getTitle());
-            assertEquals(bookmark.getUrl(), book.getUrl());
+            assertEquals(bookmark.getTitle(), "A title for an article");
+            assertEquals(bookmark.getUrl(), "foo/bar.html");
             assertEquals(bookmark.getLanguage(), book.getLanguage());
             assertEquals(bookmark.getDate(), book.getDate());
-            assertEquals(bookmark.getBookTitle(), book.getName());
+            assertEquals(bookmark.getBookTitle(), book.getTitle());
+            assertEquals(bookmark.getBookName(), book.getName());
+            assertEquals(bookmark.getBookFlavour(), book.getFlavour());
+
+            BookmarkMigrationResult result = lib.migrateBookmarks(true);
+            assertEquals(result.nbMigratedBookmarks, 0);
+            assertEquals(result.nbInvalidBookmarks, 0);
+
+            assertEquals(lib.migrateBookmarks(book.getId(), true), 0);
+            assertEquals(lib.migrateBookmarks(book.getId(), "new-id"), 1);
+
+            assertEquals(lib.getBestTargetBookId(bookmark, true), book.getId());
+            assertEquals(lib.getBestTargetBookId(book.getName()), book.getId());
+            assertEquals(lib.getBestTargetBookId(book.getName(), "someflavour"), book.getId());
+            assertEquals(lib.getBestTargetBookId(book.getName(), "someflavour", "20230105"), "");
+            assertEquals(lib.getBestTargetBookId(book.getName(), "someflavour", "20190105"), book.getId());
             // remove bookmark from library
-            lib.removeBookmark(bookmark.getBookId(), bookmark.getUrl());
+            lib.removeBookmark("new-id", bookmark.getUrl());
             bookmarkArray = lib.getBookmarks(true);
             assertEquals(0, bookmarkArray.length);
         }

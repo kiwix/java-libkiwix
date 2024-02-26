@@ -25,6 +25,7 @@ import org.kiwix.test.libkiwix.TestBookmark;
 import org.kiwix.libzim.Searcher;
 import org.kiwix.libkiwix.Filter;
 import org.kiwix.libkiwix.JNIKiwixException;
+import org.kiwix.libkiwix.BookmarkMigrationResult;
 import java.util.stream.Stream;
 
 public class TestLibrary
@@ -58,5 +59,13 @@ public class TestLibrary
 
   public void addBookmark(TestBookmark bookmark) { inner.addBookmark(bookmark.inner()); }
   public boolean removeBookmark(String zimId, String url) { return inner.removeBookmark(zimId, url); }
+  public BookmarkMigrationResult migrateBookmarks(boolean allowDowngrade) { return inner.migrateBookmarks(allowDowngrade); }
+  public int migrateBookmarks(String sourceBookId, boolean allowDowngrade) { return inner.migrateBookmarks(sourceBookId, allowDowngrade); }
+  public int migrateBookmarks(String sourceBookId, String targetBookId) { return inner.migrateBookmarks(sourceBookId, targetBookId); }
   public TestBookmark[] getBookmarks(boolean onlyValidBookmarks) { return Stream.of(inner.getBookmarks(onlyValidBookmarks)).map(b -> new TestBookmark(b)).toArray(TestBookmark[]::new); }
+
+  public String getBestTargetBookId(TestBookmark bookmark, boolean allowDowngrade) { return inner.getBestTargetBookId(bookmark.inner(), allowDowngrade); }
+  public String getBestTargetBookId(String bookname) { return inner.getBestTargetBookId(bookname); }
+  public String getBestTargetBookId(String bookname, String preferedFlavour) { return inner.getBestTargetBookId(bookname, preferedFlavour); }
+  public String getBestTargetBookId(String bookname, String preferedFlavour, String minDate) { return inner.getBestTargetBookId(bookname, preferedFlavour, minDate); }
 }

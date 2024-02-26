@@ -91,6 +91,27 @@ METHOD(jboolean, removeBookmark, jstring zimId, jstring url) {
   return TO_JNI(THIS->removeBookmark(TO_C(zimId), TO_C(url)));
 } CATCH_EXCEPTION(false)
 
+METHOD(jobject, migrateBookmarks__Z, jboolean allowDowngrade) {
+  jobject migrationResult = newObject("org/kiwix/libkiwix/BookmarkMigrationResult", env);
+  int nbMigrated, nbTotal;
+  std::tie(nbMigrated, nbTotal) = THIS->migrateBookmarks(
+    TO_C(allowDowngrade) ? kiwix::ALLOW_DOWNGRADE : kiwix::UPGRADE_ONLY
+  );
+  setMigrationResultValue(nbMigrated, nbTotal, migrationResult, env);
+  return migrationResult;
+} CATCH_EXCEPTION(nullptr)
+
+METHOD(jint, migrateBookmarks__Ljava_lang_String_2Z, jstring sourceBookId, jboolean allowDowngrade) {
+  return TO_JNI(THIS->migrateBookmarks(
+    TO_C(sourceBookId),
+    allowDowngrade? kiwix::ALLOW_DOWNGRADE : kiwix::UPGRADE_ONLY
+  ));
+} CATCH_EXCEPTION(0)
+
+METHOD(jint, migrateBookmarks__Ljava_lang_String_2Ljava_lang_String_2, jstring sourceBookId, jstring targetBookId) {
+  return TO_JNI(THIS->migrateBookmarks(TO_C(sourceBookId), TO_C(targetBookId)));
+} CATCH_EXCEPTION(0)
+
 METHOD(jobjectArray, getBookmarks, jboolean onlyValidBookmarks) {
   auto bookmarks = THIS->getBookmarks(TO_C(onlyValidBookmarks));
   jobjectArray retArray = createArray(env, bookmarks.size(), "org/kiwix/libkiwix/Bookmark");
@@ -107,4 +128,16 @@ METHOD(jobjectArray, getBookmarks, jboolean onlyValidBookmarks) {
     env->DeleteLocalRef(wrapper);
   }
   return retArray;
+} CATCH_EXCEPTION(nullptr)
+
+METHOD(jstring, getBestTargetBookId__Lorg_kiwix_libkiwix_Bookmark_2Z, jobject bookmark, jboolean allowDowngrade) {
+  auto cBookmark = getPtr<kiwix::Bookmark>(env, bookmark);
+  return TO_JNI(THIS->getBestTargetBookId(
+    *cBookmark,
+    allowDowngrade ? kiwix::ALLOW_DOWNGRADE : kiwix::UPGRADE_ONLY
+  ));
+} CATCH_EXCEPTION(nullptr)
+
+METHOD(jstring, getBestTargetBookId__Ljava_lang_String_2Ljava_lang_String_2Ljava_lang_String_2, jstring bookName, jstring preferedFlavour, jstring minDate) {
+  return TO_JNI(THIS->getBestTargetBookId(TO_C(bookName), TO_C(preferedFlavour), TO_C(minDate)));
 } CATCH_EXCEPTION(nullptr)

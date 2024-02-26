@@ -39,6 +39,10 @@ GETTER(jstring, getBookId)
 
 GETTER(jstring, getBookTitle)
 
+GETTER(jstring, getBookName)
+
+GETTER(jstring, getBookFlavour)
+
 GETTER(jstring, getUrl)
 
 GETTER(jstring, getTitle)
@@ -53,6 +57,14 @@ METHOD(void, setBookId, jstring bookId) {
 
 METHOD(void, setBookTitle, jstring bookTitle) {
   THIS->setBookTitle(TO_C(bookTitle));
+} CATCH_EXCEPTION()
+
+METHOD(void, setBookName, jstring bookName) {
+  THIS->setBookName(TO_C(bookName));
+} CATCH_EXCEPTION()
+
+METHOD(void, setBookFlavour, jstring bookFlavour) {
+  THIS->setBookFlavour(TO_C(bookFlavour));
 } CATCH_EXCEPTION()
 
 METHOD(void, setUrl, jstring url) {

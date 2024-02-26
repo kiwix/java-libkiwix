@@ -30,6 +30,8 @@ public class TestBookmark
 
   public void setBookId(String bookId) { inner.setBookId(bookId); }
   public void setBookTitle(String bookTitle) { inner.setBookTitle(bookTitle); }
+  public void setBookName(String bookName) { inner.setBookName(bookName); }
+  public void setBookFlavour(String bookFlavour) { inner.setBookFlavour(bookFlavour); }
   public void setUrl(String url) { inner.setUrl(url); }
   public void setTitle(String title) { inner.setTitle(title); }
   public void setLanguage(String language) { inner.setLanguage(language); }
@@ -37,6 +39,8 @@ public class TestBookmark
 
   public String getBookId() { return inner.getBookId(); }
   public String getBookTitle() { return inner.getBookTitle(); }
+  public String getBookName() { return inner.getBookName(); }
+  public String getBookFlavour() { return inner.getBookFlavour(); }
   public String getUrl() { return inner.getUrl(); }
   public String getTitle() { return inner.getTitle(); }
   public String getLanguage() { return inner.getLanguage(); }
