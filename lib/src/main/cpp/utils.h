@@ -401,6 +401,15 @@ inline void setDaiObjValue(const std::string& filename, const long offset,
   env->SetLongField(obj, offsetFid, offset);
 }
 
+inline void setMigrationResultValue(long nbMigrated, long nbTotalInvalid, const jobject obj, JNIEnv* env)
+{
+  jclass objClass = env->GetObjectClass(obj);
+  jfieldID nbMigratedFid = env->GetFieldID(objClass, "nbMigratedBookmarks", "J");
+  env->SetLongField(obj, nbMigratedFid, nbMigrated);
+  jfieldID nbTotalFid = env->GetFieldID(objClass, "nbInvalidBookmarks", "J");
+  env->SetLongField(obj, nbTotalFid, nbTotalInvalid);
+}
+
 inline int throwException(JNIEnv* env, const char* exception, const char* message) {
   return env->ThrowNew(env->FindClass(exception), message);
 }

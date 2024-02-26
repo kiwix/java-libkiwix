@@ -24,6 +24,7 @@ import org.kiwix.libzim.Searcher;
 import org.kiwix.libkiwix.Book;
 import org.kiwix.libkiwix.JNIKiwixException;
 import org.kiwix.libkiwix.Bookmark;
+import org.kiwix.libkiwix.BookmarkMigrationResult;
 
 public class Library
 {
@@ -56,7 +57,19 @@ public class Library
 
   public native void addBookmark(Bookmark bookmark);
   public native boolean removeBookmark(String zimId, String url);
+  public native BookmarkMigrationResult migrateBookmarks(boolean allowDowngrade);
+  public native int migrateBookmarks(String sourceBookId, boolean allowDowngrade);
+  public native int migrateBookmarks(String sourceBookId, String targetBookId);
   public native Bookmark[] getBookmarks(boolean onlyValidBookmarks);
+
+  public native String getBestTargetBookId(Bookmark bookmark, boolean allowDowngrade);
+  public String getBestTargetBookId(String bookName) {
+    return getBestTargetBookId(bookName, "", "");
+  }
+  public String getBestTargetBookId(String bookName, String preferedFlavour) {
+    return getBestTargetBookId(bookName, preferedFlavour, "");
+  }
+  public native String getBestTargetBookId(String bookName, String preferedFlavour, String minDate);
 
   @Override
   protected void finalize() { dispose(); }

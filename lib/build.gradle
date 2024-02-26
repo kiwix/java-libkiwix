@@ -328,6 +328,7 @@ task buildHeaders(type: Exec) {
 String getLibkiwixFiles() {
     return "${projectDir}/src/main/java/org/kiwix/libkiwix/Book.java " +
         "${projectDir}/src/main/java/org/kiwix/libkiwix/Bookmark.java " +
+        "${projectDir}/src/main/java/org/kiwix/libkiwix/BookmarkMigrationResult.java " +
         "${projectDir}/src/main/java/org/kiwix/libkiwix/Filter.java " +
         "${projectDir}/src/main/java/org/kiwix/libkiwix/JNIICU.java " +
         "${projectDir}/src/main/java/org/kiwix/libkiwix/Illustration.java " +
