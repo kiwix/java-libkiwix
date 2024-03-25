@@ -22,7 +22,7 @@ def siteUrl = 'https://www.kiwix.org/en/'
 def gitUrl = 'https://github.com/kiwix/libkiwix.git'
 
 group = GROUP_ID
-version = VERSION
+version = VERSION_CODE
 
 afterEvaluate {
     publishing {
@@ -31,7 +31,7 @@ afterEvaluate {
 
                 groupId GROUP_ID
                 artifactId ARTIFACT_ID
-                version VERSION
+                version VERSION_CODE
 
                 from components.release
 
@@ -58,15 +58,6 @@ afterEvaluate {
                         developerConnection = gitUrl
                         url = siteUrl
                     }
-                }
-            }
-        }
-        repositories {
-            maven {
-                url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-                credentials {
-                    username = ossrhUsername
-                    password = ossrhPassword
                 }
             }
         }
