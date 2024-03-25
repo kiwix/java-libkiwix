@@ -62,6 +62,22 @@ int jni2fd(const jobject& fdObj, JNIEnv* env)
   return env->GetIntField(fdObj, field_fd);
 }
 
+zim::FdInput jni2fdInput(const jobject& fdInputObj, JNIEnv* env)
+{
+  jclass class_fdesc = env->FindClass("org/kiwix/FdInput");
+  jfieldID field_id = env->GetFieldID(class_fdesc, "fd", "java/io/FileDescriptor");
+  jobject fdObj = env->GetField(fdInputObj, field_id);
+  int fd = jni2fd(fdObj, env);
+
+  field_id = env->GetFieldID(class_fdesc, "offset", "J");
+  long offset = env->GetLongField(fdObj, field_id);
+
+  field_id = env->GetFieldID(class_fdesc, "size", "J");
+  long size = env->GetLongField(fdObj, field_id);
+
+  return zim::FdInput(fd, offset, size);
+}
+
 } // unnamed namespace
 
 JNIEXPORT void JNICALL Java_org_kiwix_libzim_Archive_setNativeArchiveByFD(
@@ -93,6 +109,55 @@ JNIEXPORT void JNICALL Java_org_kiwix_libzim_Archive_setNativeArchiveEmbedded(
   LOG("Attempting to create reader with fd: %d", fd);
   try {
     auto archive = std::make_shared<zim::Archive>(fd, offset, size);
+    SET_PTR(archive);
+  } catch (std::exception& e) {
+    LOG("Error opening ZIM file");
+       LOG("%s", e.what());
+  }
+#else
+  jclass exception = env->FindClass("java/lang/UnsupportedOperationException");
+  env->ThrowNew(exception, "org.kiwix.libzim.Archive.setNativeArchiveEmbedded() is not supported under Windows");
+#endif
+} CATCH_EXCEPTION()
+
+JNIEXPORT void JNICALL Java_org_kiwix_libzim_Archive_setNativeArchiveEmbeddedFd(
+    JNIEnv* env, jobject thisObj, jobject fdObj) try
+{
+#ifndef _WIN32
+  auto fdInput = jni2fdInput(fdObj, env);
+
+  LOG("Attempting to create reader with fd: %d", fdInput);
+  try {
+    auto archive = std::make_shared<zim::Archive>(fdInput);
+    SET_PTR(archive);
+  } catch (std::exception& e) {
+    LOG("Error opening ZIM file");
+       LOG("%s", e.what());
+  }
+#else
+  jclass exception = env->FindClass("java/lang/UnsupportedOperationException");
+  env->ThrowNew(exception, "org.kiwix.libzim.Archive.setNativeArchiveEmbedded() is not supported under Windows");
+#endif
+} CATCH_EXCEPTION()
+
+
+JNIEXPORT void JNICALL Java_org_kiwix_libzim_Archive_setNativeArchiveEmbeddedFds(
+    JNIEnv* env, jobject thisObj, jobjectArray fdsObj) try
+{
+#ifndef _WIN32
+
+  jsize length = env->GetArrayLength(fdsObj);
+  std::vector<zim::FdInput> v(length);
+
+  int i;
+  for(i = 0; i<length; i++) {
+    jobject fdObj = env->GetObjectArrayElement(fdsObj, i);
+    auto fdInput = jni2fdInput(fdObj, env);
+    v.push_pack(fdInput);
+  }
+
+  try {
+    auto archive = std::make_shared<zim::Archive>(v);
     SET_PTR(archive);
   } catch (std::exception& e) {
     LOG("Error opening ZIM file");
