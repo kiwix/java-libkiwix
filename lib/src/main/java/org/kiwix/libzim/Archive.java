@@ -23,6 +23,7 @@ import org.kiwix.libzim.ZimFileFormatException;
 import org.kiwix.libzim.Entry;
 import org.kiwix.libzim.Item;
 import org.kiwix.libzim.EntryIterator;
+import org.kiwix.libzim.FdInput;
 import java.io.FileDescriptor;
 
 public class Archive
@@ -42,6 +43,18 @@ public class Archive
           throws ZimFileFormatException
   {
     setNativeArchiveEmbedded(fd, offset, size);
+  }
+
+  public Archive(FdInput fd)
+  throws ZimFileFormatException
+  {
+    setNativeArchiveEmbeddedFd(fd);
+  }
+
+  public Archive(FdInput[] fds)
+  throws ZimFileFormatException
+  {
+    setNativeArchiveEmbeddedFds(fds);
   }
 
   public native String getFilename();
@@ -94,6 +107,8 @@ public class Archive
   private native void setNativeArchive(String filename);
   private native void setNativeArchiveByFD(FileDescriptor fd);
   private native void setNativeArchiveEmbedded(FileDescriptor fd, long offset, long size);
+  private native void setNativeArchiveEmbeddedFd(FdInput fd);
+  private native void setNativeArchiveEmbeddedFds(FdInput[] fds);
 
   @Override
   protected void finalize() { dispose(); }
