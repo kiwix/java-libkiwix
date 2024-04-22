@@ -47,6 +47,18 @@ public class TestArchive
     inner = new Archive(fd, offset, size);
   }
 
+  public TestArchive(FdInput fd)
+          throws ZimFileFormatException
+  {
+    inner = new Archive(fd);
+  }
+
+  public TestArchive(FdInput[] fds)
+          throws ZimFileFormatException
+  {
+    inner = new Archive(fds);
+  }
+
   public String getFilename() { return inner.getFilename(); }
   public long getFilesize() { return inner.getFilesize(); }
   public int getAllEntryCount() { return inner.getAllEntryCount(); }

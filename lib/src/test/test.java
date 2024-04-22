@@ -83,11 +83,9 @@ public class test {
         assertTrue(Arrays.equals(faviconData, readData));
 
         // Checking all metadata
-        assertFalse(archive.isMultiPart());
         assertTrue(archive.hasNewNamespaceScheme());
         assertTrue(archive.hasChecksum());
         assertEquals("4a2709fddbee8c27db708c20b4952a06", archive.getChecksum());
-        assertTrue(archive.hasTitleIndex());
         assertTrue(archive.hasFulltextIndex());
         assertTrue(archive.hasMainEntry());
         long[] illuSizes = {48};
@@ -221,6 +219,8 @@ public class test {
         {
             TestArchive archive = new TestArchive("small.zim");
             testArchive(archive);
+            assertFalse(archive.isMultiPart());
+            assertTrue(archive.hasTitleIndex());
             assertTrue(archive.check());
             assertEquals("small.zim", archive.getFilename());
         }
@@ -261,6 +261,26 @@ public class test {
             FileInputStream fis = new FileInputStream("small.zim");
             TestArchive archive = new TestArchive(fis.getFD());
             testArchive(archive);
+            assertFalse(archive.isMultiPart());
+            assertTrue(archive.hasTitleIndex());
+            assertTrue(archive.check());
+            assertEquals("", archive.getFilename());
+        }
+        System.gc();
+        System.runFinalization();
+    }
+
+    @Test
+    public void testArchiveByFdInput()
+            throws JNIKiwixException, IOException, ZimFileFormatException, EntryNotFoundException {
+        {
+            File plainArchive = new File("small.zim");
+            FileInputStream fis = new FileInputStream("small.zim");
+            FdInput fd = new FdInput(fis.getFD(), 0, plainArchive.length());
+            TestArchive archive = new TestArchive(fd);
+            testArchive(archive);
+            assertFalse(archive.isMultiPart());
+            assertTrue(archive.hasTitleIndex());
             assertTrue(archive.check());
             assertEquals("", archive.getFilename());
         }
@@ -278,6 +298,56 @@ public class test {
             // This fails. See https://github.com/openzim/libzim/issues/812
             //assertTrue(archive.check());
             testArchive(archive);
+            assertFalse(archive.isMultiPart());
+            assertTrue(archive.hasTitleIndex());
+            assertEquals("", archive.getFilename());
+        }
+        System.gc();
+        System.runFinalization();
+    }
+
+    @Test
+    public void testArchiveWithAnEmbeddedArchiveFdInputNaive()
+            throws JNIKiwixException, IOException, ZimFileFormatException, EntryNotFoundException {
+        {
+            File plainArchive = new File("small.zim");
+            FileInputStream fis = new FileInputStream("small.zim.embedded");
+            FdInput fd1 = new FdInput(fis.getFD(), 8, plainArchive.length() / 2);
+            FdInput fd2 = new FdInput(fis.getFD(), fd1.offset + fd1.size, plainArchive.length() - fd1.size);
+
+            FdInput fds[] = {fd1, fd2};
+
+            TestArchive archive = new TestArchive(fds);
+            // This fails. See https://github.com/openzim/libzim/issues/812
+            //assertTrue(archive.check());
+            testArchive(archive);
+            assertTrue(archive.isMultiPart());
+            //Naive split cut the title index in the middle. libzim cannot read it.
+            assertFalse(archive.hasTitleIndex());
+            assertEquals("", archive.getFilename());
+        }
+        System.gc();
+        System.runFinalization();
+    }
+
+    @Test
+    public void testArchiveWithAnEmbeddedArchiveFdInput()
+            throws JNIKiwixException, IOException, ZimFileFormatException, EntryNotFoundException {
+        {
+            File plainArchive = new File("small.zim");
+            FileInputStream fis = new FileInputStream("small.zim.embedded");
+            FdInput fd1 = new FdInput(fis.getFD(), 8, plainArchive.length() / 10);
+            FdInput fd2 = new FdInput(fis.getFD(), fd1.offset + fd1.size, plainArchive.length() - fd1.size);
+
+            FdInput fds[] = {fd1, fd2};
+
+            TestArchive archive = new TestArchive(fds);
+            // This fails. See https://github.com/openzim/libzim/issues/812
+            //assertTrue(archive.check());
+            testArchive(archive);
+            assertTrue(archive.isMultiPart());
+            //If we don't cut in the middle of xapian db, we can read it.
+            assertTrue(archive.hasTitleIndex());
             assertEquals("", archive.getFilename());
         }
         System.gc();
