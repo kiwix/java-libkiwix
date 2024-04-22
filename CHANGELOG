@@ -1,3 +1,8 @@
+2.1.0
+* NEW: Allow zim::Archive to be created with a set of File descriptor (@mgautierfr https://github.com/kiwix/java-libkiwix/pull/87)
+* NEW: Wrap new methods migrateBookmarks and getBestTargetBookId of libkiwix (@mgautierfr https://github.com/kiwix/java-libkiwix/pull/85)
+* NEW: Libkiwix 13.1.0 and libzim 9.2.0 (@kelson42 https://github.com/kiwix/java-libkiwix/pull/86 https://github.com/kiwix/java-libkiwix/pull/88)
+
 2.0.0
 * NEW: Fix crash when using more than 512 bookmarks (@mgautierfr https://github.com/kiwix/java-libkiwix/issues/80)
 * NEW: libkiwix 13.0.0 and libzim 9.1.0 (@mgautierfr https://github.com/kiwix/java-libkiwix/pull/68)
