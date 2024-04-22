@@ -64,16 +64,17 @@ int jni2fd(const jobject& fdObj, JNIEnv* env)
 
 zim::FdInput jni2fdInput(const jobject& fdInputObj, JNIEnv* env)
 {
-  jclass class_fdesc = env->FindClass("org/kiwix/FdInput");
-  jfieldID field_id = env->GetFieldID(class_fdesc, "fd", "java/io/FileDescriptor");
-  jobject fdObj = env->GetField(fdInputObj, field_id);
+  jclass class_fdesc = env->FindClass("org/kiwix/libzim/FdInput");
+
+  jfieldID field_id = env->GetFieldID(class_fdesc, "fd", "Ljava/io/FileDescriptor;");
+  jobject fdObj = env->GetObjectField(fdInputObj, field_id);
   int fd = jni2fd(fdObj, env);
 
   field_id = env->GetFieldID(class_fdesc, "offset", "J");
-  long offset = env->GetLongField(fdObj, field_id);
+  long offset = env->GetLongField(fdInputObj, field_id);
 
   field_id = env->GetFieldID(class_fdesc, "size", "J");
-  long size = env->GetLongField(fdObj, field_id);
+  long size = env->GetLongField(fdInputObj, field_id);
 
   return zim::FdInput(fd, offset, size);
 }
@@ -147,13 +148,13 @@ JNIEXPORT void JNICALL Java_org_kiwix_libzim_Archive_setNativeArchiveEmbeddedFds
 #ifndef _WIN32
 
   jsize length = env->GetArrayLength(fdsObj);
-  std::vector<zim::FdInput> v(length);
+  std::vector<zim::FdInput> v;
 
   int i;
   for(i = 0; i<length; i++) {
     jobject fdObj = env->GetObjectArrayElement(fdsObj, i);
     auto fdInput = jni2fdInput(fdObj, env);
-    v.push_pack(fdInput);
+    v.push_back(fdInput);
   }
 
   try {

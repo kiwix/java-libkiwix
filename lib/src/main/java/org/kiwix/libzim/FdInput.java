@@ -26,4 +26,10 @@ public class FdInput
   public FileDescriptor fd;
   public long offset;
   public long size;
+
+  public FdInput(FileDescriptor fd_, long offset_, long size_) {
+    fd = fd_;
+    offset = offset_;
+    size = size_;
+  }
 }
