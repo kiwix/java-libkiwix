@@ -234,9 +234,9 @@ public class test {
         String zimFile = "non_existant.zim";
         try {
             TestArchive archive1 = new TestArchive(zimFile);
-            fail("ERROR: Archive created with invalid Zim file!");
+            fail("ERROR: Archive created with invalid ZIM file!");
         } catch (Exception e) {
-            assertEquals("error 2 opening file \"" + zimFile + "\"", e.getMessage());
+            assertEquals("Error opening as a split file: " + zimFile, e.getMessage());
         }
     }
 
