@@ -1,3 +1,6 @@
+2.1.1
+* NEW: Use libzim 9.2.1 (@kelson42 https://github.com/kiwix/java-libkiwix/pull/94)
+
 2.1.0
 * NEW: Allow zim::Archive to be created with a set of File descriptor (@mgautierfr https://github.com/kiwix/java-libkiwix/pull/87)
 * NEW: Wrap new methods migrateBookmarks and getBestTargetBookId of libkiwix (@mgautierfr https://github.com/kiwix/java-libkiwix/pull/85)
