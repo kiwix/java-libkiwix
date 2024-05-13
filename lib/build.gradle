@@ -28,12 +28,12 @@ ext.libzim_version = "9.2.1"
 
 apply from: 'publish.gradle'
 android {
-    compileSdk 32
-
+    compileSdk 34
+    namespace = "kiwix.org.kiwixlib"
     defaultConfig {
 
-        minSdk 21
-        targetSdk 32
+        minSdk 24
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
@@ -69,6 +69,14 @@ android {
         viewBinding true
     }
     ndkVersion '21.4.7075529'
+
+    // Enabled the lint to avoid potential errors.
+    lintOptions {
+        abortOnError true
+        checkAllWarnings = true
+        warningsAsErrors true
+        disable("GradleDependency", "UnknownNullness")
+    }
 }
 
 dependencies {
@@ -79,7 +87,7 @@ dependencies {
 ext.libkiwix_base_url = 'https://download.kiwix.org/release/libkiwix/'
 ext.libzim_base_url = 'https://download.openzim.org/release/libzim/'
 
-task downloadLibzimSoAndHeaderFiles(type: Download) {
+tasks.register('downloadLibzimSoAndHeaderFiles', Download) {
     src([
             libzim_base_url + 'libzim_android-arm-' + libzim_version + '.tar.gz',
             libzim_base_url + 'libzim_android-arm64-' + libzim_version + '.tar.gz',
@@ -91,7 +99,8 @@ task downloadLibzimSoAndHeaderFiles(type: Download) {
     overwrite true
 }
 
-task unzipLibzim(type: Copy) {
+tasks.register('unzipLibzim', Copy) {
+    mustRunAfter downloadLibzimSoAndHeaderFiles
     // unzip android arm
     from tarTree(buildDir.path + "/libzim_android-arm-" + libzim_version + ".tar.gz")
     into buildDir
@@ -109,11 +118,11 @@ task unzipLibzim(type: Copy) {
     into buildDir
 }
 
-task renameLibzimFolders() {
+tasks.register('renameLibzimFolders') {
     removeVersionFromFolderName(buildDir.path, "libzim_", libzim_version)
 }
 
-task copyLibzimHeaderAndSoFiles(type: Copy) {
+tasks.register('copyLibzimHeaderAndSoFiles', Copy) {
     copy {
         // copying header file
         from buildDir.path + "/libzim_android-arm/include/"
@@ -151,7 +160,7 @@ task copyLibzimHeaderAndSoFiles(type: Copy) {
     }
 }
 
-task renameLibzimSoFile(type: Copy) {
+tasks.register('renameLibzimSoFile', Copy) {
     if (libzim_version != null) {
         def finalLibzimVersion = getActualLibraryVersion(libzim_version)
 
@@ -167,7 +176,7 @@ task renameLibzimSoFile(type: Copy) {
     }
 }
 
-task downloadLibkiwixSoAndHeaderFiles(type: Download) {
+tasks.register('downloadLibkiwixSoAndHeaderFiles', Download) {
     src([
             libkiwix_base_url + 'libkiwix_android-arm-' + libkiwix_version + '.tar.gz',
             libkiwix_base_url + 'libkiwix_android-arm64-' + libkiwix_version + '.tar.gz',
@@ -179,7 +188,7 @@ task downloadLibkiwixSoAndHeaderFiles(type: Download) {
     overwrite true
 }
 
-task renameLibkiwixFolders() {
+tasks.register('renameLibkiwixFolders') {
     removeVersionFromFolderName(buildDir.path, "libkiwix_", libkiwix_version)
 }
 
@@ -196,7 +205,8 @@ static void removeVersionFromFolderName(String path, String startWith, String ve
     }
 }
 
-task unzipLibkiwix(type: Copy) {
+tasks.register('unzipLibkiwix', Copy) {
+    mustRunAfter downloadLibkiwixSoAndHeaderFiles
     // unzip android arm
     from tarTree(buildDir.path + "/libkiwix_android-arm-" + libkiwix_version + ".tar.gz")
     into buildDir
@@ -214,7 +224,7 @@ task unzipLibkiwix(type: Copy) {
     into buildDir
 }
 
-task copyLibkiwixHeaderAndSoFiles(type: Copy) {
+tasks.register('copyLibkiwixHeaderAndSoFiles', Copy) {
     copy {
         // copying header file
         from buildDir.path + "/libkiwix_android-arm/include/kiwix/"
@@ -252,7 +262,7 @@ task copyLibkiwixHeaderAndSoFiles(type: Copy) {
     }
 }
 
-task renameLibkiwixSoFile(type: Copy) {
+tasks.register('renameLibkiwixSoFile', Copy) {
     if (libkiwix_version != null) {
         def finalLibkiwixVersion = getActualLibraryVersion(libkiwix_version)
         def sourceFile = file(buildDir.path + "/libkiwix.so." + finalLibkiwixVersion)
@@ -277,23 +287,23 @@ static String getActualLibraryVersion(String libraryVersion) {
     return dashIndex != -1 ? libraryVersion.substring(0, dashIndex) : libraryVersion
 }
 
-task testSourceJar(type: Jar) {
+tasks.register('testSourceJar', Jar) {
     from android.sourceSets.test.java.srcDirs
-    archiveName = 'test-sources.jar'
+    archiveBaseName = 'test-sources'
 }
 
-task compileTestFile(type: JavaCompile) {
+tasks.register('compileTestFile', JavaCompile) {
     dependsOn testSourceJar
     source = file('src/test')
     destinationDirectory = file("$buildDir")
-    classpath = files("src/test/junit-4.13.jar" , "src/test/hamcrest-core-1.4.jar", "build/libs/test-sources.jar")
+    classpath = files("src/test/junit-4.13.jar", "src/test/hamcrest-core-1.4.jar", "build/libs/test-sources-${VERSION}.jar")
 }
 
-task runTests(type: JavaExec) {
+tasks.register('runTests', JavaExec) {
     workingDir("$projectDir/src/test/")
     dependsOn compileTestFile
     classpath = files("$buildDir", 'src/test/java/', 'src/test/junit-4.13.jar', 'src/test/hamcrest-core-1.3.jar')
-    main = 'org.junit.runner.JUnitCore'
+    mainClass = 'org.junit.runner.JUnitCore'
     args = ['test']
     jvmArgs = [
             '-Djava.library.path=' + buildDir.path,
@@ -301,11 +311,11 @@ task runTests(type: JavaExec) {
     ]
 }
 
-task createCodeCoverageReport(type: JavaExec) {
+tasks.register('createCodeCoverageReport', JavaExec) {
     workingDir "${projectDir}/src/test/"
     dependsOn runTests
     classpath = files('src/test/', 'src/test/java/', 'src/test/junit-4.13.jar', 'src/test/hamcrest-core-1.3.jar', 'src/test/jacoco-0.8.7/lib/*')
-    main = 'org.jacoco.cli.internal.Main'
+    mainClass = 'org.jacoco.cli.internal.Main'
     args = [
             'report', '../../build/jacoco/jacoco.exec',
             '--classfiles', 'java/org/kiwix', '--classfiles', '../../build/org/kiwix',
@@ -313,14 +323,14 @@ task createCodeCoverageReport(type: JavaExec) {
     ]
 }
 
-task checkCurrentJavaVersion() {
-    if (JavaVersion.current() != JavaVersion.VERSION_11) {
-        throw new RuntimeException("This build must be run with java 11. your current java version is ${JavaVersion.current()}")
+tasks.register('checkCurrentJavaVersion') {
+    if (JavaVersion.current() != JavaVersion.VERSION_17) {
+        throw new RuntimeException("This build must be run with java 17. your current java version is ${JavaVersion.current()}")
     }
 }
 
 
-task buildHeaders(type: Exec) {
+tasks.register('buildHeaders', Exec) {
     workingDir "${projectDir}/src/main/java/org/kiwix/"
     commandLine 'bash', '-c', "javac -h ${buildDir}/include/javah_generated/ -d ${projectDir}/src/test/java/ ${getLibzimFiles()} ${getLibkiwixFiles()}"
 }
@@ -358,7 +368,7 @@ String getLibzimFiles() {
         "${projectDir}/src/main/java/org/kiwix/libzim/FdInput.java"
 }
 
-task buildLinuxBinding(type: Exec) {
+tasks.register('buildLinuxBinding', Exec) {
     workingDir "${projectDir}/src/main/cpp/"
     commandLine 'bash', '-c', "cmake . -B ${buildDir} && make -C ${buildDir}"
 }
