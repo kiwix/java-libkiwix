@@ -69,6 +69,14 @@ android {
         viewBinding true
     }
     ndkVersion '21.4.7075529'
+
+    // Enabled the lint to avoid potential errors.
+    lintOptions {
+        abortOnError true
+        checkAllWarnings = true
+        warningsAsErrors true
+        disable("GradleDependency", "UnknownNullness")
+    }
 }
 
 dependencies {
