@@ -1,3 +1,7 @@
+2.2.0
+* NEW: Use libzim 9.2.1-1 and libkiwix 13.1.0-3 (@kelson42 https://github.com/kiwix/java-libkiwix/pull/98)
+* NEW: Added support for SDK 34 (@MohitMaliFtechiz https://github.com/kiwix/java-libkiwix/pull/97)
+
 2.1.1
 * NEW: Use libzim 9.2.1 (@kelson42 https://github.com/kiwix/java-libkiwix/pull/94)
 
