@@ -23,8 +23,8 @@ ext {
 }
 
 // Replace these versions with the latest available versions of libkiwix and libzim
-ext.libkiwix_version = "13.1.0-1"
-ext.libzim_version = "9.2.1"
+ext.libkiwix_version = "13.1.0-3"
+ext.libzim_version = "9.2.1-1"
 
 apply from: 'publish.gradle'
 android {
@@ -93,7 +93,7 @@ tasks.register('downloadLibzimSoAndHeaderFiles', Download) {
             libzim_base_url + 'libzim_android-arm64-' + libzim_version + '.tar.gz',
             libzim_base_url + 'libzim_android-x86-' + libzim_version + '.tar.gz',
             libzim_base_url + 'libzim_android-x86_64-' + libzim_version + '.tar.gz',
-            libzim_base_url + 'libzim_linux-x86_64-bionic-' + libzim_version + '.tar.gz'
+            libzim_base_url + 'libzim_linux-x86_64-' + libzim_version + '.tar.gz'
     ])
     dest buildDir
     overwrite true
@@ -114,7 +114,7 @@ tasks.register('unzipLibzim', Copy) {
     from tarTree(buildDir.path + "/libzim_android-x86_64-" + libzim_version + ".tar.gz")
     into buildDir
     // unzip linux x86_64
-    from tarTree(buildDir.path + "/libzim_linux-x86_64-bionic-" + libzim_version + ".tar.gz")
+    from tarTree(buildDir.path + "/libzim_linux-x86_64-" + libzim_version + ".tar.gz")
     into buildDir
 }
 
@@ -155,7 +155,7 @@ tasks.register('copyLibzimHeaderAndSoFiles', Copy) {
 
     copy {
         // copying linux_x86_64 so file
-        from buildDir.path + "/libzim_linux-x86_64-bionic/lib/x86_64-linux-gnu/libzim.so." + getActualLibraryVersion(libzim_version)
+        from buildDir.path + "/libzim_linux-x86_64/lib/x86_64-linux-gnu/libzim.so." + getActualLibraryVersion(libzim_version)
         into buildDir.path
     }
 }
