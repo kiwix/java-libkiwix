@@ -71,6 +71,13 @@ afterEvaluate {
             }
         }
     }
+
+    // Set dependency for the metadata file generation task
+    tasks.withType(GenerateModuleMetadata).tap {
+        configureEach {
+            dependsOn tasks.named("androidSourcesJar")
+        }
+    }
 }
 
 signing {
