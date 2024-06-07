@@ -1,23 +1,6 @@
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
-tasks.register('androidSourcesJar', Jar) {
-    archiveClassifier.set('sources')
-    if (project.plugins.findPlugin("com.android.library")) {
-        // For Android libraries
-        from android.sourceSets.main.java.srcDirs
-        from android.sourceSets.main.kotlin.srcDirs
-    } else {
-        // For pure Kotlin libraries, in case you have them
-        from sourceSets.main.java.srcDirs
-        from sourceSets.main.kotlin.srcDirs
-    }
-}
-
-artifacts {
-    archives androidSourcesJar
-}
-
 def siteUrl = 'https://www.kiwix.org/en/'
 def gitUrl = 'https://github.com/kiwix/libkiwix.git'
 
@@ -35,7 +18,6 @@ afterEvaluate {
 
                 from components.release
 
-                artifact androidSourcesJar
                 pom {
                     name = ARTIFACT_ID
                     description = 'LibKiwix Android library'
@@ -69,13 +51,6 @@ afterEvaluate {
                     password = ossrhPassword
                 }
             }
-        }
-    }
-
-    // Set dependency for the metadata file generation task
-    tasks.withType(GenerateModuleMetadata).tap {
-        configureEach {
-            dependsOn tasks.named("androidSourcesJar")
         }
     }
 }
