@@ -12,6 +12,8 @@ Library for accessing [libkiwix](https://github.com/kiwix/libkiwix) and [libzim]
 
 # Build
 
+The project requires `Java 17` to compile, Therefore set the `Gradle JDK` to `Java 17`.
+
 ## Install dependencies
 ```bash
 ./install_deps.sh
