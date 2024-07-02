@@ -19,12 +19,12 @@ ext["sonatypeStagingProfileId"] = properties.getProperty("sonatypeStagingProfile
 ext {
     set("GROUP_ID", "org.kiwix")
     set("ARTIFACT_ID", "libkiwix")
-    set("VERSION", "2.2.0")
+    set("VERSION", "2.2.1")
 }
 
 // Replace these versions with the latest available versions of libkiwix and libzim
-ext.libkiwix_version = "13.1.0-3"
-ext.libzim_version = "9.2.1-1"
+ext.libkiwix_version = "13.1.0-4"
+ext.libzim_version = "9.2.2"
 
 apply from: 'publish.gradle'
 android {
@@ -75,7 +75,7 @@ android {
         abortOnError true
         checkAllWarnings = true
         warningsAsErrors true
-        disable("GradleDependency", "UnknownNullness")
+        disable("GradleDependency", "UnknownNullness", "OldTargetApi")
     }
 }
 

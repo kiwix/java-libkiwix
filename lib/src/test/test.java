@@ -236,7 +236,7 @@ public class test {
             TestArchive archive1 = new TestArchive(zimFile);
             fail("ERROR: Archive created with invalid ZIM file!");
         } catch (Exception e) {
-            assertEquals("Error opening as a split file: " + zimFile, e.getMessage());
+            assertEquals("Error opening ZIM file: " + zimFile, e.getMessage());
         }
     }
 
