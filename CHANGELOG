@@ -1,4 +1,8 @@
-2.2.1
+2.2.3
+* NEW: Use libzim 9.2.3-2 (@MohitMaliFtechiz https://github.com/kiwix/java-libkiwix/pull/115)
+* NEW: Use libkiwix 14.0.0 (@MohitMaliFtechiz https://github.com/kiwix/java-libkiwix/pull/115)
+
+2.2.2
 * NEW: Use libzim 9.2.3 (@kelson42 https://github.com/kiwix/java-libkiwix/pull/113)
 
 2.2.1
