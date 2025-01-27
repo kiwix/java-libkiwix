@@ -23,7 +23,7 @@ ext {
 }
 
 // Replace these versions with the latest available versions of libkiwix and libzim
-ext.libkiwix_version = "14.0.0"
+ext.libkiwix_version = "14.0.0-1"
 ext.libzim_version = "9.2.3-2"
 
 apply from: 'publish.gradle'
