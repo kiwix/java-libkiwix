@@ -96,6 +96,11 @@ inline void setHandle(JNIEnv* env, jobject thisObj, Args && ...args)
 }
 #define SET_HANDLE(NATIVE_TYPE, OBJ, VALUE) setHandle<NATIVE_TYPE>(env, OBJ, VALUE)
 
+class NativeHandleDisposedException : public std::runtime_error {
+public:
+    explicit NativeHandleDisposedException(const std::string& message)
+            : std::runtime_error(message) {}
+};
 
 // Return a shared_ptr for the handle
 template<typename T>
@@ -104,6 +109,9 @@ shared_ptr<T> getPtr(JNIEnv* env, jobject thisObj, const char* handleName = "nat
   jclass thisClass = env->GetObjectClass(thisObj);
   jfieldID fidNumber = env->GetFieldID(thisClass, handleName, "J");
   auto handle = reinterpret_cast<shared_ptr<T>*>(env->GetLongField(thisObj, fidNumber));
+  if (handle == nullptr) {
+      throw NativeHandleDisposedException("The native object is already has been disposed");
+  }
   return *handle;
 }
 #define GET_PTR(NATIVE_TYPE) getPtr<NATIVE_TYPE>(env, thisObj)
