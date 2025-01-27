@@ -53,6 +53,9 @@ catch(const zim::ZimFileFormatError& e) { \
 } catch(const zim::EntryNotFound& e) { \
   throwException(env, "org/kiwix/libzim/EntryNotFoundException", e.what()); \
   return RET; \
+} catch (const NativeHandleDisposedException& e) { \
+  throwException(env, "java/lang/IllegalStateException", e.what()); \
+  return RET; \
 } catch (const std::ios_base::failure& e) { \
   throwException(env, "java/io/IOException", e.what()); \
   return RET; \
