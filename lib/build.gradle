@@ -19,7 +19,7 @@ ext["sonatypeStagingProfileId"] = properties.getProperty("sonatypeStagingProfile
 ext {
     set("GROUP_ID", "org.kiwix")
     set("ARTIFACT_ID", "libkiwix")
-    set("VERSION", "2.2.3")
+    set("VERSION", "2.2.4")
 }
 
 // Replace these versions with the latest available versions of libkiwix and libzim
