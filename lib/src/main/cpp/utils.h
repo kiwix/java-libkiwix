@@ -110,7 +110,7 @@ shared_ptr<T> getPtr(JNIEnv* env, jobject thisObj, const char* handleName = "nat
   jfieldID fidNumber = env->GetFieldID(thisClass, handleName, "J");
   auto handle = reinterpret_cast<shared_ptr<T>*>(env->GetLongField(thisObj, fidNumber));
   if (handle == nullptr) {
-      throw NativeHandleDisposedException("The native object is already has been disposed");
+      throw NativeHandleDisposedException("The native object has already been disposed");
   }
   return *handle;
 }
