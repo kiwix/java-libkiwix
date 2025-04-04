@@ -15,11 +15,36 @@ ext["key"] = properties.getProperty("signing.key", System.getenv('SIGNING_KEY'))
 ext["ossrhUsername"] = properties.getProperty("ossrhUsername", System.getenv('OSSRH_USERNAME'))
 ext["ossrhPassword"] = properties.getProperty("ossrhPassword", System.getenv('OSSRH_PASSWORD'))
 ext["sonatypeStagingProfileId"] = properties.getProperty("sonatypeStagingProfileId", System.getenv('SONATYPE_STAGING_PROFILE_ID'))
+ext["snapshot"] = System.getenv('SNAPSHOT') ?: false
 
 ext {
     set("GROUP_ID", "org.kiwix")
     set("ARTIFACT_ID", "libkiwix")
     set("VERSION", "2.2.4")
+}
+
+if (snapshot) {
+    ext["VERSION_CODE"] = VERSION + "-SNAPSHOT"
+} else {
+    ext["VERSION_CODE"] = VERSION
+}
+
+// Publish to Maven Central
+nexusPublishing {
+    useStaging.set(provider {
+        def release = publishing.publications.release
+        release.version.endsWith("-SNAPSHOT")
+    })
+    repositories {
+        sonatype {
+            stagingProfileId = properties.getProperty("sonatypeStagingProfileId", System.getenv('SONATYPE_STAGING_PROFILE_ID'))
+            username = properties.getProperty("ossrhUsername", System.getenv('OSSRH_USERNAME'))
+            password = properties.getProperty("ossrhPassword", System.getenv('OSSRH_PASSWORD'))
+            version = VERSION_CODE
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+        }
+    }
 }
 
 // Replace these versions with the latest available versions of libkiwix and libzim
