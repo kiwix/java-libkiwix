@@ -79,13 +79,13 @@ android {
     externalNativeBuild {
         cmake {
             path file('src/main/cpp/CMakeLists.txt')
-            version '3.18.1'
+            version '3.22.1'
         }
     }
     buildFeatures {
         viewBinding true
     }
-    ndkVersion '21.4.7075529'
+    ndkVersion '23.2.8568313'
 
     // Enabled the lint to avoid potential errors.
     lintOptions {
