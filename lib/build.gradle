@@ -48,6 +48,7 @@ android {
 
     buildTypes {
         release {
+            jniDebuggable true
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -76,6 +77,14 @@ android {
         checkAllWarnings = true
         warningsAsErrors true
         disable("GradleDependency", "UnknownNullness", "OldTargetApi")
+    }
+    // Do not strip the .so files, otherwise; it will remove the debug symbol from aar file.
+    // It increases the size of the aar file since it includes the debug symbol in it.
+    packagingOptions {
+        doNotStrip "*/arm64-v8a/*.so"
+        doNotStrip "*/armeabi-v7a/*.so"
+        doNotStrip "*/x86/*.so"
+        doNotStrip "*/x86_64/*.so"
     }
 }
 
