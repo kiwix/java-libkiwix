@@ -40,8 +40,8 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
-                cppFlags ''
-                arguments "-DANDROID_STL=c++_shared", "-DBUILD_DIR=${buildDir}"
+                cppFlags '-g'
+                arguments "-DANDROID_STL=c++_shared", "-DBUILD_DIR=${buildDir}", "-DANDROID_DEBUG_SYMBOLS=ON"
             }
         }
     }
@@ -51,6 +51,22 @@ android {
             jniDebuggable true
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            packaging {
+                // Do not strip the .so files, otherwise; it will remove the debug symbol from aar file.
+                // It increases the size of the aar file since it includes the debug symbol in it.
+                jniLibs {
+                    keepDebugSymbols.add("**/*.so")
+                }
+            }
+        }
+        debug {
+            // Do not strip the .so files, otherwise; it will remove the debug symbol from aar file.
+            // It increases the size of the aar file since it includes the debug symbol in it.
+            packaging {
+                jniLibs {
+                    keepDebugSymbols.add("**/*.so")
+                }
+            }
         }
     }
     compileOptions {
@@ -77,14 +93,6 @@ android {
         checkAllWarnings = true
         warningsAsErrors true
         disable("GradleDependency", "UnknownNullness", "OldTargetApi")
-    }
-    // Do not strip the .so files, otherwise; it will remove the debug symbol from aar file.
-    // It increases the size of the aar file since it includes the debug symbol in it.
-    packagingOptions {
-        doNotStrip "*/arm64-v8a/*.so"
-        doNotStrip "*/armeabi-v7a/*.so"
-        doNotStrip "*/x86/*.so"
-        doNotStrip "*/x86_64/*.so"
     }
 }
 
