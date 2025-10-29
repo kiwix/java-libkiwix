@@ -41,7 +41,7 @@ android {
         externalNativeBuild {
             cmake {
                 cppFlags '-g'
-                arguments "-DANDROID_STL=c++_shared", "-DBUILD_DIR=${buildDir}", "-DANDROID_DEBUG_SYMBOLS=ON"
+                arguments "-DANDROID_STL=c++_shared", "-DBUILD_DIR=${buildDir}", "-DANDROID_DEBUG_SYMBOLS=ON", "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON"
             }
         }
     }
@@ -85,7 +85,10 @@ android {
     buildFeatures {
         viewBinding true
     }
-    ndkVersion '23.2.8568313'
+    // Upgrading to this NDK version because older NDKs compile `libc++_shared.so`
+    // with a 4 KB page size. Starting with NDK r27, it is built with a 16 KB page size by default.
+    // This resolves compatibility issues reported by the Play Store. See #119 for details.
+    ndkVersion '27.3.13750724'
 
     // Enabled the lint to avoid potential errors.
     lintOptions {
