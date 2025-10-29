@@ -1,6 +1,6 @@
 
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY BOTH)
-cmake_minimum_required(VERSION 3.18.1)
+cmake_minimum_required(VERSION 3.22.1)
 
 project("libkiwix_wrapper")
 
