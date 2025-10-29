@@ -40,16 +40,33 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
-                cppFlags ''
-                arguments "-DANDROID_STL=c++_shared", "-DBUILD_DIR=${buildDir}"
+                cppFlags '-g'
+                arguments "-DANDROID_STL=c++_shared", "-DBUILD_DIR=${buildDir}", "-DANDROID_DEBUG_SYMBOLS=ON"
             }
         }
     }
 
     buildTypes {
         release {
+            jniDebuggable true
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            packaging {
+                // Do not strip the .so files, otherwise; it will remove the debug symbol from aar file.
+                // It increases the size of the aar file since it includes the debug symbol in it.
+                jniLibs {
+                    keepDebugSymbols.add("**/*.so")
+                }
+            }
+        }
+        debug {
+            // Do not strip the .so files, otherwise; it will remove the debug symbol from aar file.
+            // It increases the size of the aar file since it includes the debug symbol in it.
+            packaging {
+                jniLibs {
+                    keepDebugSymbols.add("**/*.so")
+                }
+            }
         }
     }
     compileOptions {
