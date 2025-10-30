@@ -1,3 +1,9 @@
+2.3.0
+* NEW: Use libkiwix 14.1.0 (@MohitMaliFtechiz https://github.com/kiwix/java-libkiwix/pull/124)
+* NEW: Use libzim 9.4.0 (@MohitMaliFtechiz https://github.com/kiwix/java-libkiwix/pull/124)
+* FIX: Added support for Android's 16KB page size. (@MohitMaliFtechiz https://github.com/kiwix/java-libkiwix/pull/120)
+* FIX: Added debug symbol in our bindings. (@MohitMaliFtechiz https://github.com/kiwix/java-libkiwix/pull/123)
+
 2.2.4
 * NEW: Use libkiwix 14.0.0-1 (@MohitMaliFtechiz https://github.com/kiwix/java-libkiwix/pull/118)
 * FIX: Native crashes on Android (@MohitMaliFtechiz, @mgautierfr https://github.com/kiwix/java-libkiwix/pull/116)
