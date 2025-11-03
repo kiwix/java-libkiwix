@@ -180,6 +180,7 @@ METHOD(jboolean, hasIllustration, jint size) {
   return TO_JNI(THIS->hasIllustration(TO_C(size)));
 } CATCH_EXCEPTION(false)
 
+DEPRECATED
 GETTER(jlongArray, getIllustrationSizes)
 
 METHOD(jobject, getEntryByPath__Ljava_lang_String_2, jstring path) {
