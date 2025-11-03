@@ -24,6 +24,7 @@ import org.kiwix.libzim.Entry;
 import org.kiwix.libzim.Item;
 import org.kiwix.libzim.EntryIterator;
 import org.kiwix.libzim.FdInput;
+import org.kiwix.libzim.IllustrationInfo;
 import java.io.FileDescriptor;
 
 public class Archive
@@ -67,7 +68,7 @@ public class Archive
   public native String getMetadata(String name) throws EntryNotFoundException;
   public native Item getMetadataItem(String name) throws EntryNotFoundException;
   public native String[] getMetadataKeys();
-
+  public native Item getIllustrationItem(IllustrationInfo info);
   public native Item getIllustrationItem(int size);
   public native boolean hasIllustration(int size);
   @Deprecated
