@@ -76,6 +76,17 @@ public class test {
         assertEquals(faviconData.length, illustrationData.size());
         assertTrue(Arrays.equals(faviconData, illustrationData.getData()));
 
+        IllustrationInfo illustrationInfo = new IllustrationInfo();
+        illustrationInfo.width = 48;
+        illustrationInfo.height = 48;
+        illustrationInfo.scale = 1.0f;
+        TestItem item1 = archive.getIllustrationItem(illustrationInfo);
+        assertEquals(faviconData.length, item1.getSize());
+        assertEquals("image/png", item1.getMimetype());
+        TestBlob illustrationData1 = item1.getData();
+        assertEquals(faviconData.length, illustrationData1.size());
+        assertTrue(Arrays.equals(faviconData, illustrationData1.getData()));
+
         // Checking direct access information
         DirectAccessInfo dai = item.getDirectAccessInformation();
         assertNotEquals("", dai.filename);

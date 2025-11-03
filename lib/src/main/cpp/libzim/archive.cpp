@@ -172,7 +172,24 @@ METHOD(jobject, getMetadataItem, jstring name) {
 
 GETTER(jobjectArray, getMetadataKeys)
 
-METHOD(jobject, getIllustrationItem, jint size) {
+METHOD(jobject, getIllustrationItem__Lorg_kiwix_libzim_IllustrationInfo_2, jobject infoObj) {
+    jclass infoClass = env->GetObjectClass(infoObj);
+    jfieldID widthField = env->GetFieldID(infoClass, "width", "I");
+    jfieldID heightField = env->GetFieldID(infoClass, "height", "I");
+    jfieldID scaleField = env->GetFieldID(infoClass, "scale", "F");
+
+    jint width = env->GetIntField(infoObj, widthField);
+    jint height = env->GetIntField(infoObj, heightField);
+    jfloat scale = env->GetFloatField(infoObj, scaleField);
+    zim::IllustrationInfo ii;
+    ii.width = static_cast<uint32_t>(width);
+    ii.height = static_cast<uint32_t>(height);
+    ii.scale = static_cast<float>(scale);
+    auto item = THIS->getIllustrationItem(ii);
+    return BUILD_WRAPPER("org/kiwix/libzim/Item", item);
+} CATCH_EXCEPTION(nullptr)
+
+METHOD(jobject, getIllustrationItem__I, jint size) {
   return BUILD_WRAPPER("org/kiwix/libzim/Item", THIS->getIllustrationItem(TO_C(size)));
 } CATCH_EXCEPTION(nullptr)
 
@@ -180,6 +197,7 @@ METHOD(jboolean, hasIllustration, jint size) {
   return TO_JNI(THIS->hasIllustration(TO_C(size)));
 } CATCH_EXCEPTION(false)
 
+DEPRECATED
 GETTER(jlongArray, getIllustrationSizes)
 
 METHOD(jobject, getEntryByPath__Ljava_lang_String_2, jstring path) {

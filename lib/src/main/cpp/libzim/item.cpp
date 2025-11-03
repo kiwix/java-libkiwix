@@ -51,6 +51,6 @@ METHOD0(jobject, getDirectAccessInformation) {
   setDaiObjValue("", 0, directObjInfo, env);
 
   auto cDirectObjInfo = THIS->getDirectAccessInformation();
-  setDaiObjValue(cDirectObjInfo.first, cDirectObjInfo.second, directObjInfo, env);
+  setDaiObjValue(cDirectObjInfo.filename, cDirectObjInfo.offset, directObjInfo, env);
   return directObjInfo;
 } CATCH_EXCEPTION(nullptr)

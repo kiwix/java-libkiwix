@@ -23,6 +23,7 @@ import org.kiwix.libzim.ZimFileFormatException;
 import org.kiwix.libzim.EntryIterator;
 import org.kiwix.libzim.Archive;
 import java.io.FileDescriptor;
+import org.kiwix.libzim.IllustrationInfo;
 import org.kiwix.libzim.*;
 
 public class TestArchive
@@ -69,6 +70,8 @@ public class TestArchive
   public String getMetadata(String name) throws EntryNotFoundException { return inner.getMetadata(name); }
   public TestItem getMetadataItem(String name) throws EntryNotFoundException { return new TestItem(inner.getMetadataItem(name)); }
   public String[] getMetadataKeys() { return inner.getMetadataKeys(); }
+
+  public TestItem getIllustrationItem(IllustrationInfo illustrationInfo) { return new TestItem(inner.getIllustrationItem(illustrationInfo)); }
 
   public TestItem getIllustrationItem(int size) { return new TestItem(inner.getIllustrationItem(size)); }
   public boolean hasIllustration(int size) { return inner.hasIllustration(size); }
