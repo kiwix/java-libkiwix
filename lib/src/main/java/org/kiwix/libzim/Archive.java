@@ -70,6 +70,7 @@ public class Archive
 
   public native Item getIllustrationItem(int size);
   public native boolean hasIllustration(int size);
+  @Deprecated
   public native long[] getIllustrationSizes();
 
   public native Entry getEntryByPath(String path) throws EntryNotFoundException;
