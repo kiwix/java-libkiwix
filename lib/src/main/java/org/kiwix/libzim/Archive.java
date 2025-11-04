@@ -132,6 +132,9 @@ public class Archive
   public native EntryIterator iterEfficient();
   public native EntryIterator findByPath(String path);
   public native EntryIterator findByTitle(String path);
+  public native long getDirentCacheMaxSize();
+  public native long getDirentCacheCurrentSize();
+  public native void setDirentCacheMaxSize(long nbDirents);
 
 
   private native void setNativeArchive(String filename);

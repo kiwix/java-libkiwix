@@ -136,5 +136,9 @@ public class TestArchive
   public TestEntryIterator findByPath(String path) { return new TestEntryIterator(inner.findByPath(path)); }
   public TestEntryIterator findByTitle(String path) { return new TestEntryIterator(inner.findByTitle(path)); }
 
+  public long getDirentCacheMaxSize() { return inner.getDirentCacheMaxSize(); }
+  public long getDirentCacheCurrentSize() { return inner.getDirentCacheCurrentSize(); }
+  public void setDirentCacheMaxSize(long nbDirents) { inner.setDirentCacheMaxSize(nbDirents); }
+
   public void dispose() { inner.dispose(); }
 }

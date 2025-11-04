@@ -341,6 +341,12 @@ GETTER(jstring, getChecksum)
 GETTER(jboolean, check)
 GETTER(jboolean, isMultiPart)
 GETTER(jboolean, hasNewNamespaceScheme)
+GETTER(jlong, getDirentCacheMaxSize)
+GETTER(jlong, getDirentCacheCurrentSize)
+
+METHOD(void, setDirentCacheMaxSize, jlong nbDirents) {
+    THIS->setDirentCacheMaxSize(static_cast<size_t>(nbDirents));
+} CATCH_EXCEPTION()
 
 #define ITER_BY_PATH 0
 #define ITER_BY_TITLE 1

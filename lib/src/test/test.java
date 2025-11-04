@@ -220,6 +220,12 @@ public class test {
         } catch(Exception e) {
             fail("ERROR: Must be a EntryNotFoundException.");
         }
+
+        long maxCacheSize = archive.getDirentCacheMaxSize();
+        assertEquals(512, maxCacheSize);
+        long currentCacheSize = archive.getDirentCacheCurrentSize();
+        assertEquals(19, currentCacheSize);
+        archive.setDirentCacheMaxSize(19);
         System.gc();
         System.runFinalization();
     }
