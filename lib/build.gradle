@@ -386,7 +386,8 @@ String getLibzimFiles() {
         "${projectDir}/src/main/java/org/kiwix/libzim/ZimFileFormatException.java " +
         "${projectDir}/src/main/java/org/kiwix/libzim/EntryNotFoundException.java " +
         "${projectDir}/src/main/java/org/kiwix/libzim/FdInput.java " +
-        "${projectDir}/src/main/java/org/kiwix/libzim/IllustrationInfo.java"
+        "${projectDir}/src/main/java/org/kiwix/libzim/IllustrationInfo.java " +
+        "${projectDir}/src/main/java/org/kiwix/libzim/OpenConfig.java"
 }
 
 tasks.register('buildLinuxBinding', Exec) {

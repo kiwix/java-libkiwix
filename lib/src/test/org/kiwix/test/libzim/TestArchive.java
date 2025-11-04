@@ -37,9 +37,19 @@ public class TestArchive
     inner = new Archive(filename);
   }
 
+  public TestArchive(String filename, OpenConfig openConfig) throws ZimFileFormatException
+  {
+    inner = new Archive(filename, openConfig);
+  }
+
   public TestArchive(FileDescriptor fd) throws ZimFileFormatException
   {
     inner = new Archive(fd);
+  }
+
+  public TestArchive(FileDescriptor fd, OpenConfig openConfig) throws ZimFileFormatException
+  {
+    inner = new Archive(fd, openConfig);
   }
 
   public TestArchive(FileDescriptor fd, long offset, long size)
@@ -48,16 +58,34 @@ public class TestArchive
     inner = new Archive(fd, offset, size);
   }
 
+  public TestArchive(FileDescriptor fd, long offset, long size, OpenConfig openConfig)
+          throws ZimFileFormatException
+  {
+    inner = new Archive(fd, offset, size, openConfig);
+  }
+
   public TestArchive(FdInput fd)
           throws ZimFileFormatException
   {
     inner = new Archive(fd);
   }
 
+  public TestArchive(FdInput fd, OpenConfig openConfig)
+          throws ZimFileFormatException
+  {
+    inner = new Archive(fd, openConfig);
+  }
+
   public TestArchive(FdInput[] fds)
           throws ZimFileFormatException
   {
     inner = new Archive(fds);
+  }
+
+  public TestArchive(FdInput[] fds, OpenConfig openConfig)
+          throws ZimFileFormatException
+  {
+    inner = new Archive(fds, openConfig);
   }
 
   public String getFilename() { return inner.getFilename(); }

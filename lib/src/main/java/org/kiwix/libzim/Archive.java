@@ -25,6 +25,7 @@ import org.kiwix.libzim.Item;
 import org.kiwix.libzim.EntryIterator;
 import org.kiwix.libzim.FdInput;
 import org.kiwix.libzim.IllustrationInfo;
+import org.kiwix.libzim.OpenConfig;
 import java.io.FileDescriptor;
 
 public class Archive
@@ -35,9 +36,18 @@ public class Archive
     setNativeArchive(filename);
   }
 
+  public Archive(String filename, OpenConfig config) throws ZimFileFormatException {
+    setNativeArchiveWithConfig(filename, config);
+  }
+
   public Archive(FileDescriptor fd) throws ZimFileFormatException
   {
     setNativeArchiveByFD(fd);
+  }
+
+  public Archive(FileDescriptor fd, OpenConfig openConfig) throws ZimFileFormatException
+  {
+    setNativeArchiveByFDWithConfig(fd, openConfig);
   }
 
   public Archive(FileDescriptor fd, long offset, long size)
@@ -46,16 +56,34 @@ public class Archive
     setNativeArchiveEmbedded(fd, offset, size);
   }
 
+  public Archive(FileDescriptor fd, long offset, long size, OpenConfig openConfig)
+          throws ZimFileFormatException
+  {
+    setNativeArchiveEmbeddedWithConfig(fd, offset, size, openConfig);
+  }
+
   public Archive(FdInput fd)
   throws ZimFileFormatException
   {
     setNativeArchiveEmbeddedFd(fd);
   }
 
+  public Archive(FdInput fd, OpenConfig openConfig)
+          throws ZimFileFormatException
+  {
+    setNativeArchiveEmbeddedFdWithConfig(fd, openConfig);
+  }
+
   public Archive(FdInput[] fds)
   throws ZimFileFormatException
   {
     setNativeArchiveEmbeddedFds(fds);
+  }
+
+  public Archive(FdInput[] fds, OpenConfig openConfig)
+          throws ZimFileFormatException
+  {
+    setNativeArchiveEmbeddedFdsWithConfig(fds, openConfig);
   }
 
   public native String getFilename();
@@ -107,10 +135,15 @@ public class Archive
 
 
   private native void setNativeArchive(String filename);
+  private native void setNativeArchiveWithConfig(String filename, OpenConfig openConfig);
   private native void setNativeArchiveByFD(FileDescriptor fd);
+  private native void setNativeArchiveByFDWithConfig(FileDescriptor fd, OpenConfig openConfig);
   private native void setNativeArchiveEmbedded(FileDescriptor fd, long offset, long size);
+  private native void setNativeArchiveEmbeddedWithConfig(FileDescriptor fd, long offset, long size, OpenConfig openConfig);
   private native void setNativeArchiveEmbeddedFd(FdInput fd);
+  private native void setNativeArchiveEmbeddedFdWithConfig(FdInput fd, OpenConfig openConfig);
   private native void setNativeArchiveEmbeddedFds(FdInput[] fds);
+  private native void setNativeArchiveEmbeddedFdsWithConfig(FdInput[] fds, OpenConfig openConfig);
 
   @Override
   protected void finalize() { dispose(); }

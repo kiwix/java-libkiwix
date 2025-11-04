@@ -79,7 +79,33 @@ zim::FdInput jni2fdInput(const jobject& fdInputObj, JNIEnv* env)
   return zim::FdInput(fd, offset, size);
 }
 
+zim::OpenConfig jni2openConfig(const jobject& openConfigObj, JNIEnv* env)
+{
+    jclass cls = env->GetObjectClass(openConfigObj);
+
+    jfieldID preloadXapianDbFid = env->GetFieldID(cls, "preloadXapianDb", "Z");
+    jboolean preloadXapianDb = env->GetBooleanField(openConfigObj, preloadXapianDbFid);
+    jfieldID preloadDirentRangesFid = env->GetFieldID(cls, "preloadDirentRanges", "I");
+    jint preloadDirentRanges = env->GetIntField(openConfigObj, preloadDirentRangesFid);
+    zim::OpenConfig config;
+    config.preloadXapianDb(preloadXapianDb);
+    if (preloadDirentRanges > 0)
+        config.preloadDirentRanges(preloadDirentRanges);
+    return config;
+}
+
 } // unnamed namespace
+
+METHOD(void, setNativeArchiveWithConfig, jstring filename, jobject openConfigObj)
+{
+    std::string cPath = TO_C(filename);
+    zim::OpenConfig config = jni2openConfig(openConfigObj, env);
+
+    // Create archive with custom configuration
+    auto archive = std::make_shared<zim::Archive>(cPath, config);
+    SET_PTR(archive);
+}
+CATCH_EXCEPTION()
 
 JNIEXPORT void JNICALL Java_org_kiwix_libzim_Archive_setNativeArchiveByFD(
     JNIEnv* env, jobject thisObj, jobject fdObj) try
@@ -92,6 +118,22 @@ JNIEXPORT void JNICALL Java_org_kiwix_libzim_Archive_setNativeArchiveByFD(
   SET_PTR(archive);
 #else
   jclass exception = env->FindClass("java/lang/UnsupportedOperationException");
+  env->ThrowNew(exception, "org.kiwix.libzim.Archive.setNativeArchiveByFD() is not supported under Windows");
+#endif
+} CATCH_EXCEPTION()
+
+JNIEXPORT void JNICALL Java_org_kiwix_libzim_Archive_setNativeArchiveByFDWithConfig(
+        JNIEnv* env, jobject thisObj, jobject fdObj, jobject openConfigObj) try
+{
+#ifndef _WIN32
+    int fd = jni2fd(fdObj, env);
+    zim::OpenConfig config = jni2openConfig(openConfigObj, env);
+
+    LOG("Attempting to create reader with fd: %d", fd);
+    auto archive = std::make_shared<zim::Archive>(fd, config);
+    SET_PTR(archive);
+#else
+    jclass exception = env->FindClass("java/lang/UnsupportedOperationException");
   env->ThrowNew(exception, "org.kiwix.libzim.Archive.setNativeArchiveByFD() is not supported under Windows");
 #endif
 } CATCH_EXCEPTION()
@@ -111,6 +153,22 @@ JNIEXPORT void JNICALL Java_org_kiwix_libzim_Archive_setNativeArchiveEmbedded(
 #endif
 } CATCH_EXCEPTION()
 
+JNIEXPORT void JNICALL Java_org_kiwix_libzim_Archive_setNativeArchiveEmbeddedWithConfig(
+        JNIEnv* env, jobject thisObj, jobject fdObj, jlong offset, jlong size, jobject openConfigObj) try
+{
+#ifndef _WIN32
+    int fd = jni2fd(fdObj, env);
+    zim::OpenConfig config = jni2openConfig(openConfigObj, env);
+
+    LOG("Attempting to create reader with fd: %d", fd);
+    auto archive = std::make_shared<zim::Archive>(fd, offset, size, config);
+    SET_PTR(archive);
+#else
+    jclass exception = env->FindClass("java/lang/UnsupportedOperationException");
+  env->ThrowNew(exception, "org.kiwix.libzim.Archive.setNativeArchiveEmbedded() is not supported under Windows");
+#endif
+} CATCH_EXCEPTION()
+
 JNIEXPORT void JNICALL Java_org_kiwix_libzim_Archive_setNativeArchiveEmbeddedFd(
     JNIEnv* env, jobject thisObj, jobject fdObj) try
 {
@@ -121,6 +179,21 @@ JNIEXPORT void JNICALL Java_org_kiwix_libzim_Archive_setNativeArchiveEmbeddedFd(
   SET_PTR(archive);
 #else
   jclass exception = env->FindClass("java/lang/UnsupportedOperationException");
+  env->ThrowNew(exception, "org.kiwix.libzim.Archive.setNativeArchiveEmbedded() is not supported under Windows");
+#endif
+} CATCH_EXCEPTION()
+
+JNIEXPORT void JNICALL Java_org_kiwix_libzim_Archive_setNativeArchiveEmbeddedFdWithConfig(
+        JNIEnv* env, jobject thisObj, jobject fdObj, jobject openConfigObj) try
+{
+#ifndef _WIN32
+    auto fdInput = jni2fdInput(fdObj, env);
+    zim::OpenConfig config = jni2openConfig(openConfigObj, env);
+
+    auto archive = std::make_shared<zim::Archive>(fdInput, config);
+    SET_PTR(archive);
+#else
+    jclass exception = env->FindClass("java/lang/UnsupportedOperationException");
   env->ThrowNew(exception, "org.kiwix.libzim.Archive.setNativeArchiveEmbedded() is not supported under Windows");
 #endif
 } CATCH_EXCEPTION()
@@ -145,6 +218,29 @@ JNIEXPORT void JNICALL Java_org_kiwix_libzim_Archive_setNativeArchiveEmbeddedFds
   SET_PTR(archive);
 #else
   jclass exception = env->FindClass("java/lang/UnsupportedOperationException");
+  env->ThrowNew(exception, "org.kiwix.libzim.Archive.setNativeArchiveEmbedded() is not supported under Windows");
+#endif
+} CATCH_EXCEPTION()
+
+JNIEXPORT void JNICALL Java_org_kiwix_libzim_Archive_setNativeArchiveEmbeddedFdsWithConfig(
+        JNIEnv* env, jobject thisObj, jobjectArray fdsObj, jobject openConfigObj) try
+{
+#ifndef _WIN32
+
+    jsize length = env->GetArrayLength(fdsObj);
+    std::vector<zim::FdInput> v;
+
+    int i;
+    for(i = 0; i<length; i++) {
+        jobject fdObj = env->GetObjectArrayElement(fdsObj, i);
+        auto fdInput = jni2fdInput(fdObj, env);
+        v.push_back(fdInput);
+    }
+    zim::OpenConfig config = jni2openConfig(openConfigObj, env);
+    auto archive = std::make_shared<zim::Archive>(v, config);
+    SET_PTR(archive);
+#else
+    jclass exception = env->FindClass("java/lang/UnsupportedOperationException");
   env->ThrowNew(exception, "org.kiwix.libzim.Archive.setNativeArchiveEmbedded() is not supported under Windows");
 #endif
 } CATCH_EXCEPTION()
