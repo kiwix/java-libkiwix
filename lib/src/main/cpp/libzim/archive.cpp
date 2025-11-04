@@ -410,3 +410,15 @@ METHOD(jobject, findByTitle, jstring title) {
   setPtr(env, obj, std::move(end_ptr), "nativeHandleEnd");
   return obj;
 } CATCH_EXCEPTION(nullptr)
+
+METHOD0(jlong, getClusterCacheMaxSize) {
+    return static_cast<jlong>(zim::getClusterCacheMaxSize());
+} CATCH_EXCEPTION(0)
+
+METHOD0(jlong, getClusterCacheCurrentSize) {
+    return static_cast<jlong>(zim::getClusterCacheCurrentSize());
+} CATCH_EXCEPTION(0)
+
+METHOD(void, setClusterCacheMaxSize, jlong sizeInBytes) {
+    zim::setClusterCacheMaxSize(static_cast<size_t>(sizeInBytes));
+} CATCH_EXCEPTION()

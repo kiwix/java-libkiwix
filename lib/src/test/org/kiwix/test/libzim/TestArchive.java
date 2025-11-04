@@ -140,5 +140,9 @@ public class TestArchive
   public long getDirentCacheCurrentSize() { return inner.getDirentCacheCurrentSize(); }
   public void setDirentCacheMaxSize(long nbDirents) { inner.setDirentCacheMaxSize(nbDirents); }
 
+  public long getClusterCacheMaxSize() { return inner.getClusterCacheMaxSize(); }
+  public long getClusterCacheCurrentSize() { return inner.getClusterCacheCurrentSize(); }
+  public void setClusterCacheMaxSize(long sizeInBytes) { inner.setClusterCacheMaxSize(sizeInBytes); }
+
   public void dispose() { inner.dispose(); }
 }

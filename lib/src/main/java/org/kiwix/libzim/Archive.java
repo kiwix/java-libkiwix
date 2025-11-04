@@ -135,6 +135,9 @@ public class Archive
   public native long getDirentCacheMaxSize();
   public native long getDirentCacheCurrentSize();
   public native void setDirentCacheMaxSize(long nbDirents);
+  public native long getClusterCacheMaxSize();
+  public native long getClusterCacheCurrentSize();
+  public native void setClusterCacheMaxSize(long sizeInBytes);
 
 
   private native void setNativeArchive(String filename);
