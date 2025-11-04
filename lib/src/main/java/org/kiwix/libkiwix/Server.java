@@ -27,6 +27,7 @@ public class Server
   public native void setRoot(String root);
 
   public native void setAddress(String address);
+  public native String[] getServerAccessUrls();
 
   public native void setPort(int port);
 

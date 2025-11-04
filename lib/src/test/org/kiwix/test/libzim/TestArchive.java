@@ -37,9 +37,19 @@ public class TestArchive
     inner = new Archive(filename);
   }
 
+  public TestArchive(String filename, OpenConfig openConfig) throws ZimFileFormatException
+  {
+    inner = new Archive(filename, openConfig);
+  }
+
   public TestArchive(FileDescriptor fd) throws ZimFileFormatException
   {
     inner = new Archive(fd);
+  }
+
+  public TestArchive(FileDescriptor fd, OpenConfig openConfig) throws ZimFileFormatException
+  {
+    inner = new Archive(fd, openConfig);
   }
 
   public TestArchive(FileDescriptor fd, long offset, long size)
@@ -48,16 +58,34 @@ public class TestArchive
     inner = new Archive(fd, offset, size);
   }
 
+  public TestArchive(FileDescriptor fd, long offset, long size, OpenConfig openConfig)
+          throws ZimFileFormatException
+  {
+    inner = new Archive(fd, offset, size, openConfig);
+  }
+
   public TestArchive(FdInput fd)
           throws ZimFileFormatException
   {
     inner = new Archive(fd);
   }
 
+  public TestArchive(FdInput fd, OpenConfig openConfig)
+          throws ZimFileFormatException
+  {
+    inner = new Archive(fd, openConfig);
+  }
+
   public TestArchive(FdInput[] fds)
           throws ZimFileFormatException
   {
     inner = new Archive(fds);
+  }
+
+  public TestArchive(FdInput[] fds, OpenConfig openConfig)
+          throws ZimFileFormatException
+  {
+    inner = new Archive(fds, openConfig);
   }
 
   public String getFilename() { return inner.getFilename(); }
@@ -107,6 +135,14 @@ public class TestArchive
   public TestEntryIterator iterEfficient() { return new TestEntryIterator(inner.iterEfficient()); }
   public TestEntryIterator findByPath(String path) { return new TestEntryIterator(inner.findByPath(path)); }
   public TestEntryIterator findByTitle(String path) { return new TestEntryIterator(inner.findByTitle(path)); }
+
+  public long getDirentCacheMaxSize() { return inner.getDirentCacheMaxSize(); }
+  public long getDirentCacheCurrentSize() { return inner.getDirentCacheCurrentSize(); }
+  public void setDirentCacheMaxSize(long nbDirents) { inner.setDirentCacheMaxSize(nbDirents); }
+
+  public long getClusterCacheMaxSize() { return inner.getClusterCacheMaxSize(); }
+  public long getClusterCacheCurrentSize() { return inner.getClusterCacheCurrentSize(); }
+  public void setClusterCacheMaxSize(long sizeInBytes) { inner.setClusterCacheMaxSize(sizeInBytes); }
 
   public void dispose() { inner.dispose(); }
 }

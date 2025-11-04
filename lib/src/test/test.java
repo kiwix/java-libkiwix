@@ -220,6 +220,24 @@ public class test {
         } catch(Exception e) {
             fail("ERROR: Must be a EntryNotFoundException.");
         }
+
+        long maxCacheSize = archive.getDirentCacheMaxSize();
+        assertEquals(512, maxCacheSize);
+        long currentCacheSize = archive.getDirentCacheCurrentSize();
+        assertEquals(19, currentCacheSize);
+        archive.setDirentCacheMaxSize(19);
+        // Cluster size
+        long clusterCacheMaxSize = archive.getClusterCacheMaxSize();
+        assertEquals(536870912, clusterCacheMaxSize);
+        long clusterCacheCurrentSize = archive.getClusterCacheCurrentSize();
+        assertTrue(clusterCacheCurrentSize > 0);
+        // Set the new cluster size
+        archive.setClusterCacheMaxSize(clusterCacheMaxSize / 2);
+        // Test new cluster size set or not.
+        long clusterCacheMaxSize1 = archive.getClusterCacheMaxSize();
+        assertEquals(clusterCacheMaxSize / 2, clusterCacheMaxSize1);
+        // Set the cluster max size
+        archive.setClusterCacheMaxSize(536870912);
         System.gc();
         System.runFinalization();
     }
@@ -238,6 +256,22 @@ public class test {
         System.gc();
         System.runFinalization();
    }
+
+    @Test
+    public void testArchiveDirectWithOpenConfig()
+            throws JNIKiwixException, IOException, ZimFileFormatException, EntryNotFoundException {
+        {
+            OpenConfig openConfig = new OpenConfig(true, 0);
+            TestArchive archive = new TestArchive("small.zim", openConfig);
+            testArchive(archive);
+            assertFalse(archive.isMultiPart());
+            assertTrue(archive.hasTitleIndex());
+            assertTrue(archive.check());
+            assertEquals("small.zim", archive.getFilename());
+        }
+        System.gc();
+        System.runFinalization();
+    }
 
    @Test
    public void testNonExistant() {
@@ -282,6 +316,23 @@ public class test {
     }
 
     @Test
+    public void testArchiveByFdWithConfig()
+            throws JNIKiwixException, IOException, ZimFileFormatException, EntryNotFoundException {
+        {
+            OpenConfig openConfig = new OpenConfig(true, 0);
+            FileInputStream fis = new FileInputStream("small.zim");
+            TestArchive archive = new TestArchive(fis.getFD(), openConfig);
+            testArchive(archive);
+            assertFalse(archive.isMultiPart());
+            assertTrue(archive.hasTitleIndex());
+            assertTrue(archive.check());
+            assertEquals("", archive.getFilename());
+        }
+        System.gc();
+        System.runFinalization();
+    }
+
+    @Test
     public void testArchiveByFdInput()
             throws JNIKiwixException, IOException, ZimFileFormatException, EntryNotFoundException {
         {
@@ -300,12 +351,50 @@ public class test {
     }
 
     @Test
+    public void testArchiveByFdInputWithConfig()
+            throws JNIKiwixException, IOException, ZimFileFormatException, EntryNotFoundException {
+        {
+            OpenConfig openConfig = new OpenConfig(true, 0);
+            File plainArchive = new File("small.zim");
+            FileInputStream fis = new FileInputStream("small.zim");
+            FdInput fd = new FdInput(fis.getFD(), 0, plainArchive.length());
+            TestArchive archive = new TestArchive(fd, openConfig);
+            testArchive(archive);
+            assertFalse(archive.isMultiPart());
+            assertTrue(archive.hasTitleIndex());
+            assertTrue(archive.check());
+            assertEquals("", archive.getFilename());
+        }
+        System.gc();
+        System.runFinalization();
+    }
+
+    @Test
     public void testArchiveWithAnEmbeddedArchive()
             throws JNIKiwixException, IOException, ZimFileFormatException, EntryNotFoundException {
         {
             File plainArchive = new File("small.zim");
             FileInputStream fis = new FileInputStream("small.zim.embedded");
             TestArchive archive = new TestArchive(fis.getFD(), 8, plainArchive.length());
+            // This fails. See https://github.com/openzim/libzim/issues/812
+            //assertTrue(archive.check());
+            testArchive(archive);
+            assertFalse(archive.isMultiPart());
+            assertTrue(archive.hasTitleIndex());
+            assertEquals("", archive.getFilename());
+        }
+        System.gc();
+        System.runFinalization();
+    }
+
+    @Test
+    public void testArchiveWithAnEmbeddedArchiveWithConfig()
+            throws JNIKiwixException, IOException, ZimFileFormatException, EntryNotFoundException {
+        {
+            OpenConfig openConfig = new OpenConfig(true, 0);
+            File plainArchive = new File("small.zim");
+            FileInputStream fis = new FileInputStream("small.zim.embedded");
+            TestArchive archive = new TestArchive(fis.getFD(), 8, plainArchive.length(), openConfig);
             // This fails. See https://github.com/openzim/libzim/issues/812
             //assertTrue(archive.check());
             testArchive(archive);
@@ -342,6 +431,31 @@ public class test {
     }
 
     @Test
+    public void testArchiveWithAnEmbeddedArchiveFdInputNaiveWithConfig()
+            throws JNIKiwixException, IOException, ZimFileFormatException, EntryNotFoundException {
+        {
+            OpenConfig openConfig = new OpenConfig(true, 0);
+            File plainArchive = new File("small.zim");
+            FileInputStream fis = new FileInputStream("small.zim.embedded");
+            FdInput fd1 = new FdInput(fis.getFD(), 8, plainArchive.length() / 2);
+            FdInput fd2 = new FdInput(fis.getFD(), fd1.offset + fd1.size, plainArchive.length() - fd1.size);
+
+            FdInput fds[] = {fd1, fd2};
+
+            TestArchive archive = new TestArchive(fds, openConfig);
+            // This fails. See https://github.com/openzim/libzim/issues/812
+            //assertTrue(archive.check());
+            testArchive(archive);
+            assertTrue(archive.isMultiPart());
+            //Naive split cut the title index in the middle. libzim cannot read it.
+            assertFalse(archive.hasTitleIndex());
+            assertEquals("", archive.getFilename());
+        }
+        System.gc();
+        System.runFinalization();
+    }
+
+    @Test
     public void testArchiveWithAnEmbeddedArchiveFdInput()
             throws JNIKiwixException, IOException, ZimFileFormatException, EntryNotFoundException {
         {
@@ -353,6 +467,31 @@ public class test {
             FdInput fds[] = {fd1, fd2};
 
             TestArchive archive = new TestArchive(fds);
+            // This fails. See https://github.com/openzim/libzim/issues/812
+            //assertTrue(archive.check());
+            testArchive(archive);
+            assertTrue(archive.isMultiPart());
+            //If we don't cut in the middle of xapian db, we can read it.
+            assertTrue(archive.hasTitleIndex());
+            assertEquals("", archive.getFilename());
+        }
+        System.gc();
+        System.runFinalization();
+    }
+
+    @Test
+    public void testArchiveWithAnEmbeddedArchiveFdInputWithConfig()
+            throws JNIKiwixException, IOException, ZimFileFormatException, EntryNotFoundException {
+        {
+            OpenConfig openConfig = new OpenConfig(true, 0);
+            File plainArchive = new File("small.zim");
+            FileInputStream fis = new FileInputStream("small.zim.embedded");
+            FdInput fd1 = new FdInput(fis.getFD(), 8, plainArchive.length() / 10);
+            FdInput fd2 = new FdInput(fis.getFD(), fd1.offset + fd1.size, plainArchive.length() - fd1.size);
+
+            FdInput fds[] = {fd1, fd2};
+
+            TestArchive archive = new TestArchive(fds, openConfig);
             // This fails. See https://github.com/openzim/libzim/issues/812
             //assertTrue(archive.check());
             testArchive(archive);
@@ -528,6 +667,10 @@ public class test {
             server.setBlockExternalLinks(true);
             server.setTaskbar(true, true);
             assertTrue(server.start());
+            List<String> urls = Arrays.asList(server.getServerAccessUrls());
+            assertNotNull(urls);
+            assertFalse(urls.isEmpty());
+            assertEquals(urls.get(0), "http://127.0.0.1:8080/FOO");
             server.stop();
         }
         System.gc();
