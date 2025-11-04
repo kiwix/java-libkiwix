@@ -29,7 +29,7 @@ ext.libzim_version = "9.4.0"
 apply from: 'publish.gradle'
 android {
     compileSdk 34
-    namespace = "kiwix.org.kiwixlib"
+    namespace = "org.kiwix.libkiwix"
     defaultConfig {
 
         minSdk 24

@@ -54,6 +54,12 @@ METHOD(void, setAddress, jstring address)
   THIS->setAddress(TO_C(address));
 } CATCH_EXCEPTION()
 
+METHOD0(jobjectArray, getServerAccessUrls)
+{
+    const auto urls = THIS->getServerAccessUrls();
+    return c2jni(urls, env);
+} CATCH_EXCEPTION(nullptr)
+
 METHOD(void, setPort, int port)
 {
   THIS->setPort(TO_C(port));

@@ -528,6 +528,10 @@ public class test {
             server.setBlockExternalLinks(true);
             server.setTaskbar(true, true);
             assertTrue(server.start());
+            List<String> urls = Arrays.asList(server.getServerAccessUrls());
+            assertNotNull(urls);
+            assertFalse(urls.isEmpty());
+            assertEquals(urls.get(0), "http://127.0.0.1:8080/FOO");
             server.stop();
         }
         System.gc();

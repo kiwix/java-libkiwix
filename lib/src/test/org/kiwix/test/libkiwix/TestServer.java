@@ -28,6 +28,8 @@ public class TestServer
 
   public void setRoot(String root) { inner.setRoot(root); }
   public void setAddress(String address) { inner.setAddress(address); }
+
+  public String[] getServerAccessUrls() { return inner.getServerAccessUrls(); }
   public void setPort(int port) { inner.setPort(port); }
   public void setNbThreads(int nbTreads) { inner.setNbThreads(nbTreads); }
   public void setTaskbar(boolean withTaskBar, boolean witLibraryButton) { inner.setTaskbar(withTaskBar, witLibraryButton); }
