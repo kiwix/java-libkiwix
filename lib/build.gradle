@@ -12,8 +12,8 @@ if (rootProject.file("local.properties").exists()) {
 ext["keyId"] = properties.getProperty("signing.keyId", System.getenv('SIGNING_KEY_ID'))
 ext["password"] = properties.getProperty("signing.password", System.getenv('SIGNING_PASSWORD'))
 ext["key"] = properties.getProperty("signing.key", System.getenv('SIGNING_KEY'))
-ext["ossrhUsername"] = properties.getProperty("ossrhUsername", System.getenv('OSSRH_USERNAME'))
-ext["ossrhPassword"] = properties.getProperty("ossrhPassword", System.getenv('OSSRH_PASSWORD'))
+ext["sonatypeUsername"] = properties.getProperty("sonatypeUsername", System.getenv('SONATYPE_USERNAME'))
+ext["sonatypePassword"] = properties.getProperty("sonatypePassword", System.getenv('SONATYPE_PASSWORD'))
 ext["sonatypeStagingProfileId"] = properties.getProperty("sonatypeStagingProfileId", System.getenv('SONATYPE_STAGING_PROFILE_ID'))
 
 ext {
@@ -95,7 +95,7 @@ android {
         abortOnError true
         checkAllWarnings = true
         warningsAsErrors true
-        disable("GradleDependency", "UnknownNullness", "OldTargetApi")
+        disable("GradleDependency", "UnknownNullness", "OldTargetApi", "AndroidGradlePluginVersion")
     }
 }
 
