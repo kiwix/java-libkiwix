@@ -1,3 +1,7 @@
+2.4.0
+* NEW: Introduced the "Spelling correction" API in search. (@MohitMaliFtechiz https://github.com/kiwix/java-libkiwix/pull/130)
+* FIX: Refactored the publishing plugin to upload binaries to the "Central Portal". (@MohitMaliFtechiz https://github.com/kiwix/java-libkiwix/pull/127)
+
 2.3.0
 * NEW: Use libkiwix 14.1.0 (@MohitMaliFtechiz https://github.com/kiwix/java-libkiwix/pull/124)
 * NEW: Use libzim 9.4.0 (@MohitMaliFtechiz https://github.com/kiwix/java-libkiwix/pull/124)
