@@ -1,5 +1,8 @@
 2.4.0
 * NEW: Introduced the "Spelling correction" API in search. (@MohitMaliFtechiz https://github.com/kiwix/java-libkiwix/pull/130)
+* NEW: Added support for "Preload Xapian database" introduced in libzim. (@MohitMaliFtechiz https://github.com/kiwix/java-libkiwix/pull/126)
+* NEW: Added "Server->getServerAccessUrls()" method to the bindings, which returns the server URL. (@MohitMaliFtechiz https://github.com/kiwix/java-libkiwix/pull/126)
+* NEW: Added caching-related methods to the bindings to manage cluster cache size in libzim. (@MohitMaliFtechiz https://github.com/kiwix/java-libkiwix/pull/126)
 * FIX: Refactored the publishing plugin to upload binaries to the "Central Portal". (@MohitMaliFtechiz https://github.com/kiwix/java-libkiwix/pull/127)
 
 2.3.0
