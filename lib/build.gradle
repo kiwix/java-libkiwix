@@ -365,7 +365,8 @@ String getLibkiwixFiles() {
         "${projectDir}/src/main/java/org/kiwix/libkiwix/JNIKiwixException.java " +
         "${projectDir}/src/main/java/org/kiwix/libkiwix/Library.java " +
         "${projectDir}/src/main/java/org/kiwix/libkiwix/Manager.java " +
-        "${projectDir}/src/main/java/org/kiwix/libkiwix/Server.java"
+        "${projectDir}/src/main/java/org/kiwix/libkiwix/Server.java " +
+        "${projectDir}/src/main/java/org/kiwix/libkiwix/SpellingsDB.java"
 }
 
 String getLibzimFiles() {

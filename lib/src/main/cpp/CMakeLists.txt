@@ -48,6 +48,7 @@ add_library(kiwix_wrapper
         libkiwix/bookmark.cpp
         libkiwix/manager.cpp
         libkiwix/illustration.cpp
+        libkiwix/spellingdb.cpp
         )
 
 # Linux target
