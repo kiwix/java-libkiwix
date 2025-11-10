@@ -783,6 +783,17 @@ public class test {
             assertEquals("main.html", suggestionItem.getPath());
             assertTrue(suggestionItem.hasSnippet());
             assertEquals("<b>Test</b> ZIM file", suggestionItem.getSnippet());
+
+            File cacheDir = new File("build/test-cache");
+            if (cacheDir.exists()) {
+                cacheDir.delete();
+            }
+            cacheDir.mkdirs();
+            TestSpellingsDB testSpellingsDB = new TestSpellingsDB(archive, cacheDir.getAbsolutePath());
+            String[] spellingCorrections = testSpellingsDB.getSpellingCorrections("Test ZIM fileeee", 1);
+            assertEquals("Test ZIM file", spellingCorrections[0]);
+            String[] spellingCorrections1 = testSpellingsDB.getSpellingCorrections("Test ZIM f", 1);
+            assertEquals("Test ZIM file", spellingCorrections1[0]);
         }
         System.gc();
         System.runFinalization();
