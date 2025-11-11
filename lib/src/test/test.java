@@ -790,10 +790,24 @@ public class test {
             }
             cacheDir.mkdirs();
             TestSpellingsDB testSpellingsDB = new TestSpellingsDB(archive, cacheDir.getAbsolutePath());
-            String[] spellingCorrections = testSpellingsDB.getSpellingCorrections("Test ZIM fileeee", 1);
-            assertEquals("Test ZIM file", spellingCorrections[0]);
-            String[] spellingCorrections1 = testSpellingsDB.getSpellingCorrections("Test ZIM f", 1);
-            assertEquals("Test ZIM file", spellingCorrections1[0]);
+            // Case 1: Misspelled word should return a correction
+            String[] correctionsForMisspelled = testSpellingsDB.getSpellingCorrections("Test ZIM fileeee", 1);
+            assertNotNull(correctionsForMisspelled);
+            assertTrue(correctionsForMisspelled.length > 0);
+            assertEquals("Test ZIM file", correctionsForMisspelled[0]);
+            // Case 2: Partial or close match should still return a valid correction
+            String[] correctionsForPartial = testSpellingsDB.getSpellingCorrections("Test ZIM f", 1);
+            assertNotNull(correctionsForPartial);
+            assertTrue(correctionsForPartial.length > 0);
+            assertEquals("Test ZIM file", correctionsForPartial[0]);
+            // Case 3: Completely unrelated word should return NO corrections
+            String[] correctionsForUnrelated = testSpellingsDB.getSpellingCorrections("demo", 1);
+            assertNotNull(correctionsForUnrelated);
+            assertEquals(0, correctionsForUnrelated.length);
+            // Case 4: Empty input should not return any correction
+            String[] correctionsForEmpty = testSpellingsDB.getSpellingCorrections("", 1);
+            assertNotNull(correctionsForEmpty);
+            assertEquals(0, correctionsForEmpty.length);
         }
         System.gc();
         System.runFinalization();
