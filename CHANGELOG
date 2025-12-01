@@ -1,3 +1,6 @@
+2.4.1
+* NEW: Use libkiwix 14.1.1 (@MohitMaliFtechiz , @kelson42 https://github.com/kiwix/java-libkiwix/pull/137)
+
 2.4.0
 * NEW: Introduced the "Spelling correction" API in search. (@MohitMaliFtechiz https://github.com/kiwix/java-libkiwix/pull/130)
 * NEW: Added support for "Preload Xapian database" introduced in libzim. (@MohitMaliFtechiz https://github.com/kiwix/java-libkiwix/pull/126)
