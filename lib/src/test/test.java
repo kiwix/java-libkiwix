@@ -228,7 +228,7 @@ public class test {
         archive.setDirentCacheMaxSize(19);
         // Cluster size
         long clusterCacheMaxSize = archive.getClusterCacheMaxSize();
-        assertEquals(536870912, clusterCacheMaxSize);
+        assertEquals(16777216, clusterCacheMaxSize);
         long clusterCacheCurrentSize = archive.getClusterCacheCurrentSize();
         assertTrue(clusterCacheCurrentSize > 0);
         // Set the new cluster size
@@ -237,7 +237,7 @@ public class test {
         long clusterCacheMaxSize1 = archive.getClusterCacheMaxSize();
         assertEquals(clusterCacheMaxSize / 2, clusterCacheMaxSize1);
         // Set the cluster max size
-        archive.setClusterCacheMaxSize(536870912);
+        archive.setClusterCacheMaxSize(16777216);
         System.gc();
         System.runFinalization();
     }
