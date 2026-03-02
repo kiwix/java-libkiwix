@@ -37,6 +37,10 @@ public class TestManager
                                 boolean checkMetaData)
   { return inner.addBookFromPath(pathToOpen, pathToSave, url, checkMetaData); }
 
+  public void addBooksFromDirectory(String path, boolean verboseFlag) {
+    inner.addBooksFromDirectory(path, verboseFlag);
+  }
+
   public TestManager(TestLibrary library) {
     inner = new Manager(library.inner());
   }

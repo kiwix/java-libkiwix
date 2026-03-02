@@ -75,6 +75,14 @@ public class Manager
                                        String url,
                                        boolean checkMetaData);
 
+  /**
+   * Add all books from the directory tree into the library.
+   *
+   * @param path          The path of the directory to scan.
+   * @param verboseFlag   Verbose logs flag.
+   */
+  public native void addBooksFromDirectory(String path, boolean verboseFlag);
+
   public Manager(Library library) {
     allocate(library);
     _library = library;

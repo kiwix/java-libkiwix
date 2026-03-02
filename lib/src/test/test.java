@@ -2,6 +2,9 @@ import java.io.*;
 import java.util.*;
 
 import org.junit.Test;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 import static org.junit.Assert.*;
 
@@ -566,6 +569,44 @@ public class test {
             bookIds = lib.getBooksIds();
             assertEquals(bookIds.length, 0);
         }
+        System.gc();
+        System.runFinalization();
+    }
+
+    @Test
+    public void testAddBooksFromDirectory() throws IOException {
+        TestLibrary lib = new TestLibrary();
+        TestManager manager = new TestManager(lib);
+        File tempDir = Files.createTempDirectory("zim_test_dir").toFile();
+        File sourceZim = new File("small.zim");
+        File targetZim = new File(tempDir, "small.zim");
+        Files.copy(sourceZim.toPath(), targetZim.toPath());
+        manager.addBooksFromDirectory(tempDir.getAbsolutePath(), false);
+        String[] bookIds = lib.getBooksIds();
+        assertEquals(1, bookIds.length);
+
+        TestBook book = lib.getBookById(bookIds[0]);
+
+        assertEquals(targetZim.getAbsolutePath(), book.getPath());
+        assertTrue(book.isPathValid());
+        lib.removeBookById(bookIds[0]);
+        tempDir.delete();
+
+        System.gc();
+        System.runFinalization();
+    }
+
+    @Test
+    public void testAddBooksFromEmptyDirectory() throws IOException {
+        TestLibrary lib = new TestLibrary();
+        TestManager manager = new TestManager(lib);
+
+        File emptyDir = Files.createTempDirectory("empty_zim_test").toFile();
+
+        manager.addBooksFromDirectory(emptyDir.getAbsolutePath(), false);
+
+        String[] bookIds = lib.getBooksIds();
+        assertEquals(0, bookIds.length);
         System.gc();
         System.runFinalization();
     }

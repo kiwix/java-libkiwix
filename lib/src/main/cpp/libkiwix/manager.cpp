@@ -80,3 +80,7 @@ METHOD(jstring, addBookFromPath, jstring pathToOpen, jstring pathToSave, jstring
 
   return id;
 } CATCH_EXCEPTION(0)
+
+METHOD(void, addBooksFromDirectory, jstring path, jboolean verboseFlag) {
+    THIS->addBooksFromDirectory(TO_C(path), TO_C(verboseFlag));
+} CATCH_EXCEPTION()
