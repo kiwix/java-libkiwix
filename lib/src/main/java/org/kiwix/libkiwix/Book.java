@@ -2,7 +2,8 @@
 package org.kiwix.libkiwix;
 
 import org.kiwix.libzim.Archive;
-import org.kiwix.libkiwix.Illustration;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class Book
 {
@@ -12,42 +13,42 @@ public class Book
   }
 
 
-  public native void update(Book book);
-  public native void update(Archive archive);
+  public native void update(@NonNull Book book);
+  public native void update(@NonNull Archive archive);
 
 
   @Override
   protected void finalize() { dispose();  }
 
-  public native String getId();
-  public native String getPath();
-  public native String getHumanReadableIdFromPath();
+  @NonNull public native String getId();
+  @Nullable public native String getPath();
+  @Nullable public native String getHumanReadableIdFromPath();
   public native boolean isPathValid();
-  public native String getTitle();
-  public native String getDescription();
-  public native String getLanguage();
-  public native String getCreator();
-  public native String getPublisher();
-  public native String getDate();
-  public native String getUrl();
-  public native String getName();
-  public native String getFlavour();
-  public native String getCategory();
-  public native String getTags();
+  @Nullable public native String getTitle();
+  @Nullable public native String getDescription();
+  @Nullable public native String getLanguage();
+  @Nullable public native String getCreator();
+  @Nullable public native String getPublisher();
+  @Nullable public native String getDate();
+  @Nullable public native String getUrl();
+  @Nullable public native String getName();
+  @Nullable public native String getFlavour();
+  @Nullable public native String getCategory();
+  @Nullable public native String getTags();
   /**
    * Return the value associated to the tag tagName
    *
    * @param tagName the tag name to search for.
    * @return The value of the tag. If the tag is not found, return empty string.
    */
-  public native String getTagStr(String tagName);
+  @Nullable public native String getTagStr(@NonNull String tagName);
 
   public native long getArticleCount();
   public native long getMediaCount();
   public native long getSize();
 
-  public native Illustration[] getIllustrations();
-  public native Illustration getIllustration(int size);
+  @NonNull public native Illustration[] getIllustrations();
+  @Nullable public native Illustration getIllustration(int size);
 
   private native void allocate();
   private native void dispose();

@@ -19,14 +19,9 @@
 
 package org.kiwix.libzim;
 
-import org.kiwix.libzim.ZimFileFormatException;
-import org.kiwix.libzim.Entry;
-import org.kiwix.libzim.Item;
-import org.kiwix.libzim.EntryIterator;
-import org.kiwix.libzim.FdInput;
-import org.kiwix.libzim.IllustrationInfo;
-import org.kiwix.libzim.OpenConfig;
 import java.io.FileDescriptor;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class Archive
 {
@@ -36,16 +31,16 @@ public class Archive
     setNativeArchive(filename);
   }
 
-  public Archive(String filename, OpenConfig config) throws ZimFileFormatException {
+  public Archive(@NonNull String filename, @NonNull OpenConfig config) throws ZimFileFormatException {
     setNativeArchiveWithConfig(filename, config);
   }
 
-  public Archive(FileDescriptor fd) throws ZimFileFormatException
+  public Archive(@NonNull FileDescriptor fd) throws ZimFileFormatException
   {
     setNativeArchiveByFD(fd);
   }
 
-  public Archive(FileDescriptor fd, OpenConfig openConfig) throws ZimFileFormatException
+  public Archive(@NonNull FileDescriptor fd, @NonNull OpenConfig openConfig) throws ZimFileFormatException
   {
     setNativeArchiveByFDWithConfig(fd, openConfig);
   }
@@ -86,52 +81,52 @@ public class Archive
     setNativeArchiveEmbeddedFdsWithConfig(fds, openConfig);
   }
 
-  public native String getFilename();
+  @NonNull public native String getFilename();
   public native long getFilesize();
   public native int getAllEntryCount();
   public native int getEntryCount();
   public native int getArticleCount();
   public native int getMediaCount();
-  public native String getUuid();
-  public native String getMetadata(String name) throws EntryNotFoundException;
-  public native Item getMetadataItem(String name) throws EntryNotFoundException;
-  public native String[] getMetadataKeys();
-  public native Item getIllustrationItem(IllustrationInfo info);
-  public native Item getIllustrationItem(int size);
+  @NonNull public native String getUuid();
+  @NonNull public native String getMetadata(@NonNull String name) throws EntryNotFoundException;
+  @NonNull public native Item getMetadataItem(@NonNull String name) throws EntryNotFoundException;
+  @NonNull public native String[] getMetadataKeys();
+  @Nullable public native Item getIllustrationItem(@NonNull IllustrationInfo info);
+  @Nullable public native Item getIllustrationItem(int size);
   public native boolean hasIllustration(int size);
   @Deprecated
-  public native long[] getIllustrationSizes();
+  @NonNull public native long[] getIllustrationSizes();
 
-  public native Entry getEntryByPath(String path) throws EntryNotFoundException;
-  public native Entry getEntryByPath(int index) throws EntryNotFoundException;
-  public native boolean hasEntryByPath(String path);
+  @NonNull public native Entry getEntryByPath(@NonNull String path) throws EntryNotFoundException;
+  @NonNull public native Entry getEntryByPath(int index) throws EntryNotFoundException;
+  public native boolean hasEntryByPath(@NonNull String path);
 
-  public native Entry getEntryByTitle(String title) throws EntryNotFoundException;
-  public native Entry getEntryByTitle(int index) throws EntryNotFoundException;
-  public native boolean hasEntryByTitle(String title);
+  @NonNull public native Entry getEntryByTitle(@NonNull String title) throws EntryNotFoundException;
+  @NonNull public native Entry getEntryByTitle(int index) throws EntryNotFoundException;
+  public native boolean hasEntryByTitle(@NonNull String title);
 
-  public native Entry getEntryByClusterOrder(int index) throws EntryNotFoundException;
+  @NonNull public native Entry getEntryByClusterOrder(int index) throws EntryNotFoundException;
 
-  public native Entry getMainEntry() throws EntryNotFoundException;
+  @NonNull public native Entry getMainEntry() throws EntryNotFoundException;
   public native boolean hasMainEntry();
 
-  public native Entry getRandomEntry();
+  @Nullable public native Entry getRandomEntry();
 
   public native boolean hasFulltextIndex();
   public native boolean hasTitleIndex();
 
   public native boolean hasChecksum();
-  public native String getChecksum();
+  @NonNull public native String getChecksum();
   public native boolean check();
 
   public native boolean isMultiPart();
   public native boolean hasNewNamespaceScheme();
 
-  public native EntryIterator iterByPath();
-  public native EntryIterator iterByTitle();
-  public native EntryIterator iterEfficient();
-  public native EntryIterator findByPath(String path);
-  public native EntryIterator findByTitle(String path);
+  @NonNull public native EntryIterator iterByPath();
+  @NonNull public native EntryIterator iterByTitle();
+  @NonNull public native EntryIterator iterEfficient();
+  @NonNull public native EntryIterator findByPath(@NonNull String path);
+  @NonNull public native EntryIterator findByTitle(@NonNull String path);
   public native long getDirentCacheMaxSize();
   public native long getDirentCacheCurrentSize();
   public native void setDirentCacheMaxSize(long nbDirents);
