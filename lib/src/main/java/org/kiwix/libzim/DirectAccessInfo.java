@@ -23,4 +23,14 @@ public class DirectAccessInfo
 {
   public String filename;
   public long offset;
+
+  /**
+   * An already-open, independently-owned file descriptor for `filename`, or
+   * -1 if none is available (e.g. on Windows, or if libzim didn't have one
+   * open). When set, prefer ParcelFileDescriptor.adoptFd(fd) over (re)opening
+   * `filename` by path - it may be a synthetic /dev/fd/N path that isn't
+   * guaranteed to be safely re-openable. The caller owns this descriptor and
+   * is responsible for closing it. See openzim/libzim#852, #1119.
+   */
+  public int fd = -1;
 }
