@@ -400,13 +400,15 @@ inline void setBoolObjValue(const bool value, const jobject obj, JNIEnv* env)
 }
 
 inline void setDaiObjValue(const std::string& filename, const long offset,
-                            const jobject obj, JNIEnv* env)
+                            const int fd, const jobject obj, JNIEnv* env)
 {
   jclass objClass = env->GetObjectClass(obj);
   jfieldID filenameFid = env->GetFieldID(objClass, "filename", "Ljava/lang/String;");
   env->SetObjectField(obj, filenameFid, c2jni(filename, env));
   jfieldID offsetFid = env->GetFieldID(objClass, "offset", "J");
   env->SetLongField(obj, offsetFid, offset);
+  jfieldID fdFid = env->GetFieldID(objClass, "fd", "I");
+  env->SetIntField(obj, fdFid, fd);
 }
 
 inline void setMigrationResultValue(long nbMigrated, long nbTotalInvalid, const jobject obj, JNIEnv* env)

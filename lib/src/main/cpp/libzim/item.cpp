@@ -48,9 +48,15 @@ GETTER(jlong, getSize)
 
 METHOD0(jobject, getDirectAccessInformation) {
   jobject directObjInfo = newObject("org/kiwix/libzim/DirectAccessInfo", env);
-  setDaiObjValue("", 0, directObjInfo, env);
+  setDaiObjValue("", 0, -1, directObjInfo, env);
 
   auto cDirectObjInfo = THIS->getDirectAccessInformation();
-  setDaiObjValue(cDirectObjInfo.filename, cDirectObjInfo.offset, directObjInfo, env);
+  int fd = -1;
+#ifndef _WIN32
+  // Item::getDirectAccessFd() already hands back an owned, dup()'d
+  // descriptor (or -1) - nothing further to do here. See openzim/libzim#852.
+  fd = THIS->getDirectAccessFd();
+#endif
+  setDaiObjValue(cDirectObjInfo.filename, cDirectObjInfo.offset, fd, directObjInfo, env);
   return directObjInfo;
 } CATCH_EXCEPTION(nullptr)
