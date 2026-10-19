@@ -570,6 +570,7 @@ public class test {
 
             assertEquals(book.getPath(), new File("small.zim").getAbsolutePath());
             assertEquals(book.getHumanReadableIdFromPath(), "small");
+            assertEquals(book.getCommaSeparatedLanguages(), "eng");
             assertTrue(book.isPathValid());
 
             // remove book from library by id
