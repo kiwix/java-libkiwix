@@ -59,6 +59,8 @@ GETTER(jstring, getTitle)
 GETTER(jstring, getDescription)
 
 GETTER(jstring, getLanguage)
+GETTER(jstring, getCommaSeparatedLanguages)
+GETTER(jobjectArray, getLanguages)
 
 GETTER(jstring, getCreator)
 

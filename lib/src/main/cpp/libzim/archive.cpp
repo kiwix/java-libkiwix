@@ -26,6 +26,8 @@
 
 #include <iostream>
 #include <string>
+#include <sstream>
+#include <vector>
 
 #include <zim/archive.h>
 #include <zim/item.h>
@@ -267,6 +269,39 @@ METHOD(jobject, getMetadataItem, jstring name) {
 } CATCH_EXCEPTION(nullptr)
 
 GETTER(jobjectArray, getMetadataKeys)
+
+METHOD0(jstring, getMainLanguage) {
+    const auto language = THIS->getMetadata(std::string("Language"));
+    if (language.find(',') != std::string::npos) {
+        return TO_JNI(std::string("mul"));
+    }
+
+    return TO_JNI(language);
+} CATCH_EXCEPTION(nullptr)
+
+METHOD0(jobjectArray, getLanguages) {
+    const auto languages = THIS->getMetadata(std::string("Language"));
+    std::vector<std::string> languageList;
+
+    std::stringstream stream(languages);
+    std::string language;
+
+    while (std::getline(stream, language, ',')) {
+        languageList.push_back(language);
+    }
+
+    jclass stringClass = env->FindClass("java/lang/String");
+    jobjectArray result = env->NewObjectArray(languageList.size(), stringClass, nullptr);
+
+    for (size_t i = 0; i < languageList.size(); ++i) {
+        jstring item = TO_JNI(languageList[i]);
+        env->SetObjectArrayElement(result, i, item);
+        env->DeleteLocalRef(item);
+    }
+
+    env->DeleteLocalRef(stringClass);
+    return result;
+} CATCH_EXCEPTION(nullptr)
 
 METHOD(jobject, getIllustrationItem__Lorg_kiwix_libzim_IllustrationInfo_2, jobject infoObj) {
     jclass infoClass = env->GetObjectClass(infoObj);

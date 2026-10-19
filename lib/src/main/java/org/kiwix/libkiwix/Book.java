@@ -25,7 +25,10 @@ public class Book
   public native boolean isPathValid();
   public native String getTitle();
   public native String getDescription();
+  @Deprecated
   public native String getLanguage();
+  public native String getCommaSeparatedLanguages();
+  public native String[] getLanguages();
   public native String getCreator();
   public native String getPublisher();
   public native String getDate();

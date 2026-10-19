@@ -105,6 +105,9 @@ public class TestArchive
   public boolean hasIllustration(int size) { return inner.hasIllustration(size); }
   public long[] getIllustrationSizes() { return inner.getIllustrationSizes(); }
 
+  public String getMainLanguage() { return inner.getMainLanguage(); }
+  public String[] getLanguages() { return inner.getLanguages(); }
+
   public TestEntry getEntryByPath(String path) throws EntryNotFoundException { return new TestEntry(inner.getEntryByPath(path)); }
   public TestEntry getEntryByPath(int index) throws EntryNotFoundException { return new TestEntry(inner.getEntryByPath(index)); }
   public boolean hasEntryByPath(String path) { return inner.hasEntryByPath(path); }
