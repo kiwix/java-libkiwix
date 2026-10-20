@@ -101,6 +101,8 @@ public class Archive
   public native boolean hasIllustration(int size);
   @Deprecated
   public native long[] getIllustrationSizes();
+  public native String getMainLanguage();
+  public native String[] getLanguages();
 
   public native Entry getEntryByPath(String path) throws EntryNotFoundException;
   public native Entry getEntryByPath(int index) throws EntryNotFoundException;

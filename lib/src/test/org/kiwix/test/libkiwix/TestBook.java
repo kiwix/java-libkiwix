@@ -23,6 +23,8 @@ public class TestBook
   public String getTitle() { return inner.getTitle(); }
   public String getDescription() { return inner.getDescription(); }
   public String getLanguage() { return inner.getLanguage(); }
+  public String getCommaSeparatedLanguages() { return inner.getCommaSeparatedLanguages(); }
+  public String[] getLanguages() { return inner.getLanguages(); }
   public String getCreator() { return inner.getCreator(); }
   public String getPublisher() { return inner.getPublisher(); }
   public String getDate() { return inner.getDate(); }

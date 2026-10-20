@@ -109,6 +109,14 @@ public class test {
             metaKeys,
             archive.getMetadataKeys()
         ));
+        String language = archive.getMetadata("Language");
+        String[] languages = language.split(",");
+
+        assertEquals(
+                languages.length > 1 ? "mul" : language,
+                archive.getMainLanguage()
+        );
+        assertArrayEquals(languages, archive.getLanguages());
         assertEquals("e34f5109-ed0d-b93e-943d-06f7717c7340", archive.getUuid());
         assertEquals(1, archive.getMediaCount());
         assertEquals(1, archive.getArticleCount());
@@ -562,6 +570,7 @@ public class test {
 
             assertEquals(book.getPath(), new File("small.zim").getAbsolutePath());
             assertEquals(book.getHumanReadableIdFromPath(), "small");
+            assertEquals(book.getCommaSeparatedLanguages(), "eng");
             assertTrue(book.isPathValid());
 
             // remove book from library by id
@@ -730,7 +739,7 @@ public class test {
             bookmark.setBookId(book.getId());
             bookmark.setTitle("A title for an article");
             bookmark.setUrl("foo/bar.html");
-            bookmark.setLanguage(book.getLanguage());
+            bookmark.setLanguage(book.getLanguages()[0]);
             bookmark.setDate(book.getDate());
             bookmark.setBookTitle(book.getTitle());
             bookmark.setBookName(book.getName());
@@ -744,7 +753,7 @@ public class test {
             assertEquals(bookmark.getBookId(), book.getId());
             assertEquals(bookmark.getTitle(), "A title for an article");
             assertEquals(bookmark.getUrl(), "foo/bar.html");
-            assertEquals(bookmark.getLanguage(), book.getLanguage());
+            assertEquals(bookmark.getLanguage(), book.getLanguages()[0]);
             assertEquals(bookmark.getDate(), book.getDate());
             assertEquals(bookmark.getBookTitle(), book.getTitle());
             assertEquals(bookmark.getBookName(), book.getName());
