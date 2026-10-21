@@ -48,9 +48,15 @@ GETTER(jlong, getSize)
 
 METHOD0(jobject, getDirectAccessInformation) {
   jobject directObjInfo = newObject("org/kiwix/libzim/DirectAccessInfo", env);
-  setDaiObjValue("", 0, directObjInfo, env);
+  setDaiObjValue("", 0, -1, directObjInfo, env);
 
+#ifndef _WIN32
+  // getDirectAccessFd(): owned dup()'d fd + offset in one call. See #1119.
+  auto directAccessFd = THIS->getDirectAccessFd();
+  setDaiObjValue("", directAccessFd.offset, directAccessFd.fd, directObjInfo, env);
+#else
   auto cDirectObjInfo = THIS->getDirectAccessInformation();
-  setDaiObjValue(cDirectObjInfo.filename, cDirectObjInfo.offset, directObjInfo, env);
+  setDaiObjValue(cDirectObjInfo.filename, cDirectObjInfo.offset, -1, directObjInfo, env);
+#endif
   return directObjInfo;
 } CATCH_EXCEPTION(nullptr)

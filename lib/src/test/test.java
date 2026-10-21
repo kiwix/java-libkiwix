@@ -95,6 +95,9 @@ public class test {
         assertNotEquals("", dai.filename);
         byte[] readData = getFileContentPartial(dai.filename, (int) dai.offset, (int) item.getSize());
         assertTrue(Arrays.equals(faviconData, readData));
+        // JNI dup()s an already-open native descriptor for this archive regardless of
+        // whether it was opened by path or by fd - see openzim/libzim#852.
+        assertTrue(dai.fd >= 0);
 
         // Checking all metadata
         assertTrue(archive.hasNewNamespaceScheme());

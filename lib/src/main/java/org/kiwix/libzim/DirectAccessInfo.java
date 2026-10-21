@@ -23,4 +23,10 @@ public class DirectAccessInfo
 {
   public String filename;
   public long offset;
+
+  /**
+   * Owned fd, or -1 if unavailable. `filename` is only set on Windows;
+   * elsewhere prefer ParcelFileDescriptor.adoptFd(fd). Caller must close it.
+   */
+  public int fd = -1;
 }
