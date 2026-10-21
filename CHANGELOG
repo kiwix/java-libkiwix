@@ -1,3 +1,8 @@
+2.7.0
+* NEW: Added Archive::getLanguages and Archive::getMainLanguage to retrieve the list of languages and the main language of a ZIM file. (@MohitMaliFtechiz https://github.com/kiwix/java-libkiwix/pull/154)
+* NEW: Added Book::getCommaSeparatedLanguages, and Book::getLanguages method to retrieve a book's languages as a list and as a comma-separated string. (@MohitMaliFtechiz https://github.com/kiwix/java-libkiwix/pull/154)
+* IMPROVEMENT: Deprecated Book::getLanguage in favor of Book::getLanguages and Book::getCommaSeparatedLanguages for more flexible language access. (@MohitMaliFtechiz https://github.com/kiwix/java-libkiwix/pull/154)
+
 2.6.0
 * NEW: Use libkiwix 14.2.1 (@MohitMaliFtechiz , @kelson42 https://github.com/kiwix/java-libkiwix/pull/148)
 * NEW: Use libzim 9.7.0 (@MohitMaliFtechiz , @kelson42 https://github.com/kiwix/java-libkiwix/pull/148)
